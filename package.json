@@ -3,25 +3,50 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky"
   },
   "dependencies": {
+    "@formatjs/intl-localematcher": "^0.6.1",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.52.0",
+    "antd": "^5.26.6",
+    "framer-motion": "^12.23.6",
+    "negotiator": "^1.0.0",
+    "next": "15.4.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.4.1"
+    "sass": "^1.89.2"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "3.3.1",
+    "@tailwindcss/postcss": "4.1.11",
+    "@types/negotiator": "^0.6.4",
     "@types/node": "^20",
     "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
-    "eslint": "^9",
+    "@types/react-dom": "19.1.6",
+    "eslint": "9.31.0",
     "eslint-config-next": "15.4.1",
-    "@eslint/eslintrc": "^3"
+    "eslint-config-prettier": "10.1.8",
+    "husky": "9.1.7",
+    "lint-staged": "16.1.2",
+    "prettier": "3.6.2",
+    "prettier-plugin-tailwindcss": "0.6.14",
+    "tailwindcss": "4.1.11",
+    "typescript": "5.8.3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,css,scss}": [
+      "prettier --write"
+    ]
   }
 }

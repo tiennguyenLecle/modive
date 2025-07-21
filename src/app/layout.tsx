@@ -16,8 +16,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={pretendard.variable}>
-      <body>
-        <AntdRegistry>{children}</AntdRegistry>
+      <body className="overflow-x-hidden relative">
+        <AntdRegistry>{children} </AntdRegistry>
       </body>
     </html>
   );

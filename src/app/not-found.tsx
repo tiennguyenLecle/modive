@@ -1,5 +1,5 @@
+import LocalizedLink from '@/components/LocalizedLink';
 import { Button, Result } from 'antd';
-import Link from 'next/link';
 
 const NotFoundPage = () => (
   <Result
@@ -7,11 +7,11 @@ const NotFoundPage = () => (
     title="404"
     subTitle="Sorry, the page you visited does not exist."
     extra={
-      <Link href="/">
+      <LocalizedLink href="/">
         <Button type="primary">Back Home</Button>
-      </Link>
+      </LocalizedLink>
     }
   />
 );
 
-export default NotFoundPage; 
+export default NotFoundPage;

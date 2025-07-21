@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import LocalizedLink from '@/components/LocalizedLink';
 
 export default function FontTestPage() {
   const weights = [
@@ -15,7 +15,7 @@ export default function FontTestPage() {
 
   return (
     <div className="p-8">
-      <Link href="/">Back to Home</Link>
+      <LocalizedLink href="/">Back to Home</LocalizedLink>
       <h1 className="text-4xl font-bold mb-8">Pretendard Font Face Test</h1>
       <div className="space-y-4">
         {weights.map(weight => (

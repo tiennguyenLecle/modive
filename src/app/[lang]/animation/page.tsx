@@ -1,18 +1,19 @@
 'use client';
 
-import { Locale } from '@/types/locale';
+import LocalizedLink from '@/components/LocalizedLink';
 import { Button } from 'antd';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
 
-export default function AnimationPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default function AnimationPage() {
   const [isVisible, setIsVisible] = useState(true);
 
   return (
     <div style={{ padding: '2rem' }}>
-      <Link href={`/`}>Back to Home</Link>
-      <Link href={`/animation/sub-animation`}>Sub Animation</Link>
+      <LocalizedLink href="/">Back to Home</LocalizedLink>
+      <Link href="/">Back to Home</Link>
+      <LocalizedLink href="/animation/sub-animation">Sub Animation</LocalizedLink>
       <h1>Framer Motion Test Page</h1>
       <Button onClick={() => setIsVisible(!isVisible)} style={{ marginBottom: '1rem' }}>
         Toggle Visibility

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import 'antd/dist/reset.css';
 import './globals.css';
 import { pretendard } from '@/styles/fonts';
-import AntdRegistry from '@/components/AntdRegistry';
+import AntdRegistry from '@/lib/antd-registry';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={pretendard.variable}>
       <body className="overflow-x-hidden relative">
-        <AntdRegistry>{children} </AntdRegistry>
+        <AntdRegistry>{children}</AntdRegistry>
       </body>
     </html>
   );

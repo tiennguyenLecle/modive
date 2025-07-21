@@ -5,7 +5,7 @@ import { createCache, extractStyle, px2remTransformer, StyleProvider } from '@an
 import { ConfigProvider } from 'antd';
 import { useServerInsertedHTML } from 'next/navigation';
 
-const StyledComponentsRegistry = ({ children }: React.PropsWithChildren) => {
+const AntdRegistry = ({ children }: React.PropsWithChildren) => {
   const cache = React.useMemo(() => createCache(), []);
   const transformer = px2remTransformer({ rootValue: 1 });
   useServerInsertedHTML(() => <style id="antd" dangerouslySetInnerHTML={{ __html: extractStyle(cache, true) }} />);
@@ -24,4 +24,4 @@ const StyledComponentsRegistry = ({ children }: React.PropsWithChildren) => {
   );
 };
 
-export default StyledComponentsRegistry;
+export default AntdRegistry;

@@ -7,9 +7,9 @@ export default async function Home({ params: { lang } }: { params: { lang: Local
   const dict = await getDictionary(lang);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8">
-      <h1 className="text-4xl font-bold mb-4">{dict.homepage.title}</h1>
-      <p className="text-lg mb-8">{dict.homepage.description}</p>
+    <div className="flex flex-col items-center justify-center min-h-screen p-8 m-32 font-pretendard">
+      <h1 className="text-20 font-bold mb-4">{dict.homepage.title}</h1>
+      <p className="text-16 mb-8">{dict.homepage.description}</p>
       <div className="flex gap-4">
         <LocalizedLink href="/animation">
           <Button type="primary">{dict.navigation.animation_test}</Button>

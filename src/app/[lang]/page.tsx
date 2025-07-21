@@ -25,6 +25,11 @@ export default async function Home({ params: { lang } }: { params: { lang: Local
         >
           <Button type="dashed">Animation with Params</Button>
         </LocalizedLink>
+        <div>
+          <Button size="small">Small</Button>
+          <Button size="middle">Middle</Button>
+          <Button size="large">Large</Button>
+        </div>
       </div>
     </div>
   );

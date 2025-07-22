@@ -1,5 +1,9 @@
 import { ComponentProps } from 'react';
 
+import { cx } from '@/utils/method';
+
+import styles from './Spinner.module.scss';
+
 interface SpinnerProps extends ComponentProps<'div'> {
   size?: number;
   color?: string;
@@ -19,15 +23,15 @@ export default function Spinner({
       style={{
         width: sizeValue,
         height: sizeValue,
-        padding: `${0.2 * size}rem`,
+        padding: `${0.16 * size}rem`,
 
         ...style,
       }}
+      className={cx(styles.spinner, className)}
       {...props}
     >
       <svg
         aria-hidden="true"
-        className="h-full w-full animate-spin rounded-full text-gray-200 dark:text-gray-600"
         viewBox="0 0 100 101"
         fill={color}
         xmlns="http://www.w3.org/2000/svg"

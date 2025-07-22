@@ -1,7 +1,6 @@
 import { Button } from 'antd';
 import { getTranslations } from 'next-intl/server';
 
-import { Spinner } from '@/components';
 import { Link } from '@/lib/navigation';
 
 export default async function Home() {

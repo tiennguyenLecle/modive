@@ -1,0 +1,5 @@
+.spinner {
+  > svg {
+    @apply h-full w-full animate-spin rounded-full text-gray-200 dark:text-gray-600;
+  }
+}

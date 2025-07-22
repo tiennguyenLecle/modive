@@ -55,16 +55,6 @@ const config: Config = {
       16: '16rem',
       20: '20rem',
     },
-    // Override Tailwind's default colors
-    colors: {
-      background: 'var(--background)',
-      foreground: 'var(--foreground)',
-      primary: '#FF627B',
-      'gray-00': '#250F09',
-      'gray-30': '#575665',
-      'gray-50': '#9C9EB0',
-      orange: '#FFB559',
-    },
     // Override Tailwind's default font family
     fontFamily: {
       pretendard: [
@@ -73,6 +63,17 @@ const config: Config = {
         'Helvetica',
         'sans-serif',
       ],
+    },
+    extend: {
+      colors: {
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        primary: '#FF627B',
+        'gray-00': '#250F09',
+        'gray-30': '#575665',
+        'gray-50': '#9C9EB0',
+        orange: '#FFB559',
+      },
     },
   },
   plugins: [],

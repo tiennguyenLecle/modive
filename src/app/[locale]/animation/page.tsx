@@ -1,12 +1,12 @@
 import { getTranslations } from 'next-intl/server';
 
 export default async function AnimationPage({
-  params,
+  params: { locale },
 }: {
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
 }) {
-  const { locale } = await params;
   const t = await getTranslations();
+  await new Promise(resolve => setTimeout(resolve, 2000));
 
   return (
     <div className="flex min-h-screen items-center justify-center">

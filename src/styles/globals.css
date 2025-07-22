@@ -7,6 +7,7 @@
     Define colors for light and dark mode
    */
   :root {
+    --primary: #ff627b;
     --background: #ffffff;
     --foreground: #171717;
   }

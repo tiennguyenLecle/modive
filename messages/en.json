@@ -1,0 +1,14 @@
+{
+  "homepage": {
+    "title": "Welcome to Modive",
+    "description": "A modern multilingual application"
+  },
+  "navigation": {
+    "animation_test": "Animation Test",
+    "back_home": "Back Home",
+    "back": "Go Back"
+  },
+  "errors": {
+    "not_found_description": "Sorry, the page you visited does not exist."
+  }
+}

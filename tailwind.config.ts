@@ -8,7 +8,9 @@ const config: Config = {
     './src/types/**/*.{js,ts,jsx,tsx,mdx}',
     './src/utils/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
+    // Override Tailwind's default spacing
     spacing: {
       px: '1px',
       0: '0px',
@@ -46,26 +48,31 @@ const config: Config = {
       80: '80rem',
       96: '96rem',
     },
+    // Override Tailwind's default font sizes
     fontSize: {
       10: '10rem',
       12: '12rem',
       16: '16rem',
       20: '20rem',
     },
-    extend: {
-      fontFamily: {
-        pretendard: [
-          'var(--font-pretendard)',
-          'Arial',
-          'Helvetica',
-          'sans-serif',
-        ],
-      },
-      colors: {
-        primary: '#FF627B',
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-      },
+    // Override Tailwind's default colors
+    colors: {
+      background: 'var(--background)',
+      foreground: 'var(--foreground)',
+      primary: '#FF627B',
+      'gray-00': '#250F09',
+      'gray-30': '#575665',
+      'gray-50': '#9C9EB0',
+      orange: '#FFB559',
+    },
+    // Override Tailwind's default font family
+    fontFamily: {
+      pretendard: [
+        'var(--font-pretendard)',
+        'Arial',
+        'Helvetica',
+        'sans-serif',
+      ],
     },
   },
   plugins: [],

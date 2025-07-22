@@ -6,7 +6,9 @@ import 'antd/dist/reset.css';
 import '@/styles/globals.css';
 
 import Navigation from '@/components/Navigation';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 import AntdRegistry from '@/lib/antd-registry';
+import { ThemeRegistry } from '@/lib/theme-registry';
 import { pretendard } from '@/styles/fonts';
 
 export const metadata: Metadata = {
@@ -27,14 +29,21 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={pretendard.variable}>
+    <html
+      lang={locale}
+      className={pretendard.variable}
+      suppressHydrationWarning
+    >
       <body className="relative overflow-x-hidden">
-        <NextIntlClientProvider messages={messages}>
-          <AntdRegistry>
-            <Navigation />
-            {children}
-          </AntdRegistry>
-        </NextIntlClientProvider>
+        <ThemeRegistry>
+          <NextIntlClientProvider messages={messages}>
+            <AntdRegistry>
+              <Navigation />
+              <ThemeSwitcher />
+              {children}
+            </AntdRegistry>
+          </NextIntlClientProvider>
+        </ThemeRegistry>
       </body>
     </html>
   );

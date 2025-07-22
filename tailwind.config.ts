@@ -54,7 +54,12 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        pretendard: ['var(--font-pretendard)', 'Arial', 'Helvetica', 'sans-serif'],
+        pretendard: [
+          'var(--font-pretendard)',
+          'Arial',
+          'Helvetica',
+          'sans-serif',
+        ],
       },
       colors: {
         background: 'var(--background)',

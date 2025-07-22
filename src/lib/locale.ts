@@ -91,7 +91,10 @@ export function parseAcceptLanguage(
  * @param acceptLanguage - Accept-Language header value
  * @returns Detected locale
  */
-export function detectPreferredLocale(savedLocale: string | undefined, acceptLanguage: string): Locale {
+export function detectPreferredLocale(
+  savedLocale: string | undefined,
+  acceptLanguage: string
+): Locale {
   // 1. Check saved cookie preference first
   if (savedLocale && isValidLocale(savedLocale)) {
     return savedLocale;

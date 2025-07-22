@@ -1,13 +1,17 @@
 import { getTranslations } from 'next-intl/server';
 
-export default async function FontTestPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function FontTestPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
   const t = await getTranslations();
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center max-w-2xl">
-        <h1 className="text-3xl font-bold mb-4">Font Test Page</h1>
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="max-w-2xl text-center">
+        <h1 className="text-3xl mb-4 font-bold">Font Test Page</h1>
         <p className="text-lg mb-4">Current locale: {locale}</p>
 
         <div className="space-y-4 text-left">

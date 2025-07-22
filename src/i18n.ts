@@ -1,5 +1,6 @@
 import { getRequestConfig } from 'next-intl/server';
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE, type Locale } from './lib/locale';
+
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from './lib/locale';
 
 export default getRequestConfig(async ({ requestLocale }) => {
   // `requestLocale` is a promise that resolves to the locale of the request.

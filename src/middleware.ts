@@ -8,16 +8,17 @@
  * @see https://nextjs.org/docs/app/building-your-application/routing/middleware
  */
 
+import createMiddleware from 'next-intl/middleware';
+import { NextResponse, type NextRequest } from 'next/server';
+
 import {
-  DEFAULT_LOCALE,
-  SUPPORTED_LOCALES,
-  detectPreferredLocale,
   COOKIE_LOCALE_NAME,
+  DEFAULT_LOCALE,
+  detectPreferredLocale,
   LOCALE_COOKIE_CONFIG,
+  SUPPORTED_LOCALES,
 } from '@/lib/locale';
 import { updateSession } from '@/utils/supabase/middleware';
-import createMiddleware from 'next-intl/middleware';
-import { type NextRequest, NextResponse } from 'next/server';
 
 const intlMiddleware = createMiddleware({
   locales: SUPPORTED_LOCALES,
@@ -39,13 +40,21 @@ export async function middleware(request: NextRequest) {
     const acceptLanguage = request.headers.get('Accept-Language') || '';
     const preferredLocale = detectPreferredLocale(savedLocale, acceptLanguage);
 
-    console.log(`[MIDDLEWARE] Root access detected. Redirecting to /${preferredLocale} and setting cookie.`);
+    console.log(
+      `[MIDDLEWARE] Root access detected. Redirecting to /${preferredLocale} and setting cookie.`
+    );
 
     // Create a response to redirect to the preferred locale
-    const response = NextResponse.redirect(new URL(`/${preferredLocale}`, request.url));
+    const response = NextResponse.redirect(
+      new URL(`/${preferredLocale}`, request.url)
+    );
 
     // Set the cookie for future visits, using our centralized config
-    response.cookies.set(COOKIE_LOCALE_NAME, preferredLocale, LOCALE_COOKIE_CONFIG);
+    response.cookies.set(
+      COOKIE_LOCALE_NAME,
+      preferredLocale,
+      LOCALE_COOKIE_CONFIG
+    );
 
     return response;
   }
@@ -57,7 +66,10 @@ export async function middleware(request: NextRequest) {
 
   // If intl middleware returns a redirect, let it happen immediately
   if (response.headers.get('location')) {
-    console.log('[MIDDLEWARE] Intl middleware redirect to:', response.headers.get('location'));
+    console.log(
+      '[MIDDLEWARE] Intl middleware redirect to:',
+      response.headers.get('location')
+    );
     return response;
   }
 

@@ -1,5 +1,6 @@
 import { createNavigation } from 'next-intl/navigation';
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from './locale';
+
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from './locale';
 
 // Define routing config using centralized constants
 const routing = {
@@ -8,4 +9,5 @@ const routing = {
 } as const;
 
 // Create navigation utilities
-export const { Link, redirect, usePathname, useRouter, getPathname } = createNavigation(routing);
+export const { Link, redirect, usePathname, useRouter, getPathname } =
+  createNavigation(routing);

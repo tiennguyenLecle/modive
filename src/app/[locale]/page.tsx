@@ -1,14 +1,15 @@
-import { getTranslations } from 'next-intl/server';
 import { Button } from 'antd';
+import { getTranslations } from 'next-intl/server';
+
 import { Link } from '@/lib/navigation';
 
 export default async function Home() {
   const t = await getTranslations();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 m-32 font-pretendard">
-      <h1 className="text-20 font-bold mb-4">{t('homepage.title')}</h1>
-      <p className="text-16 mb-8">{t('homepage.description')}</p>
+    <div className="m-32 flex min-h-screen flex-col items-center justify-center p-8 font-pretendard">
+      <h1 className="mb-4 text-20 font-bold">{t('homepage.title')}</h1>
+      <p className="mb-8 text-16">{t('homepage.description')}</p>
       <div className="flex gap-4">
         <Link href="/animation">
           <Button type="primary">{t('navigation.animation_test')}</Button>

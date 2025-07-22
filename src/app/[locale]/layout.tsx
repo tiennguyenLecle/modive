@@ -5,6 +5,7 @@ import { getMessages } from 'next-intl/server';
 import 'antd/dist/reset.css';
 import '@/styles/globals.css';
 
+import Navigation from '@/components/Navigation';
 import AntdRegistry from '@/lib/antd-registry';
 import { pretendard } from '@/styles/fonts';
 
@@ -29,7 +30,10 @@ export default async function LocaleLayout({
     <html lang={locale} className={pretendard.variable}>
       <body className="relative overflow-x-hidden">
         <NextIntlClientProvider messages={messages}>
-          <AntdRegistry>{children}</AntdRegistry>
+          <AntdRegistry>
+            <Navigation />
+            {children}
+          </AntdRegistry>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -62,6 +62,7 @@ const config: Config = {
         ],
       },
       colors: {
+        primary: '#FF627B',
         background: 'var(--background)',
         foreground: 'var(--foreground)',
       },

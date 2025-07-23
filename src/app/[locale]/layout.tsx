@@ -24,9 +24,11 @@ export async function generateMetadata({
 
 export default async function LocaleLayout({
   children,
+  modal,
   params: { locale },
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
   params: { locale: string };
 }) {
   // Providing all messages to the client side is the easiest way to get started
@@ -46,6 +48,7 @@ export default async function LocaleLayout({
                 {children}
                 <Navigation className="mt-auto" />
               </div>
+              {modal}
             </AntdRegistry>
           </NextIntlClientProvider>
         </ThemeRegistry>

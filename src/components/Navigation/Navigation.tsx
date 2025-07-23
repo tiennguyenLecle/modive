@@ -14,7 +14,7 @@ import NavItem from './NavItem';
 type NavigationProps = ComponentProps<'nav'>;
 
 export default function Navigation({ className, ...rest }: NavigationProps) {
-  const t = useTranslations();
+  const t = useTranslations('nav');
 
   return (
     <nav
@@ -25,15 +25,15 @@ export default function Navigation({ className, ...rest }: NavigationProps) {
         href="/"
         icon={<NavHome />}
         activeIcon={<NavHomeFilled />}
-        text={t('nav.home')}
+        text={t('home')}
       />
-      <NavItem href="/chat" icon={<NavChat />} text={t('nav.chat')} />
-      <NavItem href="/goods" icon={<NavVase />} text={t('nav.goods')} />
+      <NavItem href="/chat" icon={<NavChat />} text={t('chat')} />
+      <NavItem href="/goods" icon={<NavVase />} text={t('goods')} />
       <NavItem
         href="/me"
         icon={<NavPerson />}
         activeIcon={<NavPersonFilled />}
-        text={t('nav.me')}
+        text={t('me')}
       />
     </nav>
   );

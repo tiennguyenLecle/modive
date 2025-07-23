@@ -27,10 +27,12 @@ export default function NavItem({
       {...rest}
       className={cx(
         isActive && 'active',
-        'flex flex-1 flex-col items-center justify-center text-11 font-normal leading-none text-gray-50 transition-colors duration-300 hover:text-primary active:text-primary'
+        'group flex flex-1 flex-col items-center justify-center text-11 font-normal leading-none text-gray-50 transition-colors duration-300 hover:text-primary active:text-primary'
       )}
     >
-      <span className="mb-2">{isActive ? activeIcon : icon}</span>
+      <span className="mb-2 transition-all duration-300 group-hover:-translate-y-2">
+        {isActive && activeIcon ? activeIcon : icon}
+      </span>
       <span>{text}</span>
     </Link>
   );

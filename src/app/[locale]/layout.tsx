@@ -1,20 +1,26 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 
 import 'antd/dist/reset.css';
 import '@/styles/globals.css';
 
 import Navigation from '@/components/Navigation/Navigation';
-import ThemeSwitcher from '@/components/ThemeSwitcher';
 import AntdRegistry from '@/lib/antd-registry';
 import { ThemeRegistry } from '@/lib/theme-registry';
 import { pretendard } from '@/styles/fonts';
 
-export const metadata: Metadata = {
-  title: 'Modive App',
-  description: 'A modern multilingual app',
-};
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const t = await getTranslations({ namespace: 'default.metadata', locale });
+  return {
+    title: t('title'),
+    description: t('description'),
+  };
+}
 
 export default async function LocaleLayout({
   children,

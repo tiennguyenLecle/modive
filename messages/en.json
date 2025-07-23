@@ -5,16 +5,37 @@
     "goods": "Goods",
     "me": "Me"
   },
-  "homepage": {
-    "title": "Welcome to Modive",
-    "description": "A modern multilingual application"
+  "default": {
+    "metadata": {
+      "title": "Modive",
+      "description": "A modern AI chatbot application"
+    }
   },
-  "navigation": {
-    "animation_test": "Animation Test",
-    "back_home": "Back Home",
-    "back": "Go Back"
+  "home_page": {
+    "metadata": {
+      "title": "Modive",
+      "description": "A modern AI chatbot application"
+    }
   },
   "errors": {
     "not_found_description": "Sorry, the page you visited does not exist."
+  },
+  "chat_page": {
+    "metadata": {
+      "title": "Chat",
+      "description": "Start a conversation with AI"
+    }
+  },
+  "goods_page": {
+    "metadata": {
+      "title": "Goods",
+      "description": "View your goods"
+    }
+  },
+  "me_page": {
+    "metadata": {
+      "title": "My information",
+      "description": "View your information and settings up anything"
+    }
   }
 }

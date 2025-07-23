@@ -1,5 +1,9 @@
 import { Spinner } from '@/components';
 
 export default function Loading() {
-  return <Spinner size={100} />;
+  return (
+    <div className="flex flex-1 items-center justify-center">
+      <Spinner size={100} />
+    </div>
+  );
 }

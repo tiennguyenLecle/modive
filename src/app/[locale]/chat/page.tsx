@@ -1,5 +1,6 @@
-import { DatePicker, Form, Input, InputNumber } from 'antd';
 import { getTranslations } from 'next-intl/server';
+
+import ChatView from './ChatView';
 
 export const generateMetadata = async ({
   params: { locale },
@@ -18,23 +19,7 @@ export default async function Home() {
 
   return (
     <div className="container flex flex-1 flex-col items-center justify-center">
-      <h1 className="mb-4 text-20 font-bold">Chat Page</h1>
-      <Input />
-      <Input.TextArea />
-      <InputNumber />
-      <DatePicker />
-
-      <Form>
-        <Form.Item label="Name" name="name">
-          <Input />
-        </Form.Item>
-        <Form.Item label="Age" name="age">
-          <InputNumber />
-        </Form.Item>
-        <Form.Item label="Birthday" name="birthday">
-          <DatePicker />
-        </Form.Item>
-      </Form>
+      <ChatView />
     </div>
   );
 }

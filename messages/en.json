@@ -1,4 +1,10 @@
 {
+  "nav": {
+    "home": "Home",
+    "chat": "Chat",
+    "goods": "Goods",
+    "me": "Me"
+  },
   "homepage": {
     "title": "Welcome to Modive",
     "description": "A modern multilingual application"

@@ -9,14 +9,14 @@ export default async function AnimationPage({
   await new Promise(resolve => setTimeout(resolve, 2000));
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex items-center justify-center">
       <div className="text-center">
         <h1 className="text-3xl mb-4 font-bold">Animation Page</h1>
         <p className="text-lg mb-4">Current locale: {locale}</p>
         <p className="text-gray-600">{t('navigation.animation_test')}</p>
 
         <div className="mt-8">
-          <div className="mx-auto h-16 w-16 animate-bounce rounded-full bg-blue-500"></div>
+          <div className="bg-blue-500 mx-auto h-16 w-16 animate-bounce rounded-full"></div>
         </div>
       </div>
     </div>

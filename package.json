@@ -16,6 +16,7 @@
     "@formatjs/intl-localematcher": "^0.6.1",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.52.0",
+    "@svgr/webpack": "^8.1.0",
     "antd": "^5.26.6",
     "framer-motion": "^12.23.6",
     "negotiator": "^1.0.0",

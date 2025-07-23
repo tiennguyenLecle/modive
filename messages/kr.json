@@ -1,4 +1,10 @@
 {
+  "nav": {
+    "home": "홈",
+    "chat": "채팅",
+    "goods": "굿즈",
+    "me": "마이"
+  },
   "homepage": {
     "title": "Modive에 오신 것을 환영합니다",
     "description": "현대적인 다국어 애플리케이션"

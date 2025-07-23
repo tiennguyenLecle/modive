@@ -5,7 +5,7 @@ import { getMessages } from 'next-intl/server';
 import 'antd/dist/reset.css';
 import '@/styles/globals.css';
 
-import Navigation from '@/components/Navigation';
+import Navigation from '@/components/Navigation/Navigation';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 import AntdRegistry from '@/lib/antd-registry';
 import { ThemeRegistry } from '@/lib/theme-registry';
@@ -32,13 +32,14 @@ export default async function LocaleLayout({
       className={pretendard.variable}
       suppressHydrationWarning
     >
-      <body className="relative overflow-x-hidden">
+      <body>
         <ThemeRegistry>
           <NextIntlClientProvider messages={messages}>
             <AntdRegistry>
-              <Navigation />
-              <ThemeSwitcher />
-              {children}
+              <div className="flex h-full flex-col">
+                {children}
+                <Navigation className="mt-auto" />
+              </div>
             </AntdRegistry>
           </NextIntlClientProvider>
         </ThemeRegistry>

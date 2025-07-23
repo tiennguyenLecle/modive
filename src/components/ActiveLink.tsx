@@ -14,7 +14,7 @@ export default function ActiveLink({ href, className, ...rest }: Props) {
   return (
     <Link
       href={href}
-      className={cx(isActive && 'text-primary', className)}
+      className={cx(isActive && 'active', className)}
       {...rest}
     />
   );

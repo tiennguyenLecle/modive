@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   content: [
@@ -51,6 +52,7 @@ const config: Config = {
     // Override Tailwind's default font sizes
     fontSize: {
       10: '10rem',
+      11: '11rem',
       12: '12rem',
       16: '16rem',
       20: '20rem',
@@ -64,19 +66,30 @@ const config: Config = {
         'sans-serif',
       ],
     },
-    extend: {
-      colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-        primary: '#FF627B',
-        'gray-00': '#250F09',
-        'gray-30': '#575665',
-        'gray-50': '#9C9EB0',
-        orange: '#FFB559',
-      },
+    colors: {
+      background: 'var(--background)',
+      foreground: 'var(--foreground)',
+      primary: '#FF627B',
+      'gray-00': '#250F09',
+      'gray-30': '#575665',
+      'gray-50': '#9C9EB0',
+      'gray-90': '#F0EEEE',
+      orange: '#FFB559',
     },
+    borderWidth: {
+      DEFAULT: '1rem',
+      0: '0',
+      2: '2rem',
+      4: '4rem',
+      8: '8rem',
+    },
+    extend: {},
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addVariant }) {
+      addVariant('active', '&.active');
+    }),
+  ],
 };
 
 export default config;

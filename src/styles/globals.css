@@ -3,9 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  /**
-    Define colors for light and dark mode
-   */
+  /* Define colors for light and dark mode */
   :root {
     --primary: #ff627b;
     --background: #ffffff;
@@ -16,15 +14,26 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
 
-@layer base {
   html {
     /* In this project, use 1 rem as default spacing unit (1rem = 1px) */
     font-size: 6.25%;
+    @apply overflow-x-hidden bg-primary;
   }
 
   body {
     @apply bg-background font-pretendard text-16 text-foreground;
+    margin: 0 auto;
+    width: 360rem;
+  }
+}
+
+@layer utilities {
+  .container {
+    @apply max-w-full px-16;
+  }
+
+  .container-fluid {
+    @apply max-w-full;
   }
 }

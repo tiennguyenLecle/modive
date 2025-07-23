@@ -1,13 +1,14 @@
 import { Button } from 'antd';
 import { getTranslations } from 'next-intl/server';
 
+import { Spinner } from '@/components';
 import { Link } from '@/lib/navigation';
 
 export default async function Home() {
   const t = await getTranslations();
 
   return (
-    <div className="m-32 flex flex-col items-center justify-center p-8 font-pretendard">
+    <div className="container flex flex-col items-center justify-center">
       <h1 className="mb-4 text-20 font-bold">{t('homepage.title')}</h1>
       <p className="mb-8 text-16">{t('homepage.description')}</p>
       <div className="flex gap-4">
@@ -29,6 +30,7 @@ export default async function Home() {
           <Button size="small">Small</Button>
           <Button size="middle">Middle</Button>
           <Button size="large">Large</Button>
+          <Spinner size={100} />
         </div>
       </div>
     </div>

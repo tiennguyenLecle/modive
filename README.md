@@ -13,7 +13,17 @@ Follow these steps to get the project up and running on your local machine.
     pnpm install
     ```
 
-2.  **Run the Development Server:**
+2.  **Setup Environment Variables:**
+    You need to set up environment variables to run the application properly.
+
+    ```bash
+    # Copy the example environment file
+    cp .env.example .env
+    ```
+
+    **Important:** Contact **"tiennguyen"** to get the required environment variable values for your `.env` file. The application may not work correctly without proper environment configuration.
+
+3.  **Run the Development Server:**
     Start the Next.js development server.
 
     ```bash

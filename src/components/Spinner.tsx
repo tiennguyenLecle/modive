@@ -5,7 +5,7 @@ interface SpinnerProps extends ComponentProps<'div'> {
   color?: string;
 }
 
-export default function Spinner({
+export function Spinner({
   size = 32,
   color = 'var(--primary)',
   style,

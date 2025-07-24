@@ -2,13 +2,15 @@
 
 import { ComponentProps } from 'react';
 
-import { Link, usePathname } from '@/lib/navigation';
+import { TransitionLink } from '@/components/TransitionLink';
+import { usePathname } from '@/lib/navigation';
 import { cx } from '@/utils/method';
 
-type NavItemProps = ComponentProps<typeof Link> & {
+type NavItemProps = ComponentProps<typeof TransitionLink> & {
   icon?: React.ReactNode;
   activeIcon?: React.ReactNode;
   text: string;
+  children?: React.ReactNode;
 };
 
 export default function NavItem({
@@ -22,7 +24,7 @@ export default function NavItem({
   const isActive = pathname === href;
 
   return (
-    <Link
+    <TransitionLink
       href={href}
       {...rest}
       className={cx(
@@ -34,6 +36,6 @@ export default function NavItem({
         {isActive && activeIcon ? activeIcon : icon}
       </span>
       <span>{text}</span>
-    </Link>
+    </TransitionLink>
   );
 }

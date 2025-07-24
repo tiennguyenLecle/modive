@@ -85,6 +85,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // Matcher to run middleware on all paths except for specific assets.
-  // This ensures locale detection and auth checks run everywhere.
-  matcher: ['/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js).*)'],
+  // This new matcher prevents i18n routing from interfering with static files.
+  matcher: ['/((?!api|_next/static|_next/image|.*\\..*).*)'],
 };

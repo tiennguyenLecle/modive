@@ -6,7 +6,7 @@ export default function PhotoPage({ params }: { params: { id: string } }) {
         <img
           src={`https://picsum.photos/seed/${params.id}/600`}
           alt={`Photo ${params.id}`}
-          className="max-w-full rounded-lg"
+          className="rounded-lg max-w-full"
         />
       </div>
     </div>

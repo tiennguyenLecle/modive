@@ -3,7 +3,7 @@ import { ModalWrapper } from '@/components/ModalWrapper';
 export default function ReviewsModal({ params }: { params: { id: string } }) {
   return (
     <ModalWrapper>
-      <div className="bg-card text-card-foreground w-[600px] max-w-[90vw] rounded-lg p-8">
+      <div className="bg-card text-card-foreground rounded-lg w-[600px] max-w-[90vw] p-8">
         <h1 className="text-2xl mb-4 font-bold">
           Reviews for Item {params.id}
         </h1>

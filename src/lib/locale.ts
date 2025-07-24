@@ -21,6 +21,15 @@ export const LOCALE_COOKIE_CONFIG = {
   path: '/',
 };
 
+/**
+ * Maps internal locale identifiers to standard RFC 5646 language tags
+ * for use in SEO and internationalization contexts (e.g., HTML lang attribute, Schema).
+ */
+export const LOCALE_TO_RFC5646: Record<string, string> = {
+  en: 'en-US',
+  kr: 'ko-KR',
+};
+
 // Locale mapping từ standard Accept-Language codes to our app codes
 export const LOCALE_MAPPING: Record<string, string> = {
   ko: 'kr', // Korean: ko-KR, ko -> kr

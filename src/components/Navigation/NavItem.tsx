@@ -27,7 +27,7 @@ export default function NavItem({
       {...rest}
       className={cx(
         isActive && 'active',
-        'group flex flex-1 flex-col items-center justify-center text-11 font-normal leading-none text-gray-50 transition-colors duration-300 hover:text-primary active:text-primary'
+        'leading-none group flex flex-1 flex-col items-center justify-center text-11 font-normal text-gray-50 transition-colors duration-300 hover:text-primary active:text-primary'
       )}
     >
       <span className="mb-2 transition-all duration-300 group-hover:-translate-y-2">

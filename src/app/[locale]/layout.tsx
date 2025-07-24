@@ -8,6 +8,7 @@ import '@/styles/globals.css';
 import Navigation from '@/components/Navigation/Navigation';
 import AntdRegistry from '@/lib/antd-registry';
 import { type Locale } from '@/lib/locale';
+import { StructuredData } from '@/lib/seo';
 import { ThemeRegistry } from '@/lib/theme-registry';
 import { nanumMyeongjo, pretendard } from '@/styles/fonts';
 
@@ -24,9 +25,82 @@ export async function generateMetadata({
     namespace: 'default.metadata',
     locale: locale as Locale,
   });
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
   return {
-    title: t('title'),
+    title: {
+      default: t('title'),
+      template: `%s | ${t('title')}`,
+    },
     description: t('description'),
+    applicationName: 'Modive',
+    authors: [{ name: 'Modive Team' }],
+    generator: 'Next.js',
+    keywords: ['AI', 'chatbot', 'modern', 'multilingual', 'Korean', 'English'],
+    referrer: 'origin-when-cross-origin',
+    creator: 'Modive Team',
+    publisher: 'Modive',
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    metadataBase: baseUrl ? new URL(baseUrl) : undefined,
+    alternates: {
+      canonical: '/',
+      languages: {
+        en: '/en',
+        kr: '/kr',
+      },
+    },
+    openGraph: {
+      type: 'website',
+      locale: locale,
+      url: baseUrl,
+      title: t('title'),
+      description: t('description'),
+      siteName: 'Modive',
+      images: [
+        {
+          url: '/android-chrome-512x512.png',
+          width: 512,
+          height: 512,
+          alt: t('title'),
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('title'),
+      description: t('description'),
+      images: ['/android-chrome-512x512.png'],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    manifest: '/site.webmanifest',
+    icons: {
+      icon: [
+        { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+        { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      ],
+      apple: '/apple-touch-icon.png',
+    },
+    other: {
+      'mobile-web-app-capable': 'yes',
+      'apple-mobile-web-app-capable': 'yes',
+      'apple-mobile-web-app-status-bar-style': 'default',
+      'apple-mobile-web-app-title': 'Modive',
+    },
   };
 }
 
@@ -44,6 +118,16 @@ export default async function LocaleLayout({
       className={`${pretendard.variable} ${nanumMyeongjo.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
+        <meta name="theme-color" content="#FF627B" />
+        <meta name="color-scheme" content="light dark" />
+        {/* The single, refactored StructuredData component is used here */}
+        <StructuredData locale={locale} />
+      </head>
       <body>
         <ThemeRegistry>
           <NextIntlClientProvider messages={messages}>

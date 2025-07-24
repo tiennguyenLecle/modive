@@ -63,6 +63,38 @@ To maintain code quality and consistency, please use the following scripts after
   pnpm build
   ```
 
+## 🧪 Testing
+
+This project uses [Playwright](https://playwright.dev/) for End-to-End (E2E) testing. This allows us to simulate real user interactions in a browser to verify application behavior, including UI logic, SEO metadata, and internationalization.
+
+### Running Tests
+
+To run the entire test suite, use the following command:
+
+```bash
+pnpm test:e2e
+```
+
+This command will automatically:
+
+1. Start the Next.js development server.
+2. Wait for the server to be ready.
+3. Run all tests in the `tests/` directory across Chromium, Firefox, and WebKit.
+4. Shut down the server after the tests are complete.
+
+### Test Structure
+
+- **Configuration:** The main configuration is located in `playwright.config.ts`. It's set up to automatically handle the development server.
+- **Test Files:** Test files are located in the `tests/` directory and should end with `.spec.ts`.
+
+### Viewing Test Reports
+
+After running the tests, a detailed HTML report will be generated in the `playwright-report/` directory. To view it, run:
+
+```bash
+pnpm exec playwright show-report
+```
+
 ## Key Technologies & Notes
 
 This project leverages several key technologies to provide a modern development experience.

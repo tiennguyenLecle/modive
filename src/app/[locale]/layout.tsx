@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
+import { ViewTransitions } from 'next-view-transitions';
 
 import 'antd/dist/reset.css';
 import '@/styles/globals.css';
@@ -35,24 +36,26 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html
-      lang={locale}
-      className={pretendard.variable}
-      suppressHydrationWarning
-    >
-      <body>
-        <ThemeRegistry>
-          <NextIntlClientProvider messages={messages}>
-            <AntdRegistry>
-              <div className="flex h-full flex-col">
-                {children}
-                <Navigation className="mt-auto" />
-              </div>
-              {modal}
-            </AntdRegistry>
-          </NextIntlClientProvider>
-        </ThemeRegistry>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html
+        lang={locale}
+        className={pretendard.variable}
+        suppressHydrationWarning
+      >
+        <body>
+          <ThemeRegistry>
+            <NextIntlClientProvider messages={messages}>
+              <AntdRegistry>
+                <div className="flex h-full flex-col">
+                  {children}
+                  <Navigation className="mt-auto" />
+                </div>
+                {modal}
+              </AntdRegistry>
+            </NextIntlClientProvider>
+          </ThemeRegistry>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

@@ -7,15 +7,23 @@ import '@/styles/globals.css';
 
 import Navigation from '@/components/Navigation/Navigation';
 import AntdRegistry from '@/lib/antd-registry';
+import { type Locale } from '@/lib/locale';
 import { ThemeRegistry } from '@/lib/theme-registry';
-import { pretendard } from '@/styles/fonts';
+import { nanumMyeongjo, pretendard } from '@/styles/fonts';
+
+type LayoutProps = {
+  children: React.ReactNode;
+  modal: React.ReactNode;
+  params: { locale: string };
+};
 
 export async function generateMetadata({
   params: { locale },
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const t = await getTranslations({ namespace: 'default.metadata', locale });
+}: LayoutProps): Promise<Metadata> {
+  const t = await getTranslations({
+    namespace: 'default.metadata',
+    locale: locale as Locale,
+  });
   return {
     title: t('title'),
     description: t('description'),
@@ -26,18 +34,14 @@ export default async function LocaleLayout({
   children,
   modal,
   params: { locale },
-}: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-  params: { locale: string };
-}) {
+}: LayoutProps) {
   // Providing all messages to the client side is the easiest way to get started
   const messages = await getMessages();
 
   return (
     <html
       lang={locale}
-      className={pretendard.variable}
+      className={`${pretendard.variable} ${nanumMyeongjo.variable}`}
       suppressHydrationWarning
     >
       <body>

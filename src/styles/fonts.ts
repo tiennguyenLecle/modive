@@ -1,3 +1,4 @@
+import { Nanum_Myeongjo } from 'next/font/google';
 import localFont from 'next/font/local';
 
 export const pretendard = localFont({
@@ -50,4 +51,11 @@ export const pretendard = localFont({
   ],
   display: 'swap',
   variable: '--font-pretendard',
+});
+
+export const nanumMyeongjo = Nanum_Myeongjo({
+  subsets: ['latin'],
+  weight: ['400', '700', '800'],
+  display: 'swap',
+  variable: '--font-nanum-myeongjo',
 });

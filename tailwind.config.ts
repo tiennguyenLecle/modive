@@ -113,6 +113,8 @@ const config: Config = {
       oat: '#FFF4E0',
       red: '#FF4D4F',
       blue: '#6EAED6',
+      black: '#000000',
+      white: '#FFFFFF',
     },
     borderWidth: {
       DEFAULT: '1rem',

@@ -1,0 +1,46 @@
+{
+  // Set Prettier as the default formatter for all supported languages
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // Enable format on save
+  "editor.formatOnSave": true,
+  // Ensure a final newline is inserted, which is Prettier's default
+  "files.insertFinalNewline": true,
+  // Prevent trimming the final newline, to avoid conflicts with Prettier
+  "files.trimFinalNewlines": false,
+  // Explicitly set Prettier for specific language IDs to avoid ambiguity
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Tailwind CSS IntelliSense specific settings
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "tailwindCSS.lint.invalidScreen": "error",
+  "tailwindCSS.lint.invalidVariant": "error",
+  "tailwindCSS.lint.invalidTailwindDirective": "error",
+  "tailwindCSS.lint.recommendedVariantOrder": "warning",
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "tailwindCSS.showPixelEquivalents": true,
+  "tailwindCSS.rootFontSize": 1,
+  "i18n-ally.localesPaths": [
+    "messages"
+  ]
+}

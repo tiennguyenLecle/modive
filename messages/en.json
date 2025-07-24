@@ -5,6 +5,9 @@
     "goods": "Goods",
     "me": "Me"
   },
+  "navigation": {
+    "back_home": "Back Home"
+  },
   "default": {
     "metadata": {
       "title": "Modive",
@@ -17,8 +20,10 @@
       "description": "A modern AI chatbot application"
     }
   },
-  "errors": {
-    "not_found_description": "Sorry, the page you visited does not exist."
+  "notfound_page": {
+    "title": "404 - Page Not Found",
+    "description": "Sorry, the page you visited does not exist.",
+    "back_home": "Back Home"
   },
   "chat_page": {
     "metadata": {

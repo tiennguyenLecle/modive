@@ -5,6 +5,9 @@
     "goods": "굿즈",
     "me": "마이"
   },
+  "navigation": {
+    "back_home": "홈으로 돌아가기"
+  },
   "default": {
     "metadata": {
       "title": "Modive",
@@ -17,8 +20,10 @@
       "description": "현대적인 AI 챗봇 애플리케이션"
     }
   },
-  "errors": {
-    "not_found_description": "죄송합니다. 방문하신 페이지를 찾을 수 없습니다."
+  "notfound_page": {
+    "title": "404 - 페이지를 찾을 수 없습니다",
+    "description": "죄송합니다. 방문하신 페이지를 찾을 수 없습니다.",
+    "back_home": "홈으로 돌아가기"
   },
   "chat_page": {
     "metadata": {

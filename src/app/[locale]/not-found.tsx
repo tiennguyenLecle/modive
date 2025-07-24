@@ -1,30 +1,17 @@
-import { Button, Result } from 'antd';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 import { Link } from '@/lib/navigation';
 
-export default function NotFound() {
-  const t = useTranslations();
+export default async function NotFound() {
+  const t = await getTranslations('notfound_page');
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <Result
-        status="404"
-        title="404"
-        subTitle={
-          t('errors.not_found_description') ||
-          'Sorry, the page you visited does not exist.'
-        }
-        extra={
-          <div className="flex justify-center gap-4">
-            <Link href="/">
-              <Button type="primary" size="large">
-                {t('navigation.back_home') || 'Back Home'}
-              </Button>
-            </Link>
-          </div>
-        }
-      />
+    <div className="flex flex-1 flex-col items-center justify-center gap-8">
+      <h1 className="text-2xl font-bold">{t('title')}</h1>
+      <p className="text-lg">{t('description')}</p>
+      <Link href="/" className="hover:text-primary">
+        {t('back_home')}
+      </Link>
     </div>
   );
 }

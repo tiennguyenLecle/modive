@@ -7,7 +7,7 @@ export default function PhotoModal({ params }: { params: { id: string } }) {
       <img
         src={`https://picsum.photos/seed/${id}/600`}
         alt={`Photo ${id}`}
-        className="max-h-[90vh] max-w-[90vw] rounded-lg"
+        className="rounded-lg max-h-[90vh] max-w-[90vw]"
       />
     </ModalWrapper>
   );

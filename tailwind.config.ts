@@ -113,6 +113,7 @@ const config: Config = {
       oat: '#FFF4E0',
       red: '#FF4D4F',
       blue: '#6EAED6',
+      black: '#000000',
     },
     borderWidth: {
       DEFAULT: '1rem',
@@ -135,6 +136,7 @@ const config: Config = {
       8: '8rem',
       12: '12rem',
       16: '16rem',
+      full: '9999px',
     },
     extend: {},
   },

@@ -1,0 +1,46 @@
+{
+  "nav": {
+    "home": "Home",
+    "chat": "Chat",
+    "goods": "Goods",
+    "me": "Me"
+  },
+  "navigation": {
+    "back_home": "Back Home"
+  },
+  "default": {
+    "metadata": {
+      "title": "Modive",
+      "description": "A modern AI chatbot application"
+    }
+  },
+  "home_page": {
+    "metadata": {
+      "title": "Home",
+      "description": "A modern AI chatbot application"
+    }
+  },
+  "notfound_page": {
+    "title": "404 - Page Not Found",
+    "description": "Sorry, the page you visited does not exist.",
+    "back_home": "Back Home"
+  },
+  "chat_page": {
+    "metadata": {
+      "title": "Chat",
+      "description": "Start a conversation with AI"
+    }
+  },
+  "goods_page": {
+    "metadata": {
+      "title": "Goods",
+      "description": "View your goods"
+    }
+  },
+  "me_page": {
+    "metadata": {
+      "title": "My information",
+      "description": "View your information and settings up anything"
+    }
+  }
+}

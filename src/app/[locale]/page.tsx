@@ -1,5 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 
+import ToggleButton from '@/components/ToggleButton';
+import ToggleTab from '@/components/ToggleTab';
+
 export const generateMetadata = async ({
   params: { locale },
 }: {
@@ -18,6 +21,7 @@ export default async function Home() {
   return (
     <div className="container flex flex-1 flex-col items-center justify-center">
       <h1 className="mb-4 text-20 font-bold">Home Page</h1>
+      <ToggleTab />
     </div>
   );
 }

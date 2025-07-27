@@ -113,6 +113,7 @@ const config: Config = {
       oat: '#FFF4E0',
       red: '#FF4D4F',
       blue: '#6EAED6',
+      transparent: 'transparent',
     },
     borderWidth: {
       DEFAULT: '1rem',

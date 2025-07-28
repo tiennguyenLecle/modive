@@ -42,5 +42,6 @@
   "tailwindCSS.rootFontSize": 1,
   "i18n-ally.localesPaths": [
     "messages"
-  ]
+  ],
+  "i18n-ally.keystyle": "flat"
 }

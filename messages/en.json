@@ -42,5 +42,15 @@
       "title": "My information",
       "description": "View your information and settings up anything"
     }
+  },
+  "footer": {
+    "terms": "Terms of Use",
+    "privacy_policy": "Privacy Policy",
+    "customer_service": "Customer Service Center",
+    "copyright_policy": "Copyright Management Policy",
+    "info_name": "Modive | Representative Lim Dasol",
+    "info_number": "Business Registration Number: { phoneNumber }",
+    "info_address": "Address: { address }",
+    "copyright": "© { year } Modive. All rights reserved."
   }
 }

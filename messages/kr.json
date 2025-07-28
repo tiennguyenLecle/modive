@@ -42,5 +42,15 @@
       "title": "내 정보",
       "description": "내 정보를 확인하고 설정을 변경하세요"
     }
+  },
+  "footer": {
+    "terms": "이용약관",
+    "privacy_policy": "개인정보 처리방침",
+    "customer_service": "고객센터",
+    "copyright_policy": "저작권 관리 정책",
+    "info_name": "모다이브 | 대표 임다솔",
+    "info_number": "사업자등록번호 : { phoneNumber }",
+    "info_address": "주소 : { address }",
+    "copyright": "© { year } Modive. All rights reserved."
   }
 }

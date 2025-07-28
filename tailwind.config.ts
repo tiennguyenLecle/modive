@@ -114,6 +114,7 @@ const config: Config = {
       red: '#FF4D4F',
       blue: '#6EAED6',
       black: '#000000',
+      white: '#FFFFFF',
     },
     borderWidth: {
       DEFAULT: '1rem',

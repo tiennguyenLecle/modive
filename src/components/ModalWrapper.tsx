@@ -41,7 +41,7 @@ export function ModalWrapper({ children }: { children: React.ReactNode }) {
   return (
     <div
       ref={overlay}
-      className="bg-black/60 animate-fade-in fixed inset-0 z-10 mx-auto p-4"
+      className="animate-fade-in fixed inset-0 z-10 mx-auto bg-black/60 p-4"
       onClick={onClick}
     >
       <div

@@ -41,6 +41,7 @@ const config: Config = {
       12: '12rem',
       14: '14rem',
       16: '16rem',
+      18: '18rem',
       20: '20rem',
       24: '24rem',
       28: '28rem',
@@ -115,6 +116,7 @@ const config: Config = {
       blue: '#6EAED6',
       black: '#000000',
       white: '#FFFFFF',
+      transparent: 'transparent',
     },
     borderWidth: {
       DEFAULT: '1rem',

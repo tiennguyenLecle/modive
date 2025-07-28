@@ -10,6 +10,7 @@ type ProgressBarProps = ComponentProps<'div'> & {
 export default function ProgressBar({
   percentage,
   className,
+  ...rest
 }: ProgressBarProps) {
   return (
     <div
@@ -17,16 +18,17 @@ export default function ProgressBar({
         'relative flex h-24 w-full items-center overflow-hidden rounded-16 bg-gray-80 p-3',
         className
       )}
+      {...rest}
     >
       <div
-        className="text-white flex h-full items-center justify-center rounded-16 font-semibold transition-all duration-500"
+        className="flex h-full items-center justify-center rounded-16 font-semibold text-white transition-all duration-500"
         style={{
           width: `${percentage}%`,
           background: 'linear-gradient(90deg, #FF627B, #FFB559)',
         }}
       >
         {percentage > 10 && (
-          <p className="text-white text-12 font-semibold">{percentage}%</p>
+          <p className="text-12 font-semibold text-white">{percentage}%</p>
         )}
       </div>
       {percentage <= 10 && (

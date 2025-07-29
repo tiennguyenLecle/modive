@@ -114,7 +114,7 @@ const config: Config = {
       oat: '#FFF4E0',
       red: '#FF4D4F',
       blue: '#6EAED6',
-      black: '#000000',
+      black: 'rgb(var(--black) / <alpha-value>)',
       white: '#FFFFFF',
       transparent: 'transparent',
     },
@@ -126,7 +126,6 @@ const config: Config = {
       8: '8rem',
     },
     borderRadius: {
-      DEFAULT: '1rem',
       min: '2rem',
       s: '4rem',
       m: '8rem',

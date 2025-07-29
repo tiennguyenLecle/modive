@@ -52,5 +52,10 @@
     "info_number": "Business Registration Number: { phoneNumber }",
     "info_address": "Address: { address }",
     "copyright": "© { year } Modive. All rights reserved."
+  },
+  "components": {
+    "chapter": {
+      "seeMore": "Chapter initialization"
+    }
   }
 }

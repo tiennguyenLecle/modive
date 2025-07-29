@@ -5,6 +5,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import 'antd/dist/reset.css';
 import '@/styles/globals.css';
 
+import HomeHeader from '@/components/HomeHeader';
 import Navigation from '@/components/Navigation/Navigation';
 import AntdRegistry from '@/lib/antd-registry';
 import { type Locale } from '@/lib/locale';
@@ -132,9 +133,10 @@ export default async function LocaleLayout({
         <ThemeRegistry>
           <NextIntlClientProvider messages={messages}>
             <AntdRegistry>
-              <div className="flex h-full flex-col">
-                {children}
-                <Navigation className="mt-auto" />
+              <div className="flex h-full flex-col overflow-auto">
+                <HomeHeader />
+                <div className="my-56">{children}</div>
+                <Navigation className="fixed bottom-0 left-0 right-0 z-50 bg-gray-100" />
               </div>
               {modal}
             </AntdRegistry>

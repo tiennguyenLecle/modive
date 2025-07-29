@@ -1,5 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 
+import Banner2 from '@/assets/images/banner2.svg';
+import { Recommendation } from '@/components/Recommendation';
+
 export const generateMetadata = async ({
   params: { locale },
 }: {
@@ -16,8 +19,12 @@ export default async function Home() {
   const t = await getTranslations();
 
   return (
-    <div className="container flex flex-1 flex-col items-center justify-center">
-      <h1 className="mb-4 text-20 font-bold">Home Page</h1>
+    <div>
+      <Banner2 className="aspect-[9/5] w-full" />
+      <div className="flex flex-col gap-12 bg-gray-100 py-16">
+        <Recommendation.Container />
+        <Recommendation.Container />
+      </div>
     </div>
   );
 }

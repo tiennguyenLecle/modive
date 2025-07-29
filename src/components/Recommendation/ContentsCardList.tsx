@@ -4,9 +4,12 @@ import ContentsCard from '@/components/Recommendation/ContentsCard';
 
 type ContentsCardListProps = ComponentProps<'div'> & {};
 
-const ContentsCardList = ({}: ContentsCardListProps) => {
+const ContentsCardList = ({ ...rest }: ContentsCardListProps) => {
   return (
-    <div className="no-scrollbar flex items-start gap-12 overflow-x-auto">
+    <div
+      className="no-scrollbar flex items-start gap-12 overflow-x-auto"
+      {...rest}
+    >
       <ContentsCard />
       <ContentsCard />
       <ContentsCard />

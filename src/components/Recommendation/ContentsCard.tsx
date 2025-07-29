@@ -4,18 +4,18 @@ import Image from 'next/image';
 
 type ContentsCardProps = ComponentProps<'div'> & {};
 
-const ContentsCard = ({}: ContentsCardProps) => {
+const ContentsCard = ({ ...rest }: ContentsCardProps) => {
   const t = useTranslations('contentsCard');
 
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-12" {...rest}>
       <div className="h-[80px] w-[140px] rounded-4 border border-gray-80 bg-gray-100">
         <Image
           src="https://picsum.photos/seed/4/140/80"
           alt="Contents Card"
           width={140}
           height={80}
-          className="object-cover"
+          className="aspect-[7/4] object-cover"
           loading="lazy"
         />
       </div>

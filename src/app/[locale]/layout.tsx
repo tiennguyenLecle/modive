@@ -134,9 +134,9 @@ export default async function LocaleLayout({
           <NextIntlClientProvider messages={messages}>
             <AntdRegistry>
               <div className="flex h-full flex-col overflow-auto">
-                <HomeHeader />
+                <HomeHeader className="mx-auto w-[360rem]" />
                 <div className="my-56">{children}</div>
-                <Navigation className="fixed bottom-0 left-0 right-0 z-50 bg-gray-100" />
+                <Navigation className="fixed bottom-0 left-0 right-0 z-50 mx-auto w-[360rem] bg-gray-100" />
               </div>
               {modal}
             </AntdRegistry>

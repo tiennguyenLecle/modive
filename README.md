@@ -23,7 +23,17 @@ Follow these steps to get the project up and running on your local machine.
 
     **Important:** Contact **"tiennguyen"** to get the required environment variable values for your `.env` file. The application may not work correctly without proper environment configuration.
 
-3.  **Run the Development Server:**
+3.  **Setup VS Code Settings:**
+    This project includes recommended VS Code settings for consistency. To use them, create a local copy of the settings file.
+
+    ```bash
+    # Copy the example settings file
+    cp .vscode/settings.json.example .vscode/settings.json
+    ```
+
+    Your local `.vscode/settings.json` is ignored by Git, so you can customize it as needed without affecting other collaborators.
+
+4.  **Run the Development Server:**
     Start the Next.js development server.
 
     ```bash

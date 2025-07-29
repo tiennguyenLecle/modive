@@ -57,5 +57,8 @@
     "chapter": {
       "seeMore": "챕터 초기화"
     }
+  },
+  "contentsCard": {
+    "conversation": "대화가능"
   }
 }

@@ -57,5 +57,8 @@
     "chapter": {
       "seeMore": "Chapter initialization"
     }
+  },
+  "contentsCard": {
+    "conversation": "Conversation"
   }
 }

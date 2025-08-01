@@ -2,86 +2,225 @@
 
 This directory contains the foundational logic for making API requests throughout the application. It's designed to be robust, maintainable, and easy to use, providing a clear distinction between different types of API calls.
 
+## 📁 Directory Structure
+
+```
+src/lib/api/
+├── classes/                    # API class definitions (pure logic)
+│   ├── base-api.class.ts      # Base API client class
+│   └── chat-api.class.ts      # Chat API client class
+├── instances/                  # Configured singleton instances
+│   ├── client-safe.ts         # Safe for client & server use
+│   └── server-only.ts         # Server-only instances
+├── middleware/                 # Request/response middleware
+│   └── validators.ts          # HOF validation functions
+├── index.ts                   # Client-safe exports
+├── server-only.ts             # Server-only exports
+└── README.md                  # This documentation
+```
+
 ## Core Concepts
 
-Our API communication is built on a **Factory Pattern**. Instead of a single, monolithic API instance, we have a function that creates configured API clients. This allows us to generate multiple clients for different purposes with varying configurations (e.g., different base URLs, headers, or authentication methods).
+Our API communication follows a **classes + instances** pattern with clear separation between:
 
-### Files
+- **Classes**: Pure logic without configuration or environment dependencies
+- **Instances**: Configured singletons with specific settings and environment variables
+- **Client-safe vs Server-only**: Clear boundaries preventing accidental exposure
 
-- **`factory.ts`**: This is the heart of the module. It exports a single function, `createApiClient(baseUrl)`, which is a factory for generating new API clients. It handles all the low-level logic of `fetch`, including setting headers, processing `FormData` vs. `JSON` bodies, and standardized error handling.
+### 🎯 **Key Benefits:**
 
-- **`instances.ts`**: This file uses the factory to create and export the specific, pre-configured API client instances that the application will use. This is the central point for defining the different API "targets" our app needs to communicate with.
+- **🔧 Flexibility**: Create multiple instances of same class with different configs
+- **🧪 Testability**: Test classes independently without environment setup
+- **🔒 Security**: Clear separation of sensitive vs public code
+- **📝 Maintainability**: Organized structure with single responsibility
 
-- **`index.ts`**: This is a barrel file that re-exports the essential parts of the module (`createApiClient`, `externalApi`, `internalApi`). This provides a clean, single entry point for other parts of the application to import from (`import { ... } from '@/lib/api'`).
+## Available APIs
 
-## Available Instances
+### 🌐 Client-Safe APIs (from `@/lib/api`)
 
-We export two primary instances from `instances.ts`:
+#### 1. `internal`
 
-### 1. `externalApi`
+- **Purpose**: Communicate with our Next.js API routes (BFF pattern)
+- **Base URL**: `''` (relative requests)
+- **Usage**: Safe in both Client and Server Components
+- **Best for**: Client Components making API calls
 
-- **Purpose**: To communicate directly with our main, external backend API.
-- **`baseURL`**: `process.env.API_BASE_URL`
-- **Usage Context**: This client **must** be used in **server-side environments only** (i.e., Server Components, API Routes, and other server-side functions like `generateStaticParams`). This is because it may require server-only environment variables (like API keys) and makes direct calls to the external API endpoint.
+```typescript
+import { internal } from '@/lib/api';
 
-### 2. `internalApi`
+const data = await NextApi.get('/api/users');
+```
 
-- **Purpose**: To communicate with our own application's API routes (the "Backend for Frontend" or proxy layer).
-- **`baseURL`**: `''` (empty string)
-- **Usage Context**: This client should be used primarily in **Client Components**. It makes relative requests to our own server (e.g., `/api/users`), which then acts as a proxy to call the external API. This pattern is crucial for security, as it prevents exposing sensitive API keys or complex logic to the browser.
+#### 2. `BaseApiClient`
 
-## Usage Example
+- **Purpose**: Base class for creating custom API clients
+- **Usage**: Extend this class for new API integrations
 
-### In a Server Component
+### 🔒 Server-Only APIs (from `@/lib/api/server-only`)
+
+#### 1. `chatApi`
+
+- **Purpose**: Direct communication with external Chat API
+- **Base URL**: `process.env.DIT_API_BASE_URL`
+- **Usage**: Server Components and API Routes only
+- **Security**: Contains API keys and sensitive logic
+
+```typescript
+import { chatApi } from '@/lib/api/server-only';
+
+const sessions = await ChatApi.searchSessionsByUserId('123');
+```
+
+## 📖 Usage Examples
+
+### 🖥️ In Server Components (Recommended)
 
 ```tsx
-// app/products/[id]/page.tsx
-import { externalApi } from '@/lib/api';
+// app/chat/page.tsx
+import { chatApi } from '@/lib/api/server-only';
 
-async function ProductPage({ params }) {
-  // Direct call to the real API on the server
-  const product = await externalApi.get(`/products/${params.id}`);
-  return <div>{product.name}</div>;
+export default async function ChatPage() {
+  // ✅ Direct API call - optimal performance
+  const sessions = await ChatApi.searchSessionsByUserId('user-123');
+
+  return (
+    <div>
+      {sessions.map(session => (
+        <div key={session.id}>{session.title}</div>
+      ))}
+    </div>
+  );
 }
 ```
 
-### In a Client Component
+### 🌐 In Client Components
 
 ```tsx
-// components/search-bar.tsx
+// components/chat-list.tsx
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { internalApi } from '@/lib/api';
+import { internal } from '@/lib/api';
 
-function SearchBar() {
-  const [results, setResults] = useState([]);
+export function ChatList() {
+  const [sessions, setSessions] = useState([]);
 
-  const handleSearch = async query => {
-    // Call to our Next.js API route proxy
-    const data = await internalApi.get(`/api/search?q=${query}`);
-    setResults(data);
-  };
+  useEffect(() => {
+    const fetchSessions = async () => {
+      // ✅ Call via Next.js API route (secure)
+      const data = await NextApi.get('/api/session?userId=123');
+      setSessions(data);
+    };
 
-  // ...
+    fetchSessions();
+  }, []);
+
+  return (
+    <div>
+      {sessions.map(session => (
+        <div key={session.id}>{session.title}</div>
+      ))}
+    </div>
+  );
 }
 ```
 
-### In an API Route (Proxy)
+### 🛣️ In API Routes (Proxy Pattern)
 
 ```ts
-// app/api/search/route.ts
+// app/api/session/route.ts
 import { NextResponse } from 'next/server';
 
-import { externalApi } from '@/lib/api';
+import { chatApi } from '@/lib/api/server-only';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const query = searchParams.get('q');
+  const userId = searchParams.get('userId');
 
-  // The proxy route uses the externalApi client to call the real API
-  const results = await externalApi.get(`/search?q=${query}`);
-  return NextResponse.json(results);
+  try {
+    // ✅ Direct external API call from server
+    const sessions = await ChatApi.searchSessionsByUserId(userId);
+    return NextResponse.json(sessions);
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to fetch sessions' },
+      { status: 500 }
+    );
+  }
 }
+```
+
+## 🚀 Performance Guidelines
+
+| Context              | Recommended        | Performance | Security  |
+| -------------------- | ------------------ | ----------- | --------- |
+| **Client Component** | `NextApi.get()`    | ✅ Good     | ✅ Secure |
+| **Server Component** | `ChatApi.method()` | 🚀 Best     | ✅ Secure |
+| **API Route**        | `ChatApi.method()` | 🚀 Best     | ✅ Secure |
+
+## 🔄 Migration from Old Structure
+
+```typescript
+// ❌ Old imports
+import { internalApi } from '@/lib/api';
+import { chatApi } from '@/lib/api/server';
+
+// ✅ New imports
+import { internal } from '@/lib/api';
+import { chatApi } from '@/lib/api/server-only';
+```
+
+## 🔧 Extending the System
+
+### Creating New API Clients
+
+**1. Create a new class:**
+
+```typescript
+// classes/payment-api.class.ts
+import { BaseApiClient } from './base-api.class';
+
+export class PaymentApiClient extends BaseApiClient {
+  private apiKey: string;
+
+  constructor(baseUrl: string, apiKey: string) {
+    super(baseUrl, {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    });
+    this.apiKey = apiKey;
+  }
+
+  public processPayment(amount: number, token: string) {
+    return this.post('/payments', { amount, token });
+  }
+}
+```
+
+**2. Create instances:**
+
+```typescript
+// instances/server-only.ts
+import { PaymentApiClient } from '../classes/payment-api.class';
+
+export const paymentApi = new PaymentApiClient(
+  process.env.PAYMENT_API_URL!,
+  process.env.PAYMENT_API_KEY!
+);
+```
+
+**3. Export appropriately:**
+
+```typescript
+// server-only.ts
+export * from './instances/server-only'; // Will include paymentApi
+```
+
+### Creating Multiple Instances
+
+```typescript
+// instances/server-only.ts
+export const chatApiProd = new ChatApiClient(); // Uses prod env vars
+export const chatApiDev = new ChatApiClient(); // Could use different config
 ```

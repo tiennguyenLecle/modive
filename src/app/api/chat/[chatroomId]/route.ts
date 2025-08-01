@@ -1,29 +1,38 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
-import { chatApi, pipe, withValidation, type HandlerContext } from '@/lib/api';
+import {
+  pipe,
+  withValidatedBody,
+  withValidatedParams,
+  type HandlerContext,
+} from '@/lib/api';
+import { ChatApi } from '@/lib/api/server';
 
+// --- Common definitions ---
+
+// Schema to validate the `chatroomId` from the URL path
+const paramsSchema = z.object({
+  chatroomId: z.uuid({ message: 'Invalid chatroom ID format.' }),
+});
+type ChatRoomParams = z.infer<typeof paramsSchema>;
+
+// Extend the context to make TypeScript aware of `validatedParams`
 interface ChatRoomHandlerContext extends HandlerContext {
-  params: {
-    chatroomId: string;
-  };
+  validatedParams: ChatRoomParams;
 }
 
 // --- GET MESSAGES ---
 
 async function getMessagesHandler(
-  request: NextRequest,
+  _request: NextRequest,
   context: ChatRoomHandlerContext
 ) {
   try {
-    const { chatroomId } = context.params;
-    const messages = await chatApi.getMessages(chatroomId);
+    const { chatroomId } = context.validatedParams;
+    const messages = await ChatApi.getMessages(chatroomId);
     return NextResponse.json(messages);
   } catch (error: any) {
-    console.error(
-      `[API /chat/${context.params.chatroomId}] Failed to fetch messages:`,
-      error.message
-    );
     return NextResponse.json(
       { error: { message: 'Failed to retrieve chat messages.' } },
       { status: 502 }
@@ -31,7 +40,8 @@ async function getMessagesHandler(
   }
 }
 
-export const GET = getMessagesHandler;
+// Validate the URL parameter before executing the handler
+export const GET = pipe(withValidatedParams(paramsSchema))(getMessagesHandler);
 
 // --- CREATE A NEW MESSAGE ---
 
@@ -42,19 +52,15 @@ const createMessageBodySchema = z.object({
 type CreateMessageBody = z.infer<typeof createMessageBodySchema>;
 
 async function createMessageHandler(
-  request: NextRequest,
+  _request: NextRequest,
   context: ChatRoomHandlerContext
 ) {
   try {
-    const { chatroomId } = context.params;
+    const { chatroomId } = context.validatedParams;
     const { senderId, text } = context.validatedBody as CreateMessageBody;
-    const newMessage = await chatApi.createMessage(chatroomId, senderId, text);
+    const newMessage = await ChatApi.createMessage(chatroomId, senderId, text);
     return NextResponse.json(newMessage, { status: 201 });
   } catch (error: any) {
-    console.error(
-      `[API /chat/${context.params.chatroomId}] Failed to create message:`,
-      error.message
-    );
     return NextResponse.json(
       { error: { message: 'Failed to create chat message.' } },
       { status: 502 }
@@ -62,6 +68,8 @@ async function createMessageHandler(
   }
 }
 
+// Chain multiple HOFs: first validate params, then validate body
 export const POST = pipe(
-  withValidation(createMessageBodySchema, { target: 'body' })
+  withValidatedParams(paramsSchema),
+  withValidatedBody(createMessageBodySchema)
 )(createMessageHandler);

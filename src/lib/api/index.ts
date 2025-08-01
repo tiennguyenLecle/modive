@@ -1,3 +1,4 @@
-export * from './base-client';
-export * from './clients';
-export * from './hof';
+// Core functionality, safe for all environments
+export * from './classes/base';
+export * from './middleware/validators';
+export * from './instances/NextApi';

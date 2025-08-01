@@ -57,5 +57,13 @@
     "chapter": {
       "seeMore": "챕터 초기화"
     }
+  },
+  "contentsCard": {
+    "conversation": "대화가능"
+  },
+  "introduction": {
+    "chat": "채팅하기",
+    "personal_relationship": "인물관계도",
+    "chapter_entrance": "챕터 입장"
   }
 }

@@ -57,5 +57,13 @@
     "chapter": {
       "seeMore": "Chapter initialization"
     }
+  },
+  "contentsCard": {
+    "conversation": "Conversation"
+  },
+  "introduction": {
+    "chat": "Chat",
+    "personal_relationship": "Personal relationship",
+    "chapter_entrance": "Chapter entrance"
   }
 }

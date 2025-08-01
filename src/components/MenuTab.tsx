@@ -1,6 +1,11 @@
 'use client';
 
-import React, { ComponentProps, useRef, useState } from 'react';
+import React, {
+  ComponentProps,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { motion } from 'framer-motion';
 
 import { cx } from '@/utils/method';
@@ -24,14 +29,30 @@ const MenuTab: React.FC<MenuTabProps> = ({
   ...props
 }) => {
   const [activeTab, setActiveTab] = useState(defaultActiveKey ?? tabs[0]);
+  const [indicatorStyle, setIndicatorStyle] = useState({ width: 0, left: 0 });
+
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const updateIndicator = () => {
+    const currentTab =
+      tabRefs.current[tabs.findIndex(tab => tab.key === activeTab)];
+    if (currentTab) {
+      setIndicatorStyle({
+        width: currentTab.clientWidth,
+        left: currentTab.offsetLeft,
+      });
+    }
+  };
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
     onTabChange?.(tab);
   };
 
-  const activeIndex = tabs.findIndex(tab => tab.key === activeTab);
+  // Update on activeTab change and when refs are ready
+  useLayoutEffect(() => {
+    updateIndicator();
+  }, [activeTab, tabs]);
 
   return (
     <div className="w-full bg-white p-12">
@@ -55,17 +76,11 @@ const MenuTab: React.FC<MenuTabProps> = ({
         </div>
         <motion.div
           className="absolute bottom-0 h-2 bg-primary"
-          layout
+          animate={indicatorStyle}
           transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-          style={{
-            width: tabRefs.current[activeIndex]?.clientWidth ?? 0,
-            left: tabRefs.current[activeIndex]?.offsetLeft ?? 0,
-          }}
         />
       </div>
-      <div className="pt-8">
-        {tabs.find(tab => tab.key === activeTab)?.children}
-      </div>
+      <div>{tabs.find(tab => tab.key === activeTab)?.children}</div>
     </div>
   );
 };

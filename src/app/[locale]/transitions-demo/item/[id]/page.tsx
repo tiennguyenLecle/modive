@@ -19,7 +19,7 @@ export default function ItemDetailsPage({
       <div className="mt-8">
         <Link
           href={`/transitions-demo/item/${params.id}/reviews`}
-          className="bg-blue-500 text-white hover:bg-blue-600 rounded px-4 py-2"
+          className="bg-blue-500 hover:bg-blue-600 rounded px-4 py-2 text-white"
         >
           Show Reviews (Local Modal)
         </Link>

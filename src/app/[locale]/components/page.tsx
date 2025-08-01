@@ -1,4 +1,7 @@
 import Chapter from '@/components/Chapter';
+import RecommendationContainer from '@/components/Recommendation/Container';
+import ContentsCard from '@/components/Recommendation/ContentsCard';
+import ContentsCardList from '@/components/Recommendation/ContentsCardList';
 
 export default function ComponentsPage() {
   return (
@@ -30,6 +33,8 @@ export default function ComponentsPage() {
           { key: '2', title: 'Episode 2', url: '#' },
         ]}
       />
+      <h2>Recommendation</h2>
+      <RecommendationContainer />
     </div>
   );
 }

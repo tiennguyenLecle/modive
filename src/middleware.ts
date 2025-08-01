@@ -84,7 +84,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Matcher to run middleware on all paths except for specific assets.
-  // This new matcher prevents i18n routing from interfering with static files.
-  matcher: ['/((?!api|_next/static|_next/image|.*\\..*).*)'],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
 };

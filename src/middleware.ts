@@ -1,4 +1,8 @@
 /**
+ * For a detailed explanation of this middleware, its purpose, and the logic behind it,
+ * please see the official documentation.
+ * @see /docs/middleware.md
+ *
  * Next.js Middleware - Central request processing hub with next-intl
  *
  * This middleware handles multiple concerns in a specific order:
@@ -31,7 +35,6 @@ const intlMiddleware = createMiddleware({
  */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  console.log('[MIDDLEWARE] === START ===');
   console.log('[MIDDLEWARE] Processing path:', pathname);
 
   // 1. Locale detection, redirection, and cookie setting for the root path
@@ -59,25 +62,16 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // 2. Internationalization - This returns a response with locale information
-  console.log('[MIDDLEWARE] Calling intlMiddleware...');
+  // 2. Internationalization - Make sure the valid locale is set in the URL
   const response = intlMiddleware(request);
-  console.log('[MIDDLEWARE] IntlMiddleware processed');
 
-  // If intl middleware returns a redirect, let it happen immediately
   if (response.headers.get('location')) {
-    console.log(
-      '[MIDDLEWARE] Intl middleware redirect to:',
-      response.headers.get('location')
-    );
     return response;
   }
 
   // 3. Authentication - Pass the response from intl to Supabase
   // This ensures the locale context is not lost.
-  console.log('[MIDDLEWARE] Calling auth middleware...');
   const authResponse = await updateSession(request, response);
-  console.log('[MIDDLEWARE] Auth middleware processed');
 
   // The `updateSession` now returns the modified response.
   return authResponse;

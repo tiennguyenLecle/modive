@@ -137,7 +137,12 @@ A brief overview of the key directories in this project:
 - **/src/styles**: Global styles and font configurations.
 - **/messages**: Contains JSON files for translations used by `next-intl`.
 
-- **/src/lib/api**: Contains our API client architecture for communicating with external and internal APIs. For a detailed explanation, please see the [API Client Documentation](./src/lib/api/README.md).
+## Architectural Notes
+
+This project contains important architectural patterns that are documented to help developers understand key decisions.
+
+- **Middleware**: Handles request processing for internationalization and authentication. For a detailed explanation, see the [Middleware Documentation](./docs/middleware.md).
+- **API Client**: Manages communication with external and internal APIs. For a detailed explanation, please see the [API Client Documentation](./src/lib/api/README.md).
 
 ---
 

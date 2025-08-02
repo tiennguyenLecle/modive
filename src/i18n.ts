@@ -11,13 +11,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
   // if it's not. This is safer than calling notFound() directly,
   // especially for cases like search engine bots or crawlers.
   if (!locale || !SUPPORTED_LOCALES.includes(locale as Locale)) {
-    console.warn(
-      `[i18n] Invalid or missing locale found: "${locale}". Falling back to default locale '${DEFAULT_LOCALE}'.`
-    );
     locale = DEFAULT_LOCALE;
   }
-
-  console.log(`[i18n] Loading messages for locale: ${locale}`);
 
   return {
     locale,

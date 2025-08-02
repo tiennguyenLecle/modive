@@ -8,7 +8,7 @@
 export const SUPPORTED_LOCALES = ['en', 'kr'] as const;
 export const DEFAULT_LOCALE = 'en';
 
-// Cookie configuration với COOKIE_ prefix
+// Cookie configuration with COOKIE_ prefix
 export const COOKIE_LOCALE_NAME = 'preferred-locale';
 export const COOKIE_LOCALE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year in seconds
 
@@ -30,7 +30,7 @@ export const LOCALE_TO_RFC5646: Record<string, string> = {
   kr: 'ko-KR',
 };
 
-// Locale mapping từ standard Accept-Language codes to our app codes
+// Locale mapping from standard Accept-Language codes to our app codes
 export const LOCALE_MAPPING: Record<string, string> = {
   ko: 'kr', // Korean: ko-KR, ko -> kr
   kr: 'kr', // Korean: direct mapping

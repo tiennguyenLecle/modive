@@ -1,4 +1,77 @@
+import type { Metadata } from 'next';
+
 import { LOCALE_TO_RFC5646 } from '@/lib/locale';
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+/**
+ * Default metadata for the entire application.
+ * This is merged with page-specific metadata in the root layout.
+ */
+export const defaultMetadata: Metadata = {
+  applicationName: 'Modive',
+  authors: [{ name: 'Modive Team' }],
+  creator: 'Modive Team',
+  publisher: 'Modive',
+  generator: 'Next.js',
+  referrer: 'origin-when-cross-origin',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL(baseUrl),
+  alternates: {
+    canonical: '/',
+    languages: {
+      en: '/en',
+      kr: '/kr',
+    },
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'Modive',
+    images: [
+      {
+        url: '/android-chrome-512x512.png',
+        width: 512,
+        height: 512,
+        alt: 'Modive Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/android-chrome-512x512.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  manifest: '/site.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', type: 'image/x-icon' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'default',
+    'apple-mobile-web-app-title': 'Modive',
+  },
+};
 
 // Helper functions are kept private to this module and are not exported.
 function getWebsiteSchema(locale: string, baseUrl: string) {

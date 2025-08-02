@@ -1,29 +1,15 @@
-import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
-import {
-  pipe,
-  withValidatedBody,
-  withValidatedQuery,
-  type HandlerContext,
-} from '@/lib/api';
+import { pipe, withValidatedBody, type HandlerContext } from '@/lib/api';
+import { withAuth } from '@/lib/api/middleware/auth';
 import { ChatApi } from '@/lib/api/server';
-import { COOKIE_USER_ID } from '@/utils/constants';
 
 // --- GET SESSIONS ---
 
 async function getHandler(_request: NextRequest, context: HandlerContext) {
   try {
-    const userId = cookies().get(COOKIE_USER_ID)?.value;
-    console.log('userId', userId);
-    if (!userId) {
-      return NextResponse.json(
-        { error: { message: 'Unauthorized' } },
-        { status: 401 }
-      );
-    }
-
+    const userId = context.session?.user?.id as string;
     const sessions = await ChatApi.searchSessionsByUserId(userId);
     return NextResponse.json(sessions);
   } catch (error: any) {
@@ -35,7 +21,7 @@ async function getHandler(_request: NextRequest, context: HandlerContext) {
   }
 }
 
-export const GET = getHandler;
+export const GET = pipe(withAuth(getHandler));
 
 // --- CREATE A NEW SESSION ---
 

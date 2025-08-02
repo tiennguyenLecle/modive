@@ -12,7 +12,7 @@ export function pipe(...functions: Function[]) {
 
 export interface HandlerContext {
   params?: { [key: string]: string | string[] | undefined };
-  user?: Session['user'];
+  session?: Session;
   validatedBody?: any;
   validatedQuery?: any;
   validatedParams?: any;

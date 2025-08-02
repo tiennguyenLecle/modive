@@ -1,3 +1,4 @@
+import type { Session } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { z, ZodError, type ZodIssue } from 'zod';
 
@@ -11,10 +12,10 @@ export function pipe(...functions: Function[]) {
 
 export interface HandlerContext {
   params?: { [key: string]: string | string[] | undefined };
+  user?: Session['user'];
   validatedBody?: any;
   validatedQuery?: any;
   validatedParams?: any;
-  // F.E: session?: Session
 }
 
 export type ApiHandler = (

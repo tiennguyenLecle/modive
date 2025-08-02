@@ -40,26 +40,37 @@ export class BaseApiClient {
     url: string,
     options: RequestOptions = {}
   ): Promise<T> {
+    // Start with a copy of the default headers
     const headers = new Headers(this.defaultHeaders);
+
+    let bodyToSend: BodyInit | null = null;
+
+    if (options.body) {
+      if (options.body instanceof FormData) {
+        // For FormData, let fetch set the Content-Type header automatically
+        bodyToSend = options.body;
+      } else {
+        // For JSON, explicitly set the Content-Type and stringify the body
+        headers.set('Content-Type', 'application/json');
+        bodyToSend = JSON.stringify(options.body);
+      }
+    }
+
+    // Merge any per-request headers, overwriting defaults if necessary
     if (options.headers) {
       new Headers(options.headers).forEach((value, key) => {
         headers.set(key, value);
       });
     }
 
-    let bodyToSend: BodyInit | null = null;
-    if (options.body) {
-      if (options.body instanceof FormData) {
-        bodyToSend = options.body;
-      } else {
-        bodyToSend = JSON.stringify(options.body);
-        if (!headers.has('Content-Type')) {
-          headers.set('Content-Type', 'application/json');
-        }
-      }
-    }
+    console.log(
+      'Headers (as plain object):',
+      Object.fromEntries(headers.entries())
+    );
 
     const fullUrl = `${this.baseUrl}${url}`;
+
+    console.log('fullUrl', fullUrl);
 
     try {
       const response = await fetch(fullUrl, {

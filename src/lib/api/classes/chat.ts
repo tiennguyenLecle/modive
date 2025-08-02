@@ -14,6 +14,7 @@ export class ChatApiClient extends BaseApiClient {
 
     super(CHAT_API_BASE_URL, {
       'x-api-key': CHAT_API_KEY,
+      Accept: 'application/json',
     });
 
     this.universeId = CHAT_UNIVERSE_ID;
@@ -21,7 +22,7 @@ export class ChatApiClient extends BaseApiClient {
 
   // --- Utility Methods for Chat API ---
   public searchSessionsByUserId(userId: string) {
-    const url = `/sessions/search?universeId=${this.universeId}&userId=${userId}`;
+    const url = `/sessions/search?universeId=${this.universeId}&endUserId=${userId}`;
     return this.get(url);
   }
 

@@ -65,5 +65,9 @@
     "chat": "Chat",
     "personal_relationship": "Personal relationship",
     "chapter_entrance": "Chapter entrance"
+  },
+  "chat": {
+    "chapter": "Chapter",
+    "generalization": "Generalization"
   }
 }

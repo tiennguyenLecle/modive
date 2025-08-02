@@ -91,13 +91,13 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - .well-known (metadata files)
-     * - All files with extensions (e.g., .ico, .png, .svg)
-     * - site.webmanifest (PWA manifest)
-     * - robots.txt (robots file)
-     * - sitemap.xml (sitemap file)
+     * - SEO files (robots.txt, sitemap.xml)
+     * - All files with extensions (e.g., .ico, .png, .svg, .js)
+     * - PWA files (site.webmanifest)
      *
-     * This ensures that static assets and metadata are not processed by the i18n middleware.
+     * This ensures that static assets, metadata, and service workers
+     * are not processed by the i18n middleware.
      */
-    '/((?!api|_next/static|_next/image|\\.well-known|.*\\.ico$|.*\\.png$|.*\\.svg$|site.webmanifest|robots.txt|sitemap.xml).*)',
+    '/((?!api|_next/static|_next/image|\\.well-known|robots\\.txt|sitemap\\.xml|.*\\.(?:ico|png|svg|js)$|site\\.webmanifest).*)',
   ],
 };

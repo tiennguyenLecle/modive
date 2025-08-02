@@ -90,8 +90,14 @@ export const config = {
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * - .well-known (metadata files)
+     * - All files with extensions (e.g., .ico, .png, .svg)
+     * - site.webmanifest (PWA manifest)
+     * - robots.txt (robots file)
+     * - sitemap.xml (sitemap file)
+     *
+     * This ensures that static assets and metadata are not processed by the i18n middleware.
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|site.webmanifest).*)',
+    '/((?!api|_next/static|_next/image|\\.well-known|.*\\.ico$|.*\\.png$|.*\\.svg$|site.webmanifest|robots.txt|sitemap.xml).*)',
   ],
 };

@@ -25,7 +25,7 @@ export const defaultMetadata: Metadata = {
     canonical: '/',
     languages: {
       en: '/en',
-      kr: '/kr',
+      ko: '/ko',
     },
   },
   openGraph: {
@@ -80,7 +80,7 @@ function getWebsiteSchema(locale: string, baseUrl: string) {
     '@type': 'WebSite',
     name: 'Modive',
     description:
-      locale === 'kr'
+      locale === 'ko'
         ? '현대적인 AI 챗봇 애플리케이션'
         : 'A modern AI chatbot application',
     url: baseUrl,
@@ -110,7 +110,7 @@ function getWebApplicationSchema(locale: string, baseUrl: string) {
     '@type': 'WebApplication',
     name: 'Modive',
     description:
-      locale === 'kr'
+      locale === 'ko'
         ? '현대적인 AI 챗봇 애플리케이션'
         : 'A modern AI chatbot application',
     url: baseUrl,

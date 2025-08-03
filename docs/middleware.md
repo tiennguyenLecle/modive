@@ -1,57 +1,45 @@
-# Middleware Documentation (`src/middleware.ts`)
+# Middleware
 
-## Overview
+This document outlines the functionality and configuration of the Next.js middleware used in this project. The middleware is responsible for handling internationalization (i18n) and authentication/authorization before a request is completed.
 
-The `src/middleware.ts` file acts as a central request processing hub for the entire application. It is executed on almost every incoming request before it reaches a page. Its primary responsibilities are handled in a specific, sequential order:
+## File Location
 
-1.  **Internationalization (i18n)**: Manages locale detection, path-based routing (`/en`, `/kr`), and language-specific content delivery using `next-intl`.
-2.  **Authentication**: Manages user sessions and authentication state using Supabase.
+- `src/middleware.ts`
 
----
+## Core Responsibilities
 
-## Execution Logic: The `matcher`
+1.  **Internationalization (i18n)**: Handled by `next-intl`. It automatically detects the user's preferred locale and redirects them to the appropriate URL path (e.g., `/en/...` or `/ko/...`).
+2.  **Authentication & Authorization**: Handled by `next-auth` (Auth.js v5). It protects routes and manages user sessions.
 
-The middleware does not run on _every_ single request. The `config.matcher` object at the bottom of the file defines which paths are **excluded** from middleware processing. This is a crucial performance optimization to prevent the middleware from running on requests for static assets or API routes.
+## Execution Flow
 
-The following paths are currently **ignored** by the middleware:
+The middleware executes in a specific order for every incoming page request:
 
-- `/api/**`: All API routes.
-- `/_next/static/**`: Internal Next.js static files (JS, CSS).
-- `/_next/image/**`: Next.js image optimization files.
-- `/.well-known/**`: Standardized metadata files.
-- `/robots.txt` & `/sitemap.xml`: SEO-related files.
-- All files with a common asset extension (e.g., `.ico`, `.png`, `.svg`, `.js`). This includes favicons and service workers.
-- `/site.webmanifest`: The PWA manifest file.
+1.  **`next-auth` Wrapper**: The entire middleware is wrapped with the `auth()` function from `next-auth`. This makes the user's session information (`request.auth`) available throughout the middleware.
 
----
+2.  **`next-intl` Middleware**:
+    - It runs first to determine the correct locale for the request.
+    - **Locale Detection**: It uses its built-in mechanism (`localeDetection: true`) to parse the `Accept-Language` header from the browser and also checks for a `modive.locale` cookie.
+    - **Redirection**: If the URL is missing a locale prefix (e.g., a user visits `/login`), it performs a redirect to the detected locale's path (e.g., `/en/login`). This redirect is returned immediately, and no further middleware logic runs.
 
-## Processing Flow
+3.  **Authentication Logic**: If `next-intl` does not perform a redirect, the authentication logic proceeds:
+    - The user's authentication status is checked (`isLoggedIn = !!request.auth`).
+    - The current route is categorized as a `publicRoute`, `authRoute`, or `protectedRoute`.
 
-For any request that is _not_ excluded by the matcher, the `middleware` function executes the following steps in order:
+4.  **Route Protection**:
+    - **Auth Routes** (e.g., `/login`): If a logged-in user tries to access these pages, they are redirected to the application's home page (e.g., `/en`).
+    - **Protected Routes** (e.g., `/chat`): If an unauthenticated user tries to access a protected route, they are redirected to the `/login` page. The original path they intended to visit is saved as a `callbackUrl` query parameter.
+    - **Public Routes**: All users can access these routes without any redirection.
 
-### Step 1: Root Path Handling (First-Time Visitors)
+## Configuration (`matcher`)
 
-- **Trigger**: A user accesses the root URL (`/`) for the first time.
-- **Logic**:
-  1.  It checks for a previously saved language preference in the `COOKIE_LOCALE_NAME` cookie.
-  2.  If no cookie is found, it inspects the `Accept-Language` header from the user's browser to detect their preferred language.
-  3.  It then **redirects** the user to the appropriate localized path (e.g., from `/` to `/en`).
-  4.  Crucially, it **sets the language cookie** so that on subsequent visits, the user is taken directly to their preferred language path without this detection logic.
+The `config` object at the bottom of `src/middleware.ts` defines which paths the middleware should run on. It is configured to:
 
-### Step 2: Internationalization (i18n) via `next-intl`
+- **Run on all page routes.**
+- **Exclude specific paths** to improve performance and prevent conflicts:
+  - `/api/...` (API routes handle their own logic)
+  - `/_next/static/...` (Static assets)
+  - `/_next/image/...` (Image optimization files)
+  - Static files like `favicon.ico`, `robots.txt`, etc.
 
-- **Trigger**: Any page request that is not the root path.
-- **Logic**:
-  1.  The request is passed to the `intlMiddleware` provided by `next-intl`.
-  2.  This middleware is responsible for ensuring the URL format is correct. If a user accesses a path without a locale prefix (e.g., `/chat`), `intlMiddleware` will generate a redirect response to the correct, localized URL (e.g., `/en/chat`).
-  3.  The main middleware function includes a critical **"early exit"** check. If it detects a `location` header in the response from `intlMiddleware`, it immediately returns that redirect response without proceeding to the next step. This is an efficient way to enforce correct URL structure.
-
-### Step 3: Authentication via Supabase
-
-- **Trigger**: If and only if the previous steps did not result in a redirect.
-- **Logic**:
-  1.  The request (along with the response from the i18n middleware) is passed to Supabase's `updateSession` function.
-  2.  This function inspects the request for authentication cookies, validates the user's session, and refreshes the auth token if necessary.
-  3.  It ensures that by the time the request reaches the server-side components of a page, the user's authentication state is up-to-date and available.
-
-This sequential, step-by-step process ensures that URL structure and language are determined _before_ any authentication or page logic is executed, making the application robust and predictable.
+This ensures that the middleware only processes relevant page requests, leaving API calls and static assets untouched.

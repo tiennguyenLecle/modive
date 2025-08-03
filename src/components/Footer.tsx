@@ -7,7 +7,7 @@ export default function Footer() {
   const locale = useLocale();
 
   const address =
-    locale === 'kr'
+    locale === 'ko'
       ? '서울특별시 마포구 성암로 267 (03925)'
       : '267 (03925) Seongam-ro, Mapo-gu, Seoul';
 

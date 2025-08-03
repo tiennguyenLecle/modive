@@ -1,18 +1,18 @@
 import { expect, test } from '@playwright/test';
 
 import en from '../../messages/en.json';
-import kr from '../../messages/kr.json';
+import ko from '../../messages/ko.json';
 
 test.describe('Locale Detection', () => {
   // Scenario 1: User's browser prefers Korean.
   // Playwright will send the 'Accept-Language: ko-KR' header.
   test.use({ locale: 'ko-KR' });
 
-  test('should redirect a user with Korean locale to /kr', async ({ page }) => {
+  test('should redirect a user with Korean locale to /ko', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveURL('/kr');
+    await expect(page).toHaveURL('/ko');
     await expect(page).toHaveTitle(
-      `${kr.home_page.metadata.title} | ${kr.default.metadata.title}`
+      `${ko.home_page.metadata.title} | ${ko.default.metadata.title}`
     );
   });
 });

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import en from '../../messages/en.json';
-import kr from '../../messages/kr.json';
+import ko from '../../messages/ko.json';
 
 test.describe('Navigation and SEO', () => {
   const enDefaultTitle = en.default.metadata.title;
@@ -9,6 +9,8 @@ test.describe('Navigation and SEO', () => {
   test('should redirect to the default locale (en) and have correct title', async ({
     page,
   }) => {
+    // TODO: update this test case
+    // This test case failed because the /chat route was protected and direct to the login page
     // Navigate to the root URL
     await page.goto('/');
 
@@ -21,18 +23,18 @@ test.describe('Navigation and SEO', () => {
     );
   });
 
-  test('should show the Korean page for /kr and have correct title', async ({
+  test('should show the Korean page for /ko and have correct title', async ({
     page,
   }) => {
-    // Navigate directly to the /kr URL
-    await page.goto('/kr');
+    // Navigate directly to the /ko URL
+    await page.goto('/ko');
 
-    // Check that the URL is correctly /kr
-    await expect(page).toHaveURL('/kr');
+    // Check that the URL is correctly /ko
+    await expect(page).toHaveURL('/ko');
 
-    const koreanDefaultTitle = kr.default.metadata.title;
+    const koreanDefaultTitle = ko.default.metadata.title;
     await expect(page).toHaveTitle(
-      `${kr.home_page.metadata.title} | ${koreanDefaultTitle}`
+      `${ko.home_page.metadata.title} | ${koreanDefaultTitle}`
     );
   });
 
@@ -52,7 +54,7 @@ test.describe('Navigation and SEO', () => {
 
     // Find the hreflang tags in the head of the document
     const hreflangEn = await page.locator('link[hreflang="en"]');
-    const hreflangKr = await page.locator('link[hreflang="kr"]');
+    const hreflangKr = await page.locator('link[hreflang="ko"]');
 
     // Assert that the tags exist and have the correct href attributes
     await expect(hreflangEn).toHaveAttribute(
@@ -61,7 +63,7 @@ test.describe('Navigation and SEO', () => {
     );
     await expect(hreflangKr).toHaveAttribute(
       'href',
-      'http://localhost:3000/kr'
+      'http://localhost:3000/ko'
     );
   });
 });

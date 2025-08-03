@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { Navigation } from '@/components';
 import MenuTab from '@/components/MenuTab';
+import { ChatApi } from '@/lib/api/server';
 
 import ChatView from './ChatView';
 
@@ -19,6 +20,21 @@ export const generateMetadata = async ({
 
 export default async function Home() {
   const t = await getTranslations();
+
+  // let res;
+  // try {
+  //   // Attempt to log in to the external chat API
+  //   res = await ChatApi.login('tien3107@yopmail.com', 'Tien3107@1');
+  // } catch (error) {
+  //   // If the API call fails (e.g., wrong credentials, server down),
+  //   // log the error for debugging on the server side and set `res` to null.
+  //   // This prevents the page from crashing and allows the UI to handle the error state.
+  //   console.error(
+  //     '[ChatPage] Failed to log in to external chat API:',
+  //     JSON.stringify(error)
+  //   );
+  //   res = null;
+  // }
 
   return (
     <div className="flex h-full flex-col">
@@ -41,7 +57,7 @@ export default async function Home() {
           ]}
           defaultActiveKey="general"
         />
-        <ChatView />
+        <ChatView data={'abc'} />
       </div>
       <Navigation />
     </div>

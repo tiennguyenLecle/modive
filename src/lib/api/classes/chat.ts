@@ -1,3 +1,4 @@
+import { LoginResponse } from '../types/chat.types';
 import { BaseApiClient } from './base';
 
 export class ChatApiClient extends BaseApiClient {
@@ -21,18 +22,50 @@ export class ChatApiClient extends BaseApiClient {
   }
 
   // --- Utility Methods for Chat API ---
+
+  public login(email: string, password: string) {
+    return this.post<LoginResponse>('/auth/login', {
+      body: { email, password },
+    });
+  }
+
+  public register(name: string, email: string, password: string) {
+    return this.post('/auth/register', { body: { name, email, password } });
+  }
+
+  public resetPassword(email: string) {
+    return this.post('/auth/reset-password', { body: { email } });
+  }
+
+  public logout(accessToken: string) {
+    return this.post('/auth/logout', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+
+  public addMemberShip(userId: string, role: string) {
+    return this.post(`/universe/${this.universeId}/memberships`, {
+      body: {
+        userId,
+        role,
+      },
+    });
+  }
+
   public searchSessionsByUserId(userId: string) {
     const url = `/sessions/search?universeId=${this.universeId}&endUserId=${userId}`;
     return this.get(url);
   }
 
   public createSession(userId: string, initialMessage: string) {
-    const url = `/universe/${this.universeId}`;
-    const body = {
-      userId,
-      endUserMetadata: { message: initialMessage },
-    };
-    return this.post(url, body);
+    return this.post(`/universe/${this.universeId}`, {
+      body: {
+        userId,
+        endUserMetadata: { message: initialMessage },
+      },
+    });
   }
 
   public getMessages(chatroomId: string) {
@@ -40,9 +73,18 @@ export class ChatApiClient extends BaseApiClient {
   }
 
   public createMessage(chatroomId: string, senderId: string, text: string) {
-    const url = `/chats/chatroom/${chatroomId}`;
-    const body = { senderId, text };
-    return this.post(url, body);
+    return this.post(`/chats/chatroom/${chatroomId}`, {
+      body: { senderId, text },
+    });
+  }
+
+  public getChatbots() {
+    // If not provide universeId, it will return all chatbots from all universes
+    return this.get(`/chatbots?universeId=${this.universeId}`);
+  }
+
+  public getChatbotDetails(chatbotId: string) {
+    return this.get(`/chatbots/${chatbotId}`);
   }
 }
 

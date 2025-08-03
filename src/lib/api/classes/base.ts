@@ -63,14 +63,7 @@ export class BaseApiClient {
       });
     }
 
-    console.log(
-      'Headers (as plain object):',
-      Object.fromEntries(headers.entries())
-    );
-
     const fullUrl = `${this.baseUrl}${url}`;
-
-    console.log('fullUrl', fullUrl);
 
     try {
       const response = await fetch(fullUrl, {
@@ -90,16 +83,16 @@ export class BaseApiClient {
     return this.request<T>('GET', url, options);
   }
 
-  public post<T>(url: string, body: any, options?: RequestOptions) {
-    return this.request<T>('POST', url, { ...options, body });
+  public post<T>(url: string, options?: RequestOptions) {
+    return this.request<T>('POST', url, options);
   }
 
-  public put<T>(url: string, body: any, options?: RequestOptions) {
-    return this.request<T>('PUT', url, { ...options, body });
+  public put<T>(url: string, options?: RequestOptions) {
+    return this.request<T>('PUT', url, options);
   }
 
-  public patch<T>(url: string, body: any, options?: RequestOptions) {
-    return this.request<T>('PATCH', url, { ...options, body });
+  public patch<T>(url: string, options?: RequestOptions) {
+    return this.request<T>('PATCH', url, options);
   }
 
   public delete<T>(url: string, options?: RequestOptions) {

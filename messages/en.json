@@ -73,5 +73,26 @@
     "chat": "Chat",
     "personal_relationship": "Personal relationship",
     "chapter_entrance": "Chapter entrance"
+  },
+  "page_title": {
+    "/my-page": "My page",
+    "/my-page/my-information": "My information"
+  },
+  "my_page": {
+    "my_infomation": "My information",
+    "my_money": "My Money",
+    "noti-settings": "Notification setting",
+    "announcement": "Announcement",
+    "customer_support": "Customer support",
+    "terms_conditions": "Service Terms and Conditions",
+    "privacy_policy": "privacy policy",
+    "copyright_policy": "Copyright and intellectual property management policy"
+  },
+  "my_information": {
+    "nickname": "Nickname",
+    "social_login": "Social login",
+    "kakao": "kakaotalk",
+    "withdrawal": "Membership withdrawal",
+    "logout": "Log out"
   }
 }

@@ -79,5 +79,22 @@
       "title": "",
       "description": ""
     }
+  },
+  "my_page": {
+    "my_infomation": "내 정보",
+    "my_money": "나의 Money",
+    "noti-settings": "알림 설정",
+    "announcement": "공지사항",
+    "customer_support": "고객지원",
+    "terms_conditions": "서비스 이용약관",
+    "privacy_policy": "개인정보 처리 방침",
+    "copyright_policy": "저작권 및 지식 재산권 관리 정책"
+  },
+  "my_information": {
+    "nickname": "닉네임",
+    "social_login": "소셜 로그인",
+    "logout": "로그아웃",
+    "withdrawal": "회원탈퇴",
+    "kakao": "카카오톡"
   }
 }

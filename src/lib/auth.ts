@@ -128,20 +128,16 @@ export const {
   // === EVENT HANDLERS ===
   events: {
     // Handle sign out - clean up external API sessions
-    async signOut(params) {
-      // Check if we have token info (can be either token or session)
-      const token = 'token' in params ? params.token : null;
-      if (token?.chatApiToken) {
-        try {
-          console.log('[SIGNOUT_EVENT] Logging out from Chat API...');
-          // Call the external Chat API logout endpoint
-          await ChatApi.logout(token.chatApiToken as string);
-        } catch (error) {
-          // Log the error but don't block the main sign-out flow
-          // The user should still be signed out of next-auth even if
-          // the external API logout fails
-          console.error('[CHAT_API_LOGOUT_ERROR]', error);
-        }
+    async signOut() {
+      try {
+        // Call the external Chat API logout endpoint
+        console.log('[SIGNOUT_EVENT] Logging out from Chat API...');
+        await ChatApi.logout();
+      } catch (error) {
+        // Log the error but don't block the main sign-out flow
+        // The user should still be signed out of next-auth even if
+        // the external API logout fails
+        console.error('[CHAT_API_LOGOUT_ERROR]', error);
       }
     },
   },

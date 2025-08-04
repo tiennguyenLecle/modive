@@ -15,6 +15,9 @@ import { ChatApi } from '@/lib/api/server';
 // Schema to validate the `chatroomId` from the URL path
 const paramsSchema = z.object({
   chatroomId: z.uuid({ message: 'Invalid chatroom ID format.' }),
+  cursor: z.string().optional(),
+  limit: z.number().optional(),
+  direction: z.enum(['before', 'after']).optional(),
 });
 type ChatRoomParams = z.infer<typeof paramsSchema>;
 
@@ -30,8 +33,13 @@ async function getMessagesHandler(
   context: ChatRoomHandlerContext
 ) {
   try {
-    const { chatroomId } = context.validatedParams;
-    const messages = await ChatApi.getMessages(chatroomId);
+    const { chatroomId, cursor, limit, direction } = context.validatedParams;
+    const messages = await ChatApi.getMessages(
+      chatroomId,
+      cursor,
+      limit,
+      direction
+    );
     return NextResponse.json(messages);
   } catch (error: any) {
     return NextResponse.json(
@@ -59,15 +67,15 @@ async function createMessageHandler(
   try {
     const { chatroomId } = context.validatedParams;
     const { sessionId, text } = context.validatedBody as CreateMessageBody;
-    console.log('chatroomId', chatroomId);
-    console.log('sessionId', sessionId);
-    console.log('text', text);
-    const userId = context.session?.user?.id as string;
+    const { id: userId, name: userName } = context.session?.user!;
     const newMessage = await ChatApi.createMessage(
       sessionId,
       chatroomId,
-      userId,
-      text
+      userId!,
+      text,
+      userName!,
+      'male',
+      '2000-01-01'
     );
 
     console.log('newMessage', newMessage);

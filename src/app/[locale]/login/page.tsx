@@ -20,7 +20,8 @@ export default function LoginPage() {
           signIn('credentials', {
             email: 'tien3107@yopmail.com',
             password: 'Tien3107@',
-            callbackUrl: '/chat/24d4608f-39f8-4d6e-b4ee-6073d0c058c7',
+            callbackUrl:
+              '/chat/24d4608f-39f8-4d6e-b4ee-6073d0c058c7?sessionId=ab584cb2-c149-488f-9468-e1af8f009248',
           });
         }}
       >

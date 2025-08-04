@@ -29,14 +29,13 @@ export const GET = pipe(withAuth)(getHandler);
 
 const createBodySchema = z.object({
   userId: z.string().nonempty(),
-  initialMessage: z.string().nonempty(),
 });
 type CreateBody = z.infer<typeof createBodySchema>;
 
 async function createHandler(_request: NextRequest, context: HandlerContext) {
   try {
-    const { userId, initialMessage } = context.validatedBody as CreateBody;
-    const newSession = await ChatApi.createSession(userId, initialMessage);
+    const { userId } = context.validatedBody as CreateBody;
+    const newSession = await ChatApi.createSession(userId);
     return NextResponse.json(newSession, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(

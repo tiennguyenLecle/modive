@@ -1,0 +1,38 @@
+# .gitlab-ci.yml
+
+image: node:18
+
+stages:
+  - deploy
+
+.vercel-deploy-base:
+  script:
+    - npm install -g pnpm
+    - pnpm install
+
+deploy_staging:
+  extends: .vercel-deploy-base
+  stage: deploy
+  before_script:
+    # Get environment variables from GitLab CI/CD variables
+    - export $(grep -v '^#' $STAGING_ENV_FILE | xargs)
+  script:
+    # Vercel CLI automatically creates a "Preview Deployment" when --prod is not used
+    # URL will be like your-project-name-random-hash-your-scope.vercel.app
+    - pnpm vercel --token $VERCEL_TOKEN --yes
+  rules:
+    # Only run this job when committing/merging to the 'staging' branch
+    - if: '$CI_COMMIT_BRANCH == "staging"'
+
+deploy_production:
+  extends: .vercel-deploy-base
+  stage: deploy
+  before_script:
+    # Get environment variables from GitLab CI/CD variables
+    - export $(grep -v '^#' $PRODUCTION_ENV_FILE | xargs)
+  script:
+    # The --prod flag will create or update a "Production Deployment"
+    - pnpm vercel --prod --token $VERCEL_TOKEN --yes
+  rules:
+    # Only run this job when committing/merging to the 'production' branch
+    - if: '$CI_COMMIT_BRANCH == "production"'

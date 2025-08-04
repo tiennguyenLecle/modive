@@ -76,8 +76,26 @@ export class ChatApiClient extends BaseApiClient {
     });
   }
 
-  public getMessages(chatroomId: string) {
-    return this.get<GetMessagesResponse>(`/chats/chatroom/${chatroomId}`);
+  /**
+   * @param chatroomId - The chatroom id to get the messages from.
+   * @param cursor - The message id to get the "limit" forward/backward messages from.
+   * @param limit - The number of messages to return.
+   * @param direction - Get the messages before/after the cursor.
+   */
+  public getMessages(
+    chatroomId: string,
+    cursor?: string,
+    limit?: number,
+    direction?: 'before' | 'after'
+  ) {
+    const params = new URLSearchParams();
+    if (cursor) params.set('cursor', cursor);
+    if (limit) params.set('limit', limit.toString());
+    if (direction) params.set('direction', direction);
+
+    return this.get<GetMessagesResponse>(
+      `/chats/chatroom/${chatroomId}?${params.toString()}`
+    );
   }
 
   public createMessage(

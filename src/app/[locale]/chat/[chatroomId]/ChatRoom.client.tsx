@@ -35,8 +35,9 @@ export default function ChatRoom({
           </li>
         ))}
       </ul>
-      <div>
+      <div className="container">
         <button
+          className="rounded-4 bg-primary p-8 text-left text-white"
           onClick={() => {
             sendMessage('Hello, how are you today?');
           }}

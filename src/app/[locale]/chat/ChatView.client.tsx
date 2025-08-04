@@ -1,6 +1,6 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 import { Link } from '@/lib/navigation';
 
@@ -18,6 +18,13 @@ export default function ChatView({
 
   return (
     <div className="container min-h-0 overflow-auto p-4">
+      <button
+        onClick={() => {
+          signOut({ redirectTo: '/' });
+        }}
+      >
+        Logout
+      </button>
       <h2 className="text-22 font-semibold">User sessions</h2>
       <pre className="rounded mt-4 bg-gray-100 p-2">
         <code>{JSON.stringify(userSession, null, 2)}</code>

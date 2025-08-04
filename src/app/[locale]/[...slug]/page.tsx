@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
-// Generate metadata với translations
 export const generateMetadata = async ({
   params: { locale },
 }: {
@@ -35,7 +34,7 @@ type CatchAllPageProps = {
 };
 
 export default function CatchAllPage({ params }: CatchAllPageProps) {
-  // Log các route không tồn tại để phân tích (chỉ trong development)
+  // Log unexisted routes for analysis (only in development)
   if (process.env.NODE_ENV === 'development') {
     console.warn(
       `[404] Route not found: /${params.locale}/${params.slug?.join('/') || ''}`

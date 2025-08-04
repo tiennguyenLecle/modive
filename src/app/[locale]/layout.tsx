@@ -1,14 +1,12 @@
 import type { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 
 import 'antd/dist/reset.css';
 import '@/styles/globals.css';
 
-import AntdRegistry from '@/lib/antd-registry';
+import { Providers } from '@/app/providers';
 import { type Locale } from '@/lib/locale';
-import { StructuredData } from '@/lib/seo';
-import { ThemeRegistry } from '@/lib/theme-registry';
+import { defaultMetadata, StructuredData } from '@/lib/seo';
 import { nanumMyeongjo, pretendard } from '@/styles/fonts';
 
 type LayoutProps = {
@@ -25,80 +23,25 @@ export async function generateMetadata({
     locale: locale as Locale,
   });
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-
+  // Merge default metadata with page-specific, dynamic metadata
   return {
+    ...defaultMetadata,
     title: {
       default: t('title'),
       template: `%s | ${t('title')}`,
     },
     description: t('description'),
-    applicationName: 'Modive',
-    authors: [{ name: 'Modive Team' }],
-    generator: 'Next.js',
     keywords: ['AI', 'chatbot', 'modern', 'multilingual', 'Korean', 'English'],
-    referrer: 'origin-when-cross-origin',
-    creator: 'Modive Team',
-    publisher: 'Modive',
-    formatDetection: {
-      email: false,
-      address: false,
-      telephone: false,
-    },
-    metadataBase: baseUrl ? new URL(baseUrl) : undefined,
-    alternates: {
-      canonical: '/',
-      languages: {
-        en: '/en',
-        kr: '/kr',
-      },
-    },
     openGraph: {
-      type: 'website',
+      ...defaultMetadata.openGraph,
       locale: locale,
-      url: baseUrl,
       title: t('title'),
       description: t('description'),
-      siteName: 'Modive',
-      images: [
-        {
-          url: '/android-chrome-512x512.png',
-          width: 512,
-          height: 512,
-          alt: t('title'),
-        },
-      ],
     },
     twitter: {
-      card: 'summary_large_image',
+      ...defaultMetadata.twitter,
       title: t('title'),
       description: t('description'),
-      images: ['/android-chrome-512x512.png'],
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
-    },
-    manifest: '/site.webmanifest',
-    icons: {
-      icon: [
-        { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-        { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      ],
-      apple: '/apple-touch-icon.png',
-    },
-    other: {
-      'mobile-web-app-capable': 'yes',
-      'apple-mobile-web-app-capable': 'yes',
-      'apple-mobile-web-app-status-bar-style': 'default',
-      'apple-mobile-web-app-title': 'Modive',
     },
   };
 }
@@ -108,7 +51,6 @@ export default async function LocaleLayout({
   modal,
   params: { locale },
 }: LayoutProps) {
-  // Providing all messages to the client side is the easiest way to get started
   const messages = await getMessages();
 
   return (
@@ -124,20 +66,13 @@ export default async function LocaleLayout({
         />
         <meta name="theme-color" content="#FF627B" />
         <meta name="color-scheme" content="light dark" />
-        {/* The single, refactored StructuredData component is used here */}
         <StructuredData locale={locale} />
       </head>
       <body>
-        <ThemeRegistry>
-          <NextIntlClientProvider messages={messages}>
-            <AntdRegistry>
-              <div className="flex h-full flex-col overflow-auto">
-                {children}
-              </div>
-              {modal}
-            </AntdRegistry>
-          </NextIntlClientProvider>
-        </ThemeRegistry>
+        <Providers locale={locale} messages={messages}>
+          <div className="flex h-full flex-col overflow-auto">{children}</div>
+          {modal}
+        </Providers>
       </body>
     </html>
   );

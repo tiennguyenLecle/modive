@@ -136,6 +136,15 @@ A brief overview of the key directories in this project:
 - **/src/lib**: Houses core library files and "registry" components (e.g., `theme-registry`, `antd-registry`).
 - **/src/styles**: Global styles and font configurations.
 - **/messages**: Contains JSON files for translations used by `next-intl`.
+- **/docs**: Contains detailed documentation about architectural decisions.
+
+## Architectural Notes
+
+This project contains important architectural patterns that are documented to help developers understand key decisions.
+
+- **Authentication**: Explains the OAuth2 flow, session management, and API protection using `next-auth`. See the [Authentication Documentation](./docs/authentication.md).
+- **Middleware**: Handles request processing for internationalization. For a detailed explanation, see the [Middleware Documentation](./docs/middleware.md).
+- **API Client**: Manages communication with external and internal APIs. For a detailed explanation, please see the [API Client Documentation](./src/lib/api/README.md).
 
 ---
 

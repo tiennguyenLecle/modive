@@ -2,6 +2,7 @@
 
 # Ignore local VSCode settings
 /.vscode/settings.json
+/.history
 
 # dependencies
 /node_modules

@@ -29,6 +29,14 @@
     "metadata": {
       "title": "채팅",
       "description": "AI와 대화를 시작하세요"
+    },
+    "chapter": "챕터",
+    "generalization": "일반화",
+    "room": {
+      "favorability": "증진",
+      "metadata": {
+        "description": "{characterName}과 대화하기"
+      }
     }
   },
   "goods_page": {
@@ -65,5 +73,11 @@
     "chat": "채팅하기",
     "personal_relationship": "인물관계도",
     "chapter_entrance": "챕터 입장"
+  },
+  "chat": {
+    "chat": {
+      "title": "",
+      "description": ""
+    }
   }
 }

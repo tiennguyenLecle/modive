@@ -1,4 +1,4 @@
-import { LoginResponse } from '../types/chat.types';
+import { GetMessagesResponse, LoginResponse } from '../types/chat.types';
 import { BaseApiClient } from './base';
 
 export class ChatApiClient extends BaseApiClient {
@@ -69,12 +69,26 @@ export class ChatApiClient extends BaseApiClient {
   }
 
   public getMessages(chatroomId: string) {
-    return this.get(`/chats/chatroom/${chatroomId}`);
+    return this.get<GetMessagesResponse>(`/chats/chatroom/${chatroomId}`);
   }
 
-  public createMessage(chatroomId: string, senderId: string, text: string) {
-    return this.post(`/chats/chatroom/${chatroomId}`, {
-      body: { senderId, text },
+  public createMessage(
+    sessionId: string,
+    chatroomId: string,
+    userId: string,
+    text: string
+  ) {
+    return this.post(`/chats/chatroom/${sessionId}`, {
+      body: {
+        userId,
+        command: {
+          type: 'SEND_MESSAGE_TO_CHATROOM',
+          senderType: 'user',
+          senderId: userId,
+          chatroomId,
+          messages: [text],
+        },
+      },
     });
   }
 

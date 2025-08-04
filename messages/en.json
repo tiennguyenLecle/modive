@@ -29,6 +29,14 @@
     "metadata": {
       "title": "Chat",
       "description": "Start a conversation with AI"
+    },
+    "chapter": "Chapter",
+    "generalization": "Generalization",
+    "room": {
+      "favorability": "Favorability",
+      "metadata": {
+        "description": "Chat with {characterName}"
+      }
     }
   },
   "goods_page": {
@@ -65,9 +73,5 @@
     "chat": "Chat",
     "personal_relationship": "Personal relationship",
     "chapter_entrance": "Chapter entrance"
-  },
-  "chat": {
-    "chapter": "Chapter",
-    "generalization": "Generalization"
   }
 }

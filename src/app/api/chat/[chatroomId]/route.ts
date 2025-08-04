@@ -7,6 +7,7 @@ import {
   withValidatedParams,
   type HandlerContext,
 } from '@/lib/api';
+import { withAuth } from '@/lib/api/middleware/auth';
 import { ChatApi } from '@/lib/api/server';
 
 // --- Common definitions ---
@@ -46,7 +47,7 @@ export const GET = pipe(withValidatedParams(paramsSchema))(getMessagesHandler);
 // --- CREATE A NEW MESSAGE ---
 
 const createMessageBodySchema = z.object({
-  senderId: z.string().nonempty(),
+  sessionId: z.string().nonempty(),
   text: z.string().nonempty(),
 });
 type CreateMessageBody = z.infer<typeof createMessageBodySchema>;
@@ -57,8 +58,19 @@ async function createMessageHandler(
 ) {
   try {
     const { chatroomId } = context.validatedParams;
-    const { senderId, text } = context.validatedBody as CreateMessageBody;
-    const newMessage = await ChatApi.createMessage(chatroomId, senderId, text);
+    const { sessionId, text } = context.validatedBody as CreateMessageBody;
+    console.log('chatroomId', chatroomId);
+    console.log('sessionId', sessionId);
+    console.log('text', text);
+    const userId = context.session?.user?.id as string;
+    const newMessage = await ChatApi.createMessage(
+      sessionId,
+      chatroomId,
+      userId,
+      text
+    );
+
+    console.log('newMessage', newMessage);
     return NextResponse.json(newMessage, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
@@ -70,6 +82,7 @@ async function createMessageHandler(
 
 // Chain multiple HOFs: first validate params, then validate body
 export const POST = pipe(
+  withAuth,
   withValidatedParams(paramsSchema),
   withValidatedBody(createMessageBodySchema)
 )(createMessageHandler);

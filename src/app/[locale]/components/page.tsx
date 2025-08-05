@@ -48,11 +48,13 @@ export default function ComponentsPage() {
         ref={modalRef}
         title="Modal title"
         titleAlign="left"
-        footer={
-          <button className="w-full rounded-5 border text-gray-00">
-            다음 챕터로 넘어가기
-          </button>
-        }
+        // footer={
+        //   <button className="rounded-5 w-full border text-gray-00">
+        //     다음 챕터로 넘어가기
+        //   </button>
+        // }
+        cancelText="Cancel"
+        confirmText="Confirm"
       >
         <p className="text-gray-00">Would you like to withdraw?</p>
       </Modal>

@@ -23,10 +23,27 @@ type ModalProps = {
   header?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
+  cancelText?: string;
+  confirmText?: string;
+  onCancel?: () => void;
+  onConfirm?: () => void;
 };
 
 const Modal = forwardRef<ModalHandle, ModalProps>(
-  ({ title, titleAlign = 'center', header, children, footer }, ref) => {
+  (
+    {
+      title,
+      titleAlign = 'center',
+      header,
+      children,
+      footer,
+      cancelText,
+      confirmText,
+      onCancel,
+      onConfirm,
+    },
+    ref
+  ) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const open = () => setIsOpen(true);
@@ -90,7 +107,28 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
                 <div className="flex min-h-46 items-center px-16">
                   {children}
                 </div>
-                {footer && <div className="p-16">{footer}</div>}
+                {footer ? (
+                  <div className="p-16">{footer}</div>
+                ) : (
+                  <div className="flex flex-col gap-8 p-16">
+                    {cancelText && (
+                      <button
+                        className="flex h-40 w-full items-center justify-center gap-8 rounded-4 border border-gray-70 bg-gray-100 p-12 text-gray-00"
+                        onClick={onCancel}
+                      >
+                        {cancelText}
+                      </button>
+                    )}
+                    {confirmText && (
+                      <button
+                        className="flex h-40 w-full items-center justify-center gap-8 rounded-4 bg-primary p-12 text-gray-100"
+                        onClick={onConfirm}
+                      >
+                        {confirmText}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </motion.div>
           </>

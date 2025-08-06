@@ -60,6 +60,7 @@ const config: Config = {
       90: '90rem',
       96: '96rem',
       140: '140rem',
+      360: '360rem',
     },
     // Override Tailwind's default font sizes
     fontSize: {
@@ -102,6 +103,7 @@ const config: Config = {
       tertiary: '#FFDCE1',
       gray: '#F0F0F0',
       'gray-00': '#250F09',
+      'gray-03': '#D9D9D9',
       'gray-10': '#2C262F',
       'gray-20': '#423E4B',
       'gray-30': '#575665',

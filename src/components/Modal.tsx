@@ -10,6 +10,7 @@ import React, {
 import { AnimatePresence, motion } from 'framer-motion';
 
 import CloseIcon from '@/assets/icons/close.svg';
+import Button from '@/components/Button';
 import { cx } from '@/utils/method';
 
 export type ModalHandle = {
@@ -25,6 +26,10 @@ type ModalProps = {
   footer?: ReactNode;
   cancelText?: string;
   confirmText?: string;
+  showHeader?: boolean;
+  showFooter?: boolean;
+  showCloseButton?: boolean;
+  containerClassName?: string;
   onCancel?: () => void;
   onConfirm?: () => void;
 };
@@ -39,6 +44,10 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
       footer,
       cancelText,
       confirmText,
+      showHeader = true,
+      showFooter = true,
+      showCloseButton = true,
+      containerClassName = '',
       onCancel,
       onConfirm,
     },
@@ -77,58 +86,60 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
               onClick={close}
             >
               <div
-                className="w-full max-w-280 rounded-5 bg-white"
+                className={cx(
+                  'w-full max-w-280 rounded-5 bg-white',
+                  containerClassName
+                )}
                 style={{ boxShadow: '0px 4px 20px 0px #00000040' }}
                 onClick={e => e.stopPropagation()}
               >
-                <div className="relative flex h-46 items-center justify-between px-16">
-                  {header ? (
-                    <div className="w-full">{header}</div>
-                  ) : (
-                    <>
-                      <div
-                        className={cx(
-                          'flex-1 text-14 font-semibold text-gray-00',
-                          titleAlign === 'center' ? 'text-center' : 'text-left'
+                {showHeader && (
+                  <div className="relative flex h-46 items-center justify-between px-16">
+                    {header ? (
+                      <div className="w-full">{header}</div>
+                    ) : (
+                      <>
+                        <div
+                          className={cx(
+                            'flex-1 text-14 font-semibold text-gray-00',
+                            titleAlign === 'center'
+                              ? 'text-center'
+                              : 'text-left'
+                          )}
+                        >
+                          {title}
+                        </div>
+                        {showCloseButton && (
+                          <button
+                            onClick={close}
+                            className="absolute right-16 top-1/2 flex size-24 -translate-y-1/2 items-center justify-center transition"
+                            aria-label="Close"
+                          >
+                            <CloseIcon className="size-11 text-gray-00" />
+                          </button>
                         )}
-                      >
-                        {title}
-                      </div>
-                      <button
-                        onClick={close}
-                        className="absolute right-16 top-16 transition"
-                        aria-label="Close"
-                      >
-                        <CloseIcon className="size-11 text-gray-00" />
-                      </button>
-                    </>
-                  )}
-                </div>
-                <div className="flex min-h-46 items-center px-16">
-                  {children}
-                </div>
-                {footer ? (
-                  <div className="p-16">{footer}</div>
-                ) : (
-                  <div className="flex flex-col gap-8 p-16">
-                    {cancelText && (
-                      <button
-                        className="flex h-40 w-full items-center justify-center gap-8 rounded-4 border border-gray-70 bg-gray-100 p-12 text-gray-00"
-                        onClick={onCancel}
-                      >
-                        {cancelText}
-                      </button>
-                    )}
-                    {confirmText && (
-                      <button
-                        className="flex h-40 w-full items-center justify-center gap-8 rounded-4 bg-primary p-12 text-gray-100"
-                        onClick={onConfirm}
-                      >
-                        {confirmText}
-                      </button>
+                      </>
                     )}
                   </div>
                 )}
+                {children}
+                {showFooter &&
+                  (footer ? (
+                    <div className="p-16">{footer}</div>
+                  ) : (
+                    <div className="flex flex-col gap-8 p-16">
+                      {cancelText && (
+                        <Button variant="secondary" onClick={onCancel}>
+                          {cancelText}
+                        </Button>
+                      )}
+                      {confirmText && (
+                        <Button variant="primary" onClick={onConfirm}>
+                          {confirmText}
+                        </Button>
+                      )}
+                    </div>
+                  ))}
               </div>
             </motion.div>
           </>

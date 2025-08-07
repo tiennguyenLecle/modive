@@ -97,6 +97,13 @@
     "logout": "로그아웃",
     "withdrawal": "회원탈퇴",
     "kakao": "카카오톡",
-    "my_infomation": "내 정보"
+    "my_infomation": "내 정보",
+    "withdrawal_notification": "탈퇴 알림",
+    "withdrawal_description": "탈퇴하시겠습니끼?",
+    "withdrawal_description2": "(*지금 탈퇴하시면 서비스를 이용할 수 없어요)",
+    "cancel": "취소",
+    "check": "확인",
+    "log_out_notification": "로그아웃 알림",
+    "log_out_description": "로그아웃 하시겠습니까?"
   }
 }

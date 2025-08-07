@@ -64,6 +64,10 @@
   "components": {
     "chapter": {
       "seeMore": "Chapter initialization"
+    },
+    "chat_list_item": {
+      "top_fixing": "상단 고정",
+      "deletion": "삭제하기"
     }
   },
   "contentsCard": {

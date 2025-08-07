@@ -112,7 +112,7 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
                         {showCloseButton && (
                           <button
                             onClick={close}
-                            className="absolute right-16 top-1/2 flex size-24 -translate-y-1/2 items-center justify-center transition"
+                            className="absolute right-16 top-16 flex size-24 items-center justify-center transition"
                             aria-label="Close"
                           >
                             <CloseIcon className="size-11 text-gray-00" />
@@ -129,14 +129,20 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
                   ) : (
                     <div className="flex flex-col gap-8 p-16">
                       {cancelText && (
-                        <Button variant="secondary" onClick={onCancel}>
+                        <button
+                          className="flex h-40 w-full items-center justify-center gap-8 rounded-4 border border-gray-70 bg-gray-100 p-12 text-gray-00"
+                          onClick={onCancel}
+                        >
                           {cancelText}
-                        </Button>
+                        </button>
                       )}
                       {confirmText && (
-                        <Button variant="primary" onClick={onConfirm}>
+                        <button
+                          className="flex h-40 w-full items-center justify-center gap-8 rounded-4 bg-primary p-12 text-gray-100"
+                          onClick={onConfirm}
+                        >
                           {confirmText}
-                        </Button>
+                        </button>
                       )}
                     </div>
                   ))}

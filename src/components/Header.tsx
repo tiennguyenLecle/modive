@@ -9,7 +9,7 @@ import ArrowRight from '@/assets/icons/arrow-right.svg';
 import CashIcon from '@/assets/icons/cash.svg';
 import LogoText from '@/assets/icons/logo-text.svg';
 import SearchIcon from '@/assets/icons/search.svg';
-import Badge from '@/components/Badge';
+import { Badge } from '@/components/Badge';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
@@ -71,9 +71,9 @@ const Header = ({
         )}
         {showAlarmIcon && (
           <Link href="#">
-            <Badge count={3} showZero>
-              <AlarmIcon width={24} height={24} />
-            </Badge>
+            <Badge.Wrapper count={3} showZero>
+              <AlarmIcon width={24} height={24} className="text-gray-00" />
+            </Badge.Wrapper>
           </Link>
         )}
         {showCashIcon && (

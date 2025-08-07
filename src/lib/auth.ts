@@ -1,9 +1,13 @@
+import { SupabaseAdapter } from '@auth/supabase-adapter';
 import NextAuth, { type User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
+import Kakao from 'next-auth/providers/kakao';
+import Naver from 'next-auth/providers/naver';
 
 import { ChatApi } from '@/lib/api/server';
 import { COOKIE_PREFIX } from '@/utils/constants';
+import { createClient } from '@/utils/supabase/server';
 
 // === TYPE DEFINITIONS ===
 // Extend the User type to include chatApiToken
@@ -28,6 +32,13 @@ export const {
   handlers: { GET, POST }, // Export handlers for API routes
   auth, // Export auth function for middleware and server components
 } = NextAuth({
+  // === DATABASE ADAPTER ===
+  // Use Supabase adapter for persistent user data storage
+  adapter: SupabaseAdapter({
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    secret: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  }),
+
   // === PAGE ROUTE CONFIGURATION ===
   // Specify custom pages to use, especially the login page.
   // This tells NextAuth where to redirect users when they need to log in.
@@ -79,7 +90,14 @@ export const {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
-
+    Kakao({
+      clientId: process.env.KAKAO_CLIENT_ID,
+      clientSecret: process.env.KAKAO_CLIENT_SECRET,
+    }),
+    Naver({
+      clientId: process.env.NAVER_CLIENT_ID,
+      clientSecret: process.env.NAVER_CLIENT_SECRET,
+    }),
     // Email/Password Provider
     // TODO: [AUTH-CREDENTIALS] This provider is currently for internal/testing use.
     // Discuss with the team if this should be exposed to end-users or removed.
@@ -146,48 +164,40 @@ export const {
   callbacks: {
     // JWT Callback - runs whenever a JWT is created/updated
     // This is where we handle token persistence and external API integration
-    async jwt({ token, user, account }) {
+    async jwt(callbackData) {
+      const { token, user, account } = callbackData;
+
+      console.log('callbackData', callbackData);
+
       // --- USER SIGN-IN LOGIC ---
       // This runs when a user first signs in (user object is present)
       if (user) {
         // Always persist the user's ID to the token
         token.id = user.id;
 
-        // CASE 1: Credentials Provider (email/password)
-        // The user object from authorize() already contains the chatApiToken
-        if ((user as ExtendedUser).chatApiToken) {
-          token.chatApiToken = (user as ExtendedUser).chatApiToken;
-        }
-
-        // CASE 2: OAuth Provider (e.g., Google)
-        // We need to call our Chat API to get a token for this OAuth user
-        if (account?.provider === 'google' && user.email) {
-          // TODO: [AUTH-SSO] The current implementation for OAuth login is a placeholder
-          // and uses hardcoded credentials for the Chat API. This is INSECURE for production.
-          //
-          // Recommended Action:
-          // 1. Discuss with the Chat API development team to implement a secure
-          //    SSO (Single Sign-On) endpoint.
-          // 2. This new endpoint should accept an `id_token` or `access_token` from Google.
-          // 3. The Chat API backend must validate this token with Google to verify its authenticity.
-          // 4. Upon successful validation, the Chat API should create a user session and
-          //    return its own `accessToken`.
-          //
-          // Example of the ideal call:
-          // const { accessToken } = await ChatApi.loginWithGoogle(account.id_token);
-          // token.chatApiToken = accessToken;
+        if (
+          account?.provider &&
+          ['google', 'kakao', 'naver'].includes(account.provider) &&
+          user.email
+        ) {
+          // console.log(
+          //   `[AUTH_${account.provider.toUpperCase()}_LOGIN]`,
+          //   callbackData
+          // );
           try {
-            // NOTE: This assumes your Chat API can issue tokens for OAuth users
-            // You might need a separate endpoint like /auth/sso/google
-            // or a way to register/authenticate OAuth users automatically
-            const loginResponse = await ChatApi.login(
-              'tien3107@yopmail.com', // user.email in Chat System
-              'Tien3107@' // user.password in Chat System
-            );
-
-            token.chatApiToken = loginResponse.data.accessToken;
+            if (account.provider === 'kakao' || account.provider === 'naver') {
+              // console.log(`[AUTH_${account.provider.toUpperCase()}_LOGIN]`, {
+              //   userId: user.id,
+              //   email: user.email,
+              //   provider: account.provider,
+              //   providerAccountId: account.providerAccountId,
+              // });
+            }
           } catch (error) {
-            console.error('[AUTH_OAUTH_TOKEN_ERROR]', error);
+            console.error(
+              `[AUTH_${account?.provider?.toUpperCase()}_TOKEN_ERROR]`,
+              error
+            );
             // If we can't get a token from the Chat API for an OAuth user,
             // we invalidate the session by returning an empty token,
             // which will force a sign-out
@@ -195,10 +205,6 @@ export const {
           }
         }
       }
-
-      // --- TOKEN REFRESH LOGIC ---
-      // Here you could add logic to refresh expired tokens
-      // For example, check if the chatApiToken is expired and refresh it
 
       return token;
     },

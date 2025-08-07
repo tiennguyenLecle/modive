@@ -9,9 +9,21 @@ export default function LoginPage() {
       <p>Choose a login method to continue.</p>
       <button
         className="rounded-4 bg-primary p-8 text-white"
-        onClick={() => signIn('google', { callbackUrl: '/' })}
+        onClick={() => signIn('google', { callbackUrl: '/view-session' })}
       >
         Login with Google
+      </button>
+      <button
+        className="rounded-4 bg-primary p-8 text-white"
+        onClick={() => signIn('kakao', { callbackUrl: '/view-session' })}
+      >
+        Login with KakaoTalk
+      </button>
+      <button
+        className="rounded-4 bg-primary p-8 text-white"
+        onClick={() => signIn('naver', { callbackUrl: '/view-session' })}
+      >
+        Login with Naver
       </button>
 
       <button

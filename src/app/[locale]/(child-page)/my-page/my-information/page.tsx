@@ -32,7 +32,7 @@ const MyInformation = () => {
               {t('social_login')}
             </p>
             <div className="flex items-center gap-8">
-              <KakaoTalk className="rounded-5 size-20" />
+              <KakaoTalk className="size-20 rounded-5" />
               <p className="text-14 font-semibold text-gray-00">{t('kakao')}</p>
             </div>
           </div>

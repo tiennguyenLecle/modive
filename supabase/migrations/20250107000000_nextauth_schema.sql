@@ -14,7 +14,7 @@ GRANT ALL ON SCHEMA next_auth TO postgres;
 CREATE TABLE IF NOT EXISTS next_auth.users (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
     name text,
-    email text,
+    email text NOT NULL,
     "emailVerified" timestamp with time zone,
     image text,
     CONSTRAINT users_pkey PRIMARY KEY (id),
@@ -82,11 +82,10 @@ CREATE TABLE IF NOT EXISTS next_auth.accounts (
 GRANT ALL ON TABLE next_auth.accounts TO postgres;
 GRANT ALL ON TABLE next_auth.accounts TO service_role;
 
--- Create verification_tok
-ens table
+-- Create verification_tokens table
 CREATE TABLE IF NOT EXISTS next_auth.verification_tokens (
-    identifier text,
-    token text,
+    identifier text NOT NULL,
+    token text NOT NULL,
     expires timestamp with time zone NOT NULL,
     CONSTRAINT verification_tokens_pkey PRIMARY KEY (token),
     CONSTRAINT token_unique UNIQUE (token),

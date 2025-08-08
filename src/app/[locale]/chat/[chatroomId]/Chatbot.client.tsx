@@ -46,10 +46,10 @@
 
 //   const handleLoadMore = useCallback(async () => {
 //     if (prevLoadMoreRef.current) return;
-
-//     const prevMessages = messagesRef?.current?.length;
 //     prevLoadMoreRef.current = true;
 //     setIsPreviousLoading(true);
+
+//     const prevMessages = messagesRef?.current?.length;
 //     const beforeIdx = messagesRef?.current?.[0]?.id;
 
 //     const res: any = await NextApi.get(
@@ -80,47 +80,51 @@
 //     setNewMessage(e.target.value);
 //   }, []);
 
-//   const mappedMessages = (messages: Message[]): MessageInfoProps[] => {
-//     // 1. Filter
-//     let currentMessages = messages.filter(
-//       msg => !filterMessageConditions(msg.message)
-//     );
+//   const handleMessageText = (message: string) => {
+//     if (typeof message === 'string' && /\n+/.test(message)) {
+//       const parts = message?.split(/\n+/)?.filter(Boolean) || [];
+//       if (parts.length === 0) return [];
 
-//     // 2. Map basic fields
-//     const baseMapped = currentMessages.map(msg => ({
-//       id: msg.id,
-//       chatroomId: msg.chatroom_id,
-//       speakerType: msg.speaker_type ?? 'user', // ✅ always provide fallback
-//       speakerId: msg.speaker_id,
-//       name: msg.speaker_id,
-//       message: msg.message,
-//       createdAt: msg.created_at ? dayjs(msg.created_at).format('HH:mm') : '',
-//       type: 'text',
-//       avatarUrl: DEFAULT_IMAGE_URL,
-//       imageUrl: DEFAULT_IMAGE_URL,
-//     }));
+//       return parts.map(part => {
+//         const isImage = part.startsWith('::image{id=');
 
-//     // 3. Split multi-line messages
-//     return baseMapped.flatMap(item => {
-//       if (typeof item.message === 'string' && /\n+/.test(item.message)) {
-//         const parts = item.message.split(/\n+/).filter(Boolean);
-
-//         return parts.map((p, index) => {
-//           const isImage = p.startsWith('::image{id=');
+//         if (isImage) {
+//           const imageId = part?.split('{id=')[1]?.split('}')[0];
+//           console.log('aaa part imageId', imageId);
 //           return {
-//             ...item,
-//             type: isImage ? 'image' : 'text',
-//             imageUrl: isImage ? DEFAULT_IMAGE_URL : '',
-//             avatarUrl: index === 0 ? DEFAULT_IMAGE_URL : undefined,
-//             createdAt: index === parts.length - 1 ? item.createdAt : undefined,
-//             message: p,
-//             name: index === 0 ? item.name : undefined,
+//             type: 'image',
+//             imageUrl: DEFAULT_IMAGE_URL,
+//             message: '',
 //           };
-//         });
-//       }
-//       return item;
-//     });
+//         }
+//         return {
+//           type: 'text',
+//           message: part,
+//         };
+//       });
+//     }
 //   };
+
+//   const mappedMessages = (messages: Message[]): MessageInfoProps[] => {
+//     const seenIds = new Set<string>();
+
+//     const baseMapped = messages
+//       .filter(msg => !filterMessageConditions(msg.message, msg.id, seenIds))
+//       .map(msg => ({
+//         id: msg.id,
+//         chatroomId: msg.chatroom_id,
+//         speakerType: msg.speaker_type ?? 'user',
+//         speakerId: msg.speaker_id,
+//         name: msg.speaker_id,
+//         message: msg.message,
+//         createdAt: msg.created_at ? dayjs(msg.created_at).format('HH:mm') : '',
+//         avatarUrl: DEFAULT_IMAGE_URL,
+//         messageArray: handleMessageText(msg.message),
+//       }));
+
+//     return baseMapped;
+//   };
+
 //   console.log(mappedMessages(messages));
 
 //   const messageComponent = useMemo(

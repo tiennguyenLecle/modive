@@ -12,6 +12,7 @@ async function getHandler(_request: NextRequest, context: HandlerContext) {
     const userId =
       (context.session?.user?.id as string) ||
       '4db73f46-4c4b-4340-a121-6d0735ba0b481';
+
     const sessions = await ChatApi.searchSessionsByUserId(userId);
     return NextResponse.json(sessions);
   } catch (error: any) {

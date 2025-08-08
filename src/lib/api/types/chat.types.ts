@@ -63,19 +63,19 @@ export type LoginResponse = {
   };
 };
 
-export type SpeakerType = 'user' | 'chatbot';
+export type SpeakerType = 'user' | 'chatbot' | 'system';
 
 export type Message = {
   id: string;
   chatroom_id: string;
-  speaker_type: SpeakerType;
-  speaker_id: string;
   message: string;
-  message_embedding: null;
-  metadata: {};
-  created_at: string;
-  updated_at: string;
-  v2_data: {
+  speaker_type?: SpeakerType;
+  speaker_id?: string;
+  message_embedding?: null;
+  metadata?: {};
+  created_at?: string;
+  updated_at?: string;
+  v2_data?: {
     id: string;
     type: SpeakerType;
     origin: {

@@ -28,6 +28,12 @@ export default async function Home() {
   const chatSession: any = await ChatApi.searchSessionsByUserId(
     session.user.id
   );
+
+  // const newSession = session.user.id
+  //   ? await ChatApi.createSession(session.user.id)
+  //   : null;
+  // console.log('newSession', session.user.id);
+
   const chatBotName = process.env.DIT_CHATBOT_NAME;
 
   return (

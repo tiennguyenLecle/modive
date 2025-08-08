@@ -15,10 +15,8 @@ import { ChatApi } from '@/lib/api/server';
 // Schema to validate the `chatroomId` from the URL path
 const paramsSchema = z.object({
   chatroomId: z.uuid({ message: 'Invalid chatroom ID format.' }),
-  cursor: z.string().optional(),
-  limit: z.number().optional(),
-  direction: z.enum(['before', 'after']).optional(),
 });
+
 type ChatRoomParams = z.infer<typeof paramsSchema>;
 
 // Extend the context to make TypeScript aware of `validatedParams`
@@ -29,11 +27,21 @@ interface ChatRoomHandlerContext extends HandlerContext {
 // --- GET MESSAGES ---
 
 async function getMessagesHandler(
-  _request: NextRequest,
+  request: NextRequest,
   context: ChatRoomHandlerContext
 ) {
   try {
-    const { chatroomId, cursor, limit, direction } = context.validatedParams;
+    const { chatroomId } = context.validatedParams;
+    const { searchParams } = new URL(request.url);
+    const cursor = searchParams.get('cursor') ?? '';
+    const limit = searchParams.get('limit')
+      ? parseInt(searchParams.get('limit')!)
+      : 10;
+    const direction = searchParams.get('direction') as
+      | 'before'
+      | 'after'
+      | undefined;
+
     const messages = await ChatApi.getMessages(
       chatroomId,
       cursor,
@@ -78,7 +86,6 @@ async function createMessageHandler(
       '2000-01-01'
     );
 
-    console.log('newMessage', newMessage);
     return NextResponse.json(newMessage, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(

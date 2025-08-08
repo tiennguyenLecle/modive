@@ -1,8 +1,10 @@
 import createMiddleware from 'next-intl/middleware';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-import { auth } from '@/lib/auth'; // Import from next-auth config
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/lib/locale';
+import { updateSession } from '@/lib/supabase/middleware';
+
+import { COOKIE_PREFIX_SB } from './utils/constants';
 
 // === ROUTE CONFIGURATION ===
 // Define different types of routes for authentication logic
@@ -27,20 +29,20 @@ const intlMiddleware = createMiddleware({
 });
 
 // The middleware is wrapped with `auth` to handle authentication.
-export default auth(request => {
+export default async function middleware(request: NextRequest) {
   // === STEP 1: HANDLE INTERNATIONALIZATION ===
   // First, let's get the response from the i18n middleware.
-  const i18nResponse = intlMiddleware(request);
+  let response = intlMiddleware(request);
 
   // If i18n middleware returns a redirect (e.g., adding missing locale),
   // return it immediately without further processing
   // Check for both redirect status codes and location header
   if (
-    i18nResponse.status === 307 ||
-    i18nResponse.status === 308 ||
-    i18nResponse.headers.get('location')
+    response.status === 307 ||
+    response.status === 308 ||
+    response.headers.get('location')
   ) {
-    return i18nResponse;
+    return response;
   }
 
   // === STEP 2: HANDLE AUTHENTICATION & AUTHORIZATION ===
@@ -53,8 +55,13 @@ export default auth(request => {
       ''
     ) || '/';
 
-  // Check if user is authenticated using next-auth session
-  const isLoggedIn = !!request.auth;
+  // Refresh Supabase session cookies and read user
+  response = await updateSession(request, NextResponse.next());
+  // Supabase @supabase/ssr đặt cookie auth dạng chunked với tiền tố tuỳ chỉnh.
+  // Với cấu hình hiện tại (cookieOptions.name = 'modive-sb'), tên cookie sẽ là 'modive-sb.0', 'modive-sb.1'.
+  const isLoggedIn = Boolean(
+    response.cookies.get(`${COOKIE_PREFIX_SB}.0`)?.value
+  );
 
   // Determine if the current route is public
   // A route is public if:
@@ -83,7 +90,7 @@ export default auth(request => {
       return NextResponse.redirect(new URL(`/${locale}`, request.url));
     }
     // Allow unauthenticated users to access auth routes
-    return i18nResponse;
+    return response;
   }
 
   // === PROTECTED ROUTE LOGIC ===
@@ -105,8 +112,8 @@ export default auth(request => {
 
   // === FINAL STEP ===
   // If all authentication checks pass, return the i18n response
-  return i18nResponse;
-});
+  return response;
+}
 
 // === MIDDLEWARE MATCHER CONFIGURATION ===
 // Define which routes this middleware should run on
@@ -127,6 +134,6 @@ export const config = {
      * 2. Static assets are served directly
      * 3. Only page routes go through authentication and i18n logic
      */
-    '/((?!api|_next/static|_next/image|\\.well-known|robots\\.txt|sitemap\\.xml|.*\\.(?:ico|png|svg|js)$|site\\.webmanifest).*)',
+    '/((?!api|auth/callback|_next/static|_next/image|\\.well-known|robots\\.txt|sitemap\\.xml|.*\\.(?:ico|png|svg|js)$|site\\.webmanifest).*)',
   ],
 };

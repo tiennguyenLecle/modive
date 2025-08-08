@@ -1,44 +1,7 @@
-'use client';
+import dynamic from 'next/dynamic';
 
-import { signIn } from 'next-auth/react';
+const LoginClient = dynamic(() => import('./Login.client'), { ssr: false });
 
 export default function LoginPage() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-16">
-      <h3>Login</h3>
-      <p>Choose a login method to continue.</p>
-      <button
-        className="rounded-4 bg-primary p-8 text-white"
-        onClick={() => signIn('google', { callbackUrl: '/view-session' })}
-      >
-        Login with Google
-      </button>
-      <button
-        className="rounded-4 bg-primary p-8 text-white"
-        onClick={() => signIn('kakao', { callbackUrl: '/view-session' })}
-      >
-        Login with KakaoTalk
-      </button>
-      <button
-        className="rounded-4 bg-primary p-8 text-white"
-        onClick={() => signIn('naver', { callbackUrl: '/view-session' })}
-      >
-        Login with Naver
-      </button>
-
-      <button
-        className="rounded-4 bg-primary p-8 text-white"
-        onClick={() => {
-          signIn('credentials', {
-            email: 'tien3107@yopmail.com',
-            password: 'Tien3107@',
-            callbackUrl:
-              '/chat/24d4608f-39f8-4d6e-b4ee-6073d0c058c7?sessionId=ab584cb2-c149-488f-9468-e1af8f009248',
-          });
-        }}
-      >
-        Demo session
-      </button>
-    </div>
-  );
+  return <LoginClient />;
 }

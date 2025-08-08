@@ -1,6 +1,8 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { type NextRequest, type NextResponse } from 'next/server';
 
+import { COOKIE_PREFIX_SB } from '../../utils/constants';
+
 export async function updateSession(
   request: NextRequest,
   response: NextResponse
@@ -9,6 +11,9 @@ export async function updateSession(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      cookieOptions: {
+        name: COOKIE_PREFIX_SB,
+      },
       cookies: {
         get(name: string) {
           return request.cookies.get(name)?.value;

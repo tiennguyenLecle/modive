@@ -1,19 +1,20 @@
 'use client';
 
 import { Avatar, Button, Dropdown, MenuProps, Space, Spin } from 'antd';
-import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
+import { useAuth } from '@/lib/auth-context';
+import { ROUTES } from '@/utils/constants';
+
 export function AuthActions() {
-  const { data: session, status } = useSession();
+  const { status, session, signOut } = useAuth();
   const router = useRouter();
 
-  if (status === 'loading') {
-    return <Spin />;
-  }
+  if (status === 'loading') return <Spin />;
 
-  const handleLogout = () => {
-    signOut({ callbackUrl: '/login' });
+  const handleLogout = async () => {
+    await signOut();
+    router.push(ROUTES.HOME);
   };
 
   if (status === 'authenticated') {
@@ -35,8 +36,8 @@ export function AuthActions() {
       <Dropdown menu={{ items }} trigger={['click']}>
         <a onClick={e => e.preventDefault()}>
           <Space>
-            <Avatar src={session.user?.image} />
-            {session.user?.name || session.user?.email}
+            <Avatar src={session?.user?.user_metadata?.avatar_url} />
+            {session?.user?.user_metadata?.name || session?.user?.email}
           </Space>
         </a>
       </Dropdown>

@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { auth } from '@/lib/auth'; // Import the auth config from src/lib/auth.ts
+import {
+  decodeJwtPayload,
+  extractUserFromPayload,
+  getSupabaseAccessTokenFromRequest,
+  isJwtExpired,
+} from '@/lib/auth-helpers';
+import { getServerAuth } from '@/lib/server-auth';
 
 import type { ApiHandler, HandlerContext } from './validators';
 
@@ -16,9 +22,20 @@ import type { ApiHandler, HandlerContext } from './validators';
  */
 export function withAuth(handler: ApiHandler): ApiHandler {
   return async (request: NextRequest, context: HandlerContext) => {
-    const session = await auth(); // Use next-auth's auth() function
+    // Fast path: use cookie token to avoid a network call when possible
+    const rawToken = getSupabaseAccessTokenFromRequest(request);
+    const payload = rawToken ? decodeJwtPayload(rawToken) : null;
+    const expired = isJwtExpired(payload);
+    const userFromToken = !expired ? extractUserFromPayload(payload) : null;
 
-    if (!session || !session.user) {
+    if (userFromToken) {
+      context.session = { user: userFromToken } as any;
+      return handler(request, context);
+    }
+
+    // Fallback: let server auth helper resolve session/user (will refresh cookies if needed)
+    const { status, user } = await getServerAuth();
+    if (status !== 'authenticated' || !user) {
       return NextResponse.json(
         {
           error: {
@@ -31,7 +48,9 @@ export function withAuth(handler: ApiHandler): ApiHandler {
     }
 
     // Attach user session to the context for downstream handlers
-    context.session = session;
+    context.session = {
+      user: { id: user.id, email: user.email },
+    } as any;
 
     return handler(request, context);
   };

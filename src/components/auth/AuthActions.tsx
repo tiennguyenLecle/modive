@@ -3,21 +3,21 @@
 import { Avatar, Button, Dropdown, MenuProps, Space, Spin } from 'antd';
 import { useRouter } from 'next/navigation';
 
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { ROUTES } from '@/utils/constants';
 
 export function AuthActions() {
-  const { status, session, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const router = useRouter();
 
-  if (status === 'loading') return <Spin />;
+  if (!user) return <Spin />;
 
   const handleLogout = async () => {
     await signOut();
     router.push(ROUTES.HOME);
   };
 
-  if (status === 'authenticated') {
+  if (user) {
     const items: MenuProps['items'] = [
       {
         key: '1',
@@ -36,8 +36,8 @@ export function AuthActions() {
       <Dropdown menu={{ items }} trigger={['click']}>
         <a onClick={e => e.preventDefault()}>
           <Space>
-            <Avatar src={session?.user?.user_metadata?.avatar_url} />
-            {session?.user?.user_metadata?.name || session?.user?.email}
+            <Avatar src={user?.user_metadata?.avatar_url} />
+            {user?.user_metadata?.name || user?.email}
           </Space>
         </a>
       </Dropdown>

@@ -1,15 +1,14 @@
 'use client';
 
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { User } from '@supabase/supabase-js';
 
 import { createSupabaseClient } from '@/lib/supabase/client';
 
 type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 
 type AuthContextValue = {
-  status: AuthStatus;
-  session: any | null;
-  user: any | null;
+  user: User | null;
   signInWithProvider: (
     provider: 'google' | string,
     redirectTo?: string
@@ -21,33 +20,27 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = useMemo(() => createSupabaseClient(), []);
-  const [data, setData] = useState<
-    Pick<AuthContextValue, 'status' | 'session' | 'user'>
-  >({
-    status: 'loading',
-    session: null,
-    user: null,
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     let isActive = true;
     async function init() {
-      const { data } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.getSession();
       if (!isActive) return;
-      setData({
-        status: data.session ? 'authenticated' : 'unauthenticated',
-        session: data.session ?? null,
-        user: data.session?.user ?? null,
-      });
+      if (error || !data.session) {
+        setUser(null);
+      } else {
+        setUser(data.session.user);
+      }
     }
     init();
     const { data: sub } = supabase.auth.onAuthStateChange(
       (_event, newSession) => {
-        setData({
-          status: newSession ? 'authenticated' : 'unauthenticated',
-          session: newSession ?? null,
-          user: newSession?.user ?? null,
-        });
+        if (!newSession) {
+          setUser(null);
+        } else {
+          setUser(newSession.user);
+        }
       }
     );
     return () => {
@@ -74,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const value: AuthContextValue = {
-    ...data,
+    user,
     signInWithProvider,
     signOut,
   };

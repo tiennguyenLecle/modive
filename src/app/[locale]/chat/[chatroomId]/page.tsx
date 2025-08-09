@@ -26,7 +26,6 @@ export default async function ChatRoomPage({
   const { chatroomId } = params;
 
   const res = await ChatApi.getMessages(chatroomId, undefined, 4, 'after');
-  console.log(res);
 
   return (
     <div>

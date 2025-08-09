@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/lib/authentication/auth-context';
 
 export default function LoginClient() {
   const { signInWithProvider } = useAuth();
@@ -36,14 +36,14 @@ export default function LoginClient() {
       >
         Login with KakaoTalk
       </button>
-      <button
+      {/* <button
         className="rounded-4 bg-primary p-8 text-white"
         onClick={async () => {
-          await signInWithProvider('naver', redirectTo);
+          await signInWithProvider('apple', redirectTo);
         }}
       >
-        Login with Naver
-      </button>
+        Login with Apple
+      </button> */}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 import { COOKIE_PREFIX_SB } from '../../utils/constants';
 
-export async function createSupabaseServerClient() {
+export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient(

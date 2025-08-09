@@ -92,5 +92,9 @@
     "withdrawal": "Membership withdrawal",
     "logout": "Log out",
     "my_infomation": "My information"
+  },
+  "chat": {
+    "chapter": "Chapter",
+    "generalization": "Generalization"
   }
 }

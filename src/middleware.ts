@@ -57,10 +57,11 @@ export default async function middleware(request: NextRequest) {
 
   // Refresh Supabase session cookies and read user
   response = await updateSession(request, NextResponse.next());
-  // Supabase @supabase/ssr đặt cookie auth dạng chunked với tiền tố tuỳ chỉnh.
-  // Với cấu hình hiện tại (cookieOptions.name = 'modive-sb'), tên cookie sẽ là 'modive-sb.0', 'modive-sb.1'.
+  // Supabase @supabase/ssr set cookie auth in chunked format with custom prefix.
+  // With current configuration (cookieOptions.name = 'modive.sb-auth_token.'), the cookie name will be 'modive.sb-auth_token.0', 'modive.sb-auth_token.1'.
+
   const isLoggedIn = Boolean(
-    response.cookies.get(`${COOKIE_PREFIX_SB}.0`)?.value
+    request.cookies.get(`${COOKIE_PREFIX_SB}.0`)?.value
   );
 
   // Determine if the current route is public

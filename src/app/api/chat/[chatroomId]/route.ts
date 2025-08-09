@@ -50,7 +50,10 @@ async function getMessagesHandler(
 }
 
 // Validate the URL parameter before executing the handler
-export const GET = pipe(withValidatedParams(paramsSchema))(getMessagesHandler);
+export const GET = pipe(
+  withAuth,
+  withValidatedParams(paramsSchema)
+)(getMessagesHandler);
 
 // --- CREATE A NEW MESSAGE ---
 
@@ -67,13 +70,13 @@ async function createMessageHandler(
   try {
     const { chatroomId } = context.validatedParams;
     const { sessionId, text } = context.validatedBody as CreateMessageBody;
-    const { id: userId, name: userName } = context.session?.user!;
+    const { id: userId, user_metadata } = context.user!;
     const newMessage = await ChatApi.createMessage(
       sessionId,
       chatroomId,
       userId!,
       text,
-      userName!,
+      user_metadata.name || '',
       'male',
       '2000-01-01'
     );

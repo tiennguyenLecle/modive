@@ -1,6 +1,6 @@
 'use client';
 
-import { ComponentProps } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 
 import { ProgressBar } from '@/components';
@@ -13,11 +13,27 @@ type ChatRoomProps = ComponentProps<'div'> & {
 };
 
 export default function ChatRoom({
-  messages,
+  messages: _messages,
   className,
   ...props
 }: ChatRoomProps) {
   const { sendMessage } = useSendMessage();
+
+  const { chatroomId } = useParams();
+
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  console.log('Message from server', _messages);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const res = await NextApi.get<any>(`/api/chat/${chatroomId}`);
+
+      console.log('Message from client', res.data);
+      setMessages(res.data as Message[]);
+    };
+    fetchMessages();
+  }, [chatroomId]);
 
   return (
     <div className={cx('flex h-full flex-col', className)} {...props}>

@@ -3,7 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { Navigation } from '@/components';
 import MenuTab from '@/components/MenuTab';
 import { ChatApi } from '@/lib/api/server';
-import { getServerAuth } from '@/lib/server-auth';
+import { getServerAuth } from '@/lib/authentication/server-auth';
 
 import ChatView from './ChatView.client';
 
@@ -21,8 +21,10 @@ export const generateMetadata = async ({
 
 export default async function Home() {
   const t = await getTranslations();
-  const { status, user } = await getServerAuth();
-  if (status !== 'authenticated' || !user) return <div>No session</div>;
+  const user = await getServerAuth();
+  if (!user) {
+    return <div>No session</div>;
+  }
   const chatSession: any = await ChatApi.searchSessionsByUserId(user.id);
   const chatBotName = process.env.DIT_CHATBOT_NAME;
 

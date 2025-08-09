@@ -1,6 +1,6 @@
 # Authentication in Modive
 
-This document outlines the authentication and session management architecture for the Modive application, built upon `next-auth` (Auth.js).
+This document outlines the authentication and session management architecture for the Modive application, built upon Supabase Auth.
 
 ## Table of Contents
 
@@ -8,104 +8,101 @@ This document outlines the authentication and session management architecture fo
 - [Configuration](#configuration)
   - [Environment Variables](#environment-variables)
 - [Session Management](#session-management)
-  - [Server-Side: `auth()`](#server-side-auth)
-  - [Client-Side: `useSession()`](#client-side-usesession)
+  - [Server-Side: `getServerAuth()`](#server-side-getserverauth)
+  - [Client-Side: `useAuth()`](#client-side-useauth)
 - [Authentication Providers](#authentication-providers)
-  - [Google](#google)
-  - [KakaoTalk (TODO)](#kakaotalk-todo)
+  - [Google, Kakao, Naver](#google-kakao-naver)
 - [Protecting API Routes](#protecting-api-routes)
   - [The `withAuth` HOF](#the-withauth-hof)
   - [Usage with `pipe`](#usage-with-pipe)
-- [Callbacks and Token Management](#callbacks-and-token-management)
 - [Cookie Details](#cookie-details)
 
 ---
 
 ## Core Technology
 
-We use **`next-auth` v5 (Auth.js)**, which is tightly integrated with the Next.js App Router. This library handles the complexities of OAuth 2.0 flows, session management, and JWT handling.
+We use **Supabase Auth** with `@supabase/supabase-js` and `@supabase/ssr`.
+The OAuth flow (e.g., Google) is handled by Supabase. Our app exchanges the authorization code at `/api/auth/callback` to set HTTP‑Only cookies for the app domain.
 
 ## Configuration
 
-The core configuration for `next-auth` resides in `src/lib/auth.ts`. This file exports the `auth` object and the route handlers (`GET`, `POST`) that are used in the catch-all API route `src/app/api/auth/[...nextauth]/route.ts`.
+The core configuration lives in:
+
+- `src/app/api/auth/callback/route.ts`: exchanges the OAuth code via `supabase.auth.exchangeCodeForSession(code)` and sets cookies
+- `src/lib/auth-context.tsx`: client auth context (`useAuth`) reading Supabase session
+- `src/lib/server-auth.ts`: server helper `getServerAuth()` to read session on the server
+- `src/lib/supabase/{client,server,middleware}.ts`: Supabase clients and middleware helper
 
 ### Environment Variables
 
-Secure credentials and configuration values are stored in `.env.local`.
+Stored in `.env.local`:
 
-- `AUTH_SECRET`: A **critical** secret key used to encrypt JWTs and sign cookies. It must be a long, random string (e.g., generated with `openssl rand -hex 32`). **NEVER** commit this to version control.
-- `AUTH_URL`: The canonical URL of the application (e.g., `http://localhost:3000`).
-- `GOOGLE_CLIENT_ID`: The client ID obtained from the Google Cloud Console for the OAuth application.
-- `GOOGLE_CLIENT_SECRET`: The client secret obtained from the Google Cloud Console.
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Provider secrets are configured in Supabase Dashboard (Auth > Providers)
 
 ## Session Management
 
-`next-auth` provides a unified way to access session data on both the server and the client.
+Supabase provides session access on both the server and client via SDKs.
 
-### Server-Side: `auth()`
+### Server-Side: `getServerAuth()`
 
-On the server (in Server Components, API Routes, middleware), we use the `auth()` function exported from `src/lib/auth.ts`.
+Use `getServerAuth()` from `src/lib/server-auth.ts` in Server Components, API Routes, and server logic.
 
-- **How it works:** It directly reads and verifies the session cookie/JWT from the incoming request headers.
-- **Usage:**
+```ts
+import { getServerAuth } from '@/lib/server-auth';
 
-  ```typescript
-  import { auth } from '@/lib/auth';
+const { status, user, session } = await getServerAuth();
+if (status !== 'authenticated') {
+  // redirect or return 401
+}
+```
 
-  async function MyServerComponent() {
-    const session = await auth();
-    if (!session?.user) {
-      // Handle unauthenticated state, e.g., redirect
-    }
-    return <div>Welcome, {session.user.name}</div>;
+### Client-Side: `useAuth()`
+
+In Client Components (`'use client'`), use `useAuth()` from `src/lib/auth-context.tsx`.
+
+```tsx
+'use client';
+
+import { useAuth } from '@/lib/auth-context';
+
+function AuthButton() {
+  const { status, user, signInWithProvider, signOut } = useAuth();
+  if (status === 'loading') return null;
+  if (status === 'authenticated') {
+    return (
+      <div>
+        {user?.email}
+        <button onClick={() => signOut()}>Logout</button>
+      </div>
+    );
   }
-  ```
-
-### Client-Side: `useSession()`
-
-In Client Components (`'use client'`), we use the `useSession` hook from `next-auth/react`.
-
-- **Prerequisite:** The application's root layout must be wrapped in a `<SessionProvider>`, which we handle in `src/app/providers.tsx`.
-- **How it works:** This hook reads the session data from the React context provided by `SessionProvider`. It also handles automatic refetching and provides a `status` field (`'loading'`, `'authenticated'`, `'unauthenticated'`).
-- **Usage:**
-
-  ```typescript
-  'use client';
-  import { useSession, signIn } from 'next-auth/react';
-
-  function AuthButton() {
-    const { data: session, status } = useSession();
-
-    if (status === 'loading') return <p>Loading...</p>;
-    if (session) {
-      return <p>Signed in as {session.user.email}</p>;
-    }
-    return <button onClick={() => signIn('google')}>Sign in</button>;
-  }
-  ```
+  return (
+    <button onClick={() => signInWithProvider('google')}>
+      Sign in with Google
+    </button>
+  );
+}
+```
 
 ## Authentication Providers
 
 We support various OAuth providers.
 
-### Google
+### Google, Kakao, Naver
 
-- **Status:** Implemented.
-- **Configuration:** Uses `GoogleProvider` with `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
-
-### KakaoTalk (TODO)
-
-- **Status:** Planned.
-- **Action:** To implement, we will need to obtain credentials from the Kakao Developers portal and add the `KakaoProvider` to `src/lib/auth.ts`.
+- Enable providers in Supabase Dashboard (Auth > Providers)
+- Add redirect URL: `http://localhost:3000/api/auth/callback` (dev) and production domain.
 
 ## Protecting API Routes
 
-Our internal API routes (under `src/app/api/`) are protected to ensure only authenticated users can access them. We use a custom Higher-Order Function (HOF) for this.
+Our API routes (`src/app/api/`) are protected to ensure only authenticated users can access them.
 
 ### The `withAuth` HOF
 
 - **Location:** `src/lib/api/middleware/auth.ts`
-- **Functionality:** This HOF wraps an API handler. It calls `await auth()` internally. If no session is found, it immediately returns a `401 Unauthorized` error. If a session exists, it attaches the `session.user` object to the `context.user` and calls the original handler.
+- **Functionality:** This HOF wraps an API handler. It first tries to decode the access token from cookies, then falls back to `getServerAuth()` to refresh/read user. If no user, returns 401; else attaches to `context.session.user`.
 
 ### Usage with `pipe`
 
@@ -126,13 +123,8 @@ export const POST = pipe(
 )(myProtectedHandler);
 ```
 
-## Callbacks and Token Management
-
-We use the `callbacks` object in `src/lib/auth.ts` to customize the JWT and session objects.
-
-- `jwt({ token, user })`: This callback is executed whenever a JWT is created or updated. We use it to persist the user's database ID (`user.id`) into the token (`token.id`).
-- `session({ session, token })`: This callback is executed whenever a session is accessed on the client. We use it to transfer the `token.id` from the JWT into the `session.user` object, making the user ID available to client components via `useSession`.
-
 ## Cookie Details
 
-`next-auth` handles cookie management automatically. By default, it creates a secure, `HttpOnly` session cookie. The name and options of the cookie can be customized in the `NextAuth` configuration if needed, but the defaults are generally recommended.
+Supabase stores auth session in HTTP‑Only cookies (chunked): `${COOKIE_PREFIX_SB}.0`, `${COOKIE_PREFIX_SB}.1`.
+We set the prefix via `cookieOptions.name` when creating server/client/middleware Supabase clients.
+Do not decode cookies manually; use the SDK (`getServerAuth()` / `useAuth()`).

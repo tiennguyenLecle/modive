@@ -1,4 +1,4 @@
-import type { Session } from 'next-auth';
+import { User } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { z, ZodError, type ZodIssue } from 'zod';
 
@@ -10,9 +10,12 @@ export function pipe(...functions: Function[]) {
   };
 }
 
+// Align with Supabase `auth.users` minimal shape used in our app.
+// Note: Keep fields optional to avoid breaking handlers that only set a subset.
+
 export interface HandlerContext {
   params?: { [key: string]: string | string[] | undefined };
-  session?: Session;
+  user?: User;
   validatedBody?: any;
   validatedQuery?: any;
   validatedParams?: any;

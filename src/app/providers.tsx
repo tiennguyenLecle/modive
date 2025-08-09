@@ -3,7 +3,7 @@
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 
 import AntdRegistry from '@/lib/antd-registry';
-import { AuthProvider } from '@/lib/auth-context';
+import { AuthProvider } from '@/lib/authentication/auth-context';
 import { ThemeRegistry } from '@/lib/theme-registry';
 
 type Props = {

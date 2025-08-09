@@ -8,8 +8,7 @@ import Chapter from '@/components/Chapter';
 import ChatListItem from '@/components/ChatListItem';
 import Modal, { ModalHandle } from '@/components/Modal';
 import RecommendationContainer from '@/components/Recommendation/Container';
-import ContentsCard from '@/components/Recommendation/ContentsCard';
-import ContentsCardList from '@/components/Recommendation/ContentsCardList';
+import { Story } from '@/components/Story';
 
 export default function ComponentsPage() {
   const modalRef = useRef<ModalHandle>(null);
@@ -80,6 +79,21 @@ export default function ComponentsPage() {
       <div className="flex items-center justify-between p-2">
         <p>New message</p>
         <Badge.CountNode count={3} showZero />
+        <h2>Story Component</h2>
+
+        <div className="flex flex-col gap-16 bg-white p-16">
+          <Story.Text>
+            {
+              'You have made their debut only after a tough trainee life. But the public&apos;s response is still cold ... We got married. He will appear in the reality entertainment program We Got Married to show a virtual marriage.'
+            }
+          </Story.Text>
+          <Story.Image
+            src="https://picsum.photos/seed/1/400"
+            alt="Story Image"
+            width={160}
+            height={160}
+          />
+        </div>
       </div>
     </div>
   );

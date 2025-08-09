@@ -77,6 +77,21 @@ export default function ComponentsPage() {
           <AlarmIcon width={24} height={24} className="text-primary" />
         </Badge.Wrapper>
         <Badge.CountNode count={3} showZero />
+        <h2>Story Component</h2>
+
+        <div className="flex flex-col gap-16 bg-white p-16">
+          <Story.Text>
+            {
+              'You have made their debut only after a tough trainee life. But the public&apos;s response is still cold ... We got married. He will appear in the reality entertainment program We Got Married to show a virtual marriage.'
+            }
+          </Story.Text>
+          <Story.Image
+            src="https://picsum.photos/seed/1/400"
+            alt="Story Image"
+            width={160}
+            height={160}
+          />
+        </div>
       </div>
       <div className="p-2">
         <h2>Story Component</h2>

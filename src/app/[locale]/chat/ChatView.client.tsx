@@ -1,7 +1,8 @@
 'use client';
 
-import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
+import { useAuth } from '@/lib/authentication/auth-context';
 import { Link } from '@/lib/navigation';
 
 // Define a more specific type for the expected data prop
@@ -14,21 +15,11 @@ export default function ChatView({
   sessions: chatSessions,
   chatBotName,
 }: ChatViewProps) {
-  const { data: userSession, status } = useSession();
+  const router = useRouter();
 
   return (
     <div className="container min-h-0 overflow-auto p-4">
-      <button
-        onClick={() => {
-          signOut({ redirectTo: '/' });
-        }}
-      >
-        Logout
-      </button>
       <h2 className="text-22 font-semibold">User sessions</h2>
-      <pre className="rounded mt-4 bg-gray-100 p-2">
-        <code>{JSON.stringify(userSession, null, 2)}</code>
-      </pre>
 
       <div>
         <div>{chatSessions.data.length}</div>

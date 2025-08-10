@@ -4,16 +4,16 @@
 
 ## 📋 Table of Contents
 
-- [1. 🌟 Overview](#1--overview)
-- [2. 🔐 Authentication](#2--authentication)
-- [3. 📡 API Endpoints](#3--api-endpoints)
-  - [3.1. 🔵 Create New Session](#31--create-new-session)
-  - [3.2. 🟢 Search Existing Sessions](#32--search-existing-sessions)
-  - [3.3. 🔵 Send Messages](#33--send-messages)
-  - [3.4. 🟢 Get Messages](#34--get-messages)
-- [❌ Error Codes Reference](#-error-codes-reference)
-- [4. 🛠️ Troubleshooting](#4-️-troubleshooting)
-- [5. 📞 Support](#5--support)
+- [1. 🌟 Overview](#1-overview)
+- [2. 🔐 Authentication](#2-authentication)
+- [3. 📡 API Endpoints](#3-api-endpoints)
+  - [3.1. 🔵 Create New Session](#31-create-new-session)
+  - [3.2. 🟢 Search Existing Sessions](#32-search-existing-sessions)
+  - [3.3. 🔵 Send Messages](#33-send-messages)
+  - [3.4. 🟢 Get Messages](#34-get-messages)
+- [❌ Error Codes Reference](#4-error-codes-reference)
+- [4. 🛠️ Troubleshooting](#5-troubleshooting)
+- [5. 📞 Support](#6-support)
 
 ---
 
@@ -394,7 +394,7 @@ curl -X GET "{{API_URL}}/chats/chatroom/room_uuid_xyz789abc123?cursor=msg_uuid_x
 
 ---
 
-## ❌ Error Codes Reference
+## 4. ❌ Error Codes Reference
 
 | Status Code                                                                                       | Error Code           | Description                | Solution                                    |
 | ------------------------------------------------------------------------------------------------- | -------------------- | -------------------------- | ------------------------------------------- |
@@ -403,7 +403,7 @@ curl -X GET "{{API_URL}}/chats/chatroom/room_uuid_xyz789abc123?cursor=msg_uuid_x
 | <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 4px;">404</span> | `UNIVERSE_NOT_FOUND` | Universe does not exist    | Check `bundleId` or `universeId` is correct |
 | <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 4px;">500</span> | `22P02`              | Invalid UUID format        | Ensure all IDs are valid UUID format        |
 
-## 4. 🛠️ Troubleshooting
+## 5. 🛠️ Troubleshooting
 
 ### Common Issues
 
@@ -457,7 +457,7 @@ curl -X GET "{{API_URL}}/chats/chatroom/room_uuid_xyz789abc123?cursor=msg_uuid_x
 
 ---
 
-## 5. 📞 Support
+## 6. 📞 Support
 
 - **API Version**: v3
 - **Documentation Updated**: 2025-08-10

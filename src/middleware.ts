@@ -16,8 +16,7 @@ const publicRoutes = ['/', '/login', '/register'];
 const authRoutes = ['/login', '/register'];
 
 // Protected routes - require authentication (redirected to login if not authenticated)
-// const protectedRoutes = ['/chat', '/profile'];
-const protectedRoutes: string[] = [];
+const protectedRoutes = ['/chat', '/profile'];
 
 // === INTERNATIONALIZATION SETUP ===
 // Create the next-intl middleware with our locale configuration

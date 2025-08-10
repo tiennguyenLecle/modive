@@ -4,17 +4,19 @@
 
 ## 📋 Table of Contents
 
-- [🌟 Overview](#overview-1)
-- [🔐 Authentication](#authentication-1)
-- [📡 API Endpoints](#api-endpoints-1)
+- [🌟 Overview](#overview)
+- [🔐 Authentication](#authentication)
+- [📡 API Endpoints](#api-endpoints)
   - [1. 🔵 Create New Session](#1-create-new-session)
   - [2. 🟢 Search Existing Sessions](#2-search-existing-sessions)
   - [3. 🔵 Send Messages](#3-send-messages)
   - [4. 🟢 Get Messages](#4-get-messages)
-- [❌ Error Codes Reference](#error-codes-reference-1)
-- [🛠️ Troubleshooting](#troubleshooting-1)
+- [❌ Error Codes Reference](#error-codes-reference)
+- [🛠️ Troubleshooting](#troubleshooting)
 
 ---
+
+<a id="overview"></a>
 
 ## 🌟 Overview
 
@@ -33,6 +35,8 @@
 
 ---
 
+<a id="authentication"></a>
+
 ## 🔐 Authentication
 
 All API endpoints require authentication using an API key passed in the `x-api-key` header.
@@ -42,6 +46,8 @@ All API endpoints require authentication using an API key passed in the `x-api-k
 ```
 
 ---
+
+<a id="api-endpoints"></a>
 
 ## 📡 API Endpoints
 

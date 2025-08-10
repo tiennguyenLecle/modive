@@ -403,6 +403,8 @@ curl -X GET "{{API_URL}}/chats/chatroom/room_uuid_xyz789abc123?cursor=msg_uuid_x
 | <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 4px;">404</span> | `UNIVERSE_NOT_FOUND` | Universe does not exist    | Check `bundleId` or `universeId` is correct |
 | <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 4px;">500</span> | `22P02`              | Invalid UUID format        | Ensure all IDs are valid UUID format        |
 
+---
+
 ## 5. 🛠️ Troubleshooting
 
 ### Common Issues

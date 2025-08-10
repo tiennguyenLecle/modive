@@ -4,19 +4,20 @@
 
 ## 📋 Table of Contents
 
-- [🌟 Overview](#-overview)
-- [🔐 Authentication](#-authentication)
-- [📡 API Endpoints](#-api-endpoints)
-  - [1. 🔵 Create New Session](#1-create-new-session)
-  - [2. 🟢 Search Existing Sessions](#2-search-existing-sessions)
-  - [3. 🔵 Send Messages](#3-send-messages)
-  - [4. 🟢 Get Messages](#4-get-messages)
+- [1. 🌟 Overview](#1--overview)
+- [2. 🔐 Authentication](#2--authentication)
+- [3. 📡 API Endpoints](#3--api-endpoints)
+  - [3.1. 🔵 Create New Session](#31--create-new-session)
+  - [3.2. 🟢 Search Existing Sessions](#32--search-existing-sessions)
+  - [3.3. 🔵 Send Messages](#33--send-messages)
+  - [3.4. 🟢 Get Messages](#34--get-messages)
 - [❌ Error Codes Reference](#-error-codes-reference)
-- [🛠️ Troubleshooting](#-troubleshooting)
+- [4. 🛠️ Troubleshooting](#4-️-troubleshooting)
+- [5. 📞 Support](#5--support)
 
 ---
 
-## 🌟 Overview
+## 1. 🌟 Overview
 
 1. When a new user enters the app and clicks **Start Chatting**, the app will:
    - Call **Search Existing Sessions** API to check if there is already an active session for that user.
@@ -33,7 +34,7 @@
 
 ---
 
-## 🔐 Authentication
+## 2. 🔐 Authentication
 
 All API endpoints require authentication using an API key passed in the `x-api-key` header.
 
@@ -43,7 +44,7 @@ All API endpoints require authentication using an API key passed in the `x-api-k
 
 ---
 
-## 📡 API Endpoints
+## 3. 📡 API Endpoints
 
 | Method                                                                                                                | Endpoint                           | Purpose                    | Auth Required | Status    |
 | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | -------------------------- | ------------- | --------- |
@@ -54,7 +55,7 @@ All API endpoints require authentication using an API key passed in the `x-api-k
 
 ---
 
-## 1. 🔵 Create New Session
+## 3.1. 🔵 Create New Session
 
 **POST** `{{API_URL}}/v3/universe/{{bundleId}}`
 
@@ -119,7 +120,7 @@ curl -X POST "{{API_URL}}/v3/universe/my-chat-universe" \
 
 ---
 
-## 2. 🟢 Search Existing Sessions
+## 3.2. 🟢 Search Existing Sessions
 
 **GET** `{{API_URL}}/sessions/search`
 
@@ -211,7 +212,7 @@ curl -X GET "{{API_URL}}/sessions/search?universeId=uuid-1234-5678-9abc-def0&end
 
 ---
 
-## 3. 🔵 Send Messages
+## 3.3. 🔵 Send Messages
 
 **POST** `{{API_URL}}/v3/universe/session/{{sessionId}}`
 
@@ -312,7 +313,7 @@ curl -X POST "{{API_URL}}/v3/universe/session/sess_uuid_abc123def456" \
 
 ---
 
-## 4. 🟢 Get Messages
+## 3.4. 🟢 Get Messages
 
 **GET** `{{API_URL}}/chats/chatroom/{{chatroomId}}`
 
@@ -402,7 +403,7 @@ curl -X GET "{{API_URL}}/chats/chatroom/room_uuid_xyz789abc123?cursor=msg_uuid_x
 | <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 4px;">404</span> | `UNIVERSE_NOT_FOUND` | Universe does not exist    | Check `bundleId` or `universeId` is correct |
 | <span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 4px;">500</span> | `22P02`              | Invalid UUID format        | Ensure all IDs are valid UUID format        |
 
-## 🛠️ Troubleshooting
+## 4. 🛠️ Troubleshooting
 
 ### Common Issues
 
@@ -456,7 +457,7 @@ curl -X GET "{{API_URL}}/chats/chatroom/room_uuid_xyz789abc123?cursor=msg_uuid_x
 
 ---
 
-## 📞 Support
+## 5. 📞 Support
 
 - **API Version**: v3
 - **Documentation Updated**: 2025-08-10

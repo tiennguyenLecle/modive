@@ -1,5 +1,6 @@
 'use client';
 
+import { Provider } from 'jotai';
 import { SessionProvider } from 'next-auth/react';
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 
@@ -21,7 +22,9 @@ export const Providers = ({ children, messages, locale }: Props) => {
     <SessionProvider>
       <ThemeRegistry>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <AntdRegistry>{children}</AntdRegistry>
+          <AntdRegistry>
+            <Provider>{children}</Provider>
+          </AntdRegistry>
         </NextIntlClientProvider>
       </ThemeRegistry>
     </SessionProvider>

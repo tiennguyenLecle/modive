@@ -3,20 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  /* Define colors for light and dark mode */
-  :root {
-    --primary: #ff627b;
-    --secondary: #ffa7b5;
-    --tertiary: #ffdce1;
-    --background: #ffffff;
-    --foreground: #171717;
-    --black: 0 0 0;
-  }
-
-  .dark {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  @import url(variables.css);
 
   html {
     /* In this project, use 1 rem as default spacing unit (1rem = 1px) */

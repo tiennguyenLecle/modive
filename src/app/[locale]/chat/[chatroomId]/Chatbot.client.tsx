@@ -1,197 +1,265 @@
-// 'use client';
+'use client';
 
-// import {
-//   ChangeEvent,
-//   ComponentProps,
-//   useCallback,
-//   useMemo,
-//   useRef,
-//   useState,
-// } from 'react';
-// import { useParams, useSearchParams } from 'next/navigation';
+import {
+  ChangeEvent,
+  ComponentProps,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
 
-// import { NextApi } from '@/lib/api';
-// import { Message } from '@/lib/api/types/chat.types';
-// // @ts-ignore
-// //disable eslin
-// import {
-//   ChatboxComposer,
-//   ChatboxLayout,
-//   MessageInfoProps,
-//   MessageList,
-// } from '@/lib/chatbot-modules';
+import { NextApi } from '@/lib/api';
+import { Message, SpeakerType } from '@/lib/api/types/chat.types';
+// @ts-ignore
+//disable eslin
+import {
+  ChatboxComposer,
+  ChatboxLayout,
+  MessageInfoProps,
+  MessageList,
+} from '@/lib/chatbot-modules';
 
-// import '@/lib/chatbot-modules/dist/styles.css';
+import '@/lib/chatbot-modules/dist/styles.css';
 
-// import dayjs from 'dayjs';
-// import { includes } from 'zod';
+import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
+import { useSession } from 'next-auth/react';
 
-// import { filterMessageConditions } from '@/utils/method';
+import { messagesAtom } from '@/atoms/messagesAtom';
+import { filterMessageConditions } from '@/utils/method';
 
-// type ChatbotProps = ComponentProps<'div'> & {
-//   messages: Message[];
-// };
+import { LoadingDots } from './Loading.client';
 
-// const DEFAULT_IMAGE_URL = 'https://cdn3.emoji.gg/emojis/10098-pervy-look.png';
+type ChatbotProps = ComponentProps<'div'> & {
+  messages: Message[];
+  chatbotName: string;
+};
 
-// export default function Chatbot({ messages: initialMessages }: ChatbotProps) {
-//   const { sendMessage } = useSendMessage();
-//   const [messages, setMessages] = useState<Message[]>(initialMessages || []);
-//   const [newMessage, setNewMessage] = useState('');
-//   const { chatroomId } = useParams();
-//   const messageListRef = useRef<any>(null);
-//   const [isPreviousLoading, setIsPreviousLoading] = useState(false);
-//   const messagesRef = useRef<Message[]>(initialMessages || []);
-//   const prevLoadMoreRef = useRef<boolean>(false);
+const DEFAULT_IMAGE_URL = 'https://cdn3.emoji.gg/emojis/10098-pervy-look.png';
 
-//   const handleLoadMore = useCallback(async () => {
-//     if (prevLoadMoreRef.current) return;
-//     prevLoadMoreRef.current = true;
-//     setIsPreviousLoading(true);
+export default function Chatbot({
+  messages: initialMessages,
+  chatbotName,
+}: ChatbotProps) {
+  const { sendMessage } = useSendMessage();
+  const [messages, setMessages] = useAtom(messagesAtom);
+  const [newMessage, setNewMessage] = useState('');
+  const { chatroomId } = useParams();
+  const messageListRef = useRef<any>(null);
+  const [isPreviousLoading, setIsPreviousLoading] = useState(false);
+  const messagesRef = useRef<Message[]>(initialMessages || []);
+  const prevLoadMoreRef = useRef<boolean>(false);
+  const { data: session, status } = useSession();
 
-//     const prevMessages = messagesRef?.current?.length;
-//     const beforeIdx = messagesRef?.current?.[0]?.id;
+  useEffect(() => {
+    setMessages(initialMessages);
+  }, [initialMessages, setMessages]);
 
-//     const res: any = await NextApi.get(
-//       `/api/chat/${chatroomId}?direction=before&cursor=${beforeIdx}&limit=20`
-//     );
+  const handleLoadMore = useCallback(async () => {
+    if (prevLoadMoreRef.current) return;
+    prevLoadMoreRef.current = true;
+    setIsPreviousLoading(true);
 
-//     if (res?.data?.length > 0) {
-//       const newData = [...res.data, ...messagesRef?.current];
-//       messagesRef.current = newData;
-//       setMessages(newData);
+    const prevMessages = messagesRef?.current?.length;
+    const beforeIdx = messagesRef?.current?.[0]?.id;
 
-//       prevLoadMoreRef.current = false;
-//       setTimeout(() => {
-//         (messageListRef as any).current.scrollToIndex({
-//           index: newData.length - prevMessages,
-//           align: 'end',
-//           behavior: 'instant',
-//         });
-//         setIsPreviousLoading(false);
-//       }, 100);
-//     } else {
-//       prevLoadMoreRef.current = true;
-//       setIsPreviousLoading(false);
-//     }
-//   }, [messages, isPreviousLoading]);
+    const res: any = await NextApi.get(
+      `/api/chat/${chatroomId}?direction=before&cursor=${beforeIdx}&limit=20`
+    );
 
-//   const handleChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-//     setNewMessage(e.target.value);
-//   }, []);
+    if (res?.data?.length > 0) {
+      const newData = [...res.data.reverse(), ...messagesRef?.current];
+      setMessages(newData);
+      messagesRef.current = newData;
+      prevLoadMoreRef.current = false;
 
-//   const handleMessageText = (message: string) => {
-//     if (typeof message === 'string' && /\n+/.test(message)) {
-//       const parts = message?.split(/\n+/)?.filter(Boolean) || [];
-//       if (parts.length === 0) return [];
+      setTimeout(() => {
+        (messageListRef as any).current.scrollToIndex({
+          index: newData.length - prevMessages,
+          align: 'end',
+          behavior: 'instant',
+        });
+        setIsPreviousLoading(false);
+      }, 100);
+    } else {
+      prevLoadMoreRef.current = true;
+      setIsPreviousLoading(false);
+    }
+  }, [messages, isPreviousLoading]);
 
-//       return parts.map(part => {
-//         const isImage = part.startsWith('::image{id=');
+  const handleChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setNewMessage(e.target.value);
+  }, []);
 
-//         if (isImage) {
-//           const imageId = part?.split('{id=')[1]?.split('}')[0];
-//           console.log('aaa part imageId', imageId);
-//           return {
-//             type: 'image',
-//             imageUrl: DEFAULT_IMAGE_URL,
-//             message: '',
-//           };
-//         }
-//         return {
-//           type: 'text',
-//           message: part,
-//         };
-//       });
-//     }
-//   };
+  const handleMessageText = (message: string) => {
+    if (typeof message === 'string' && /\n+/.test(message)) {
+      const parts = message?.split(/\n+/)?.filter(Boolean) || [];
+      if (parts.length === 0) return [];
 
-//   const mappedMessages = (messages: Message[]): MessageInfoProps[] => {
-//     const seenIds = new Set<string>();
+      return parts.map(part => {
+        const isImage = part.startsWith('::image{id=');
 
-//     const baseMapped = messages
-//       .filter(msg => !filterMessageConditions(msg.message, msg.id, seenIds))
-//       .map(msg => ({
-//         id: msg.id,
-//         chatroomId: msg.chatroom_id,
-//         speakerType: msg.speaker_type ?? 'user',
-//         speakerId: msg.speaker_id,
-//         name: msg.speaker_id,
-//         message: msg.message,
-//         createdAt: msg.created_at ? dayjs(msg.created_at).format('HH:mm') : '',
-//         avatarUrl: DEFAULT_IMAGE_URL,
-//         messageArray: handleMessageText(msg.message),
-//       }));
+        if (isImage) {
+          const imageId = part?.split('{id=')[1]?.split('}')[0];
 
-//     return baseMapped;
-//   };
+          return {
+            type: 'image',
+            imageUrl: DEFAULT_IMAGE_URL,
+            message: '',
+          };
+        }
+        return {
+          type: 'text',
+          message: part,
+        };
+      });
+    }
+  };
 
-//   console.log(mappedMessages(messages));
+  const mappedMessages = (messages: Message[]): MessageInfoProps[] => {
+    const seenIds = new Set<string>();
 
-//   const messageComponent = useMemo(
-//     () => (
-//       <MessageList
-//         messages={mappedMessages(messages)}
-//         conversationId={chatroomId as string}
-//         cache="local"
-//         onLoadMorePreviousData={handleLoadMore}
-//         showScrollToEndButton={true}
-//         className={'px-16'}
-//         ref={messageListRef}
-//         isPrevLoading={isPreviousLoading}
-//         isPrevLoadingComponent={
-//           <div className="flex h-40 w-full items-center justify-center text-16">
-//             Loading...
-//           </div>
-//         }
-//       />
-//     ),
-//     [messages, handleLoadMore, isPreviousLoading, messageListRef, chatroomId]
-//   );
+    const baseMapped = messages
+      .filter(msg => !filterMessageConditions(msg.message, msg.id, seenIds))
+      .map(msg => ({
+        id: msg.id,
+        chatroomId: msg.chatroom_id,
+        speakerType: msg.speaker_type ?? 'user',
+        speakerId: msg.speaker_id,
+        name: msg.speaker_id,
+        message:
+          msg.id === 'temparareryChatbotItemId' ? <LoadingDots /> : msg.message,
+        createdAt: msg.created_at ? dayjs(msg.created_at).format('HH:mm') : '',
+        avatarUrl: DEFAULT_IMAGE_URL,
+        messageArray: handleMessageText(msg.message),
+      }));
 
-//   const composerComponent = useMemo(
-//     () => (
-//       <ChatboxComposer
-//         textareaProps={{
-//           value: newMessage,
-//           onChange: handleChange,
-//           autoSize: {
-//             minRows: 1,
-//             maxRows: 5,
-//           },
-//         }}
-//         sendButtonComponent={{
-//           onClick: () => sendMessage(newMessage),
-//           disabled: !newMessage.trim(),
-//           children: 'Send',
-//         }}
-//       />
-//     ),
-//     [newMessage, handleChange, sendMessage]
-//   );
+    return baseMapped;
+  };
 
-//   return (
-//     <ChatboxLayout
-//       backgroundColor="#ed00ff40"
-//       layoutHeight="80dvh"
-//       messageComponent={messageComponent}
-//       composerComponent={composerComponent}
-//     />
-//   );
-// }
+  const messageComponent = useMemo(
+    () => (
+      <MessageList
+        messages={mappedMessages(messages)}
+        conversationId={chatroomId as string}
+        cache="local"
+        onLoadMorePreviousData={handleLoadMore}
+        showScrollToEndButton={true}
+        className={'px-16'}
+        ref={messageListRef}
+        isPrevLoading={isPreviousLoading}
+        isPrevLoadingComponent={
+          <div className="flex h-40 w-full items-center justify-center text-16">
+            Loading...
+          </div>
+        }
+      />
+    ),
+    [messages, handleLoadMore, isPreviousLoading, messageListRef, chatroomId]
+  );
 
-// const useSendMessage = () => {
-//   const { chatroomId } = useParams();
-//   const searchParams = useSearchParams();
-//   const sessionId = searchParams.get('sessionId');
+  const composerComponent = useMemo(
+    () => (
+      <ChatboxComposer
+        textareaProps={{
+          value: newMessage,
+          onChange: handleChange,
+          autoSize: {
+            minRows: 1,
+            maxRows: 5,
+          },
+        }}
+        sendButtonComponent={{
+          onClick: async () => {
+            let lastMessageId = messages[messages.length - 1]?.id;
+            const newMessageUser = {
+              id: '1',
+              chatroom_id: chatroomId as string,
+              speaker_type: 'user' as SpeakerType,
+              speaker_id: session?.user?.id,
+              message: newMessage,
+              created_at: dayjs().toISOString(),
+            };
 
-//   const sendMessage = async (text: string) => {
-//     await NextApi.post(`/api/chat/${chatroomId}`, {
-//       body: {
-//         sessionId,
-//         text: text,
-//       },
-//     });
-//   };
+            const temparareryChatbotItem = {
+              id: 'temparareryChatbotItemId',
+              chatroom_id: chatroomId as string,
+              speaker_type: 'chatbot' as SpeakerType,
+              speaker_id: chatbotName,
+              message: 'Thinking',
+              created_at: dayjs().toISOString(),
+            };
 
-//   return { sendMessage };
-// };
+            setMessages((prev: Message[]) => [
+              ...prev,
+              newMessageUser,
+              temparareryChatbotItem,
+            ]);
+            await sendMessage(newMessage);
+
+            const startTime = Date.now();
+            const interval = setInterval(async () => {
+              const res: any = await NextApi.get(
+                `/api/chat/${chatroomId}?limit=20&direction=after&cursor=${lastMessageId}`
+              );
+              const newMessages = res?.data ?? [];
+              console.log('bbb newMessages', newMessages);
+
+              if (newMessages.length >= 2) {
+                // Có đủ 2 messages => add ngay
+                messagesRef.current = [...messages, ...newMessages];
+                setMessages(messagesRef.current);
+                setNewMessage('');
+                clearInterval(interval);
+              } else if (Date.now() - startTime >= 30000) {
+                // Hết 20s
+                if (newMessages.length === 1) {
+                  // Thêm error field
+                  const erroredMessage = { ...newMessages[0], error: true };
+                  messagesRef.current = [...messages, erroredMessage];
+                  setMessages(messagesRef.current);
+                }
+                // Nếu 0 tin nhắn mới thì không add gì
+                clearInterval(interval);
+              }
+            }, 2000);
+          },
+          disabled: !newMessage.trim(),
+          children: 'Send',
+        }}
+      />
+    ),
+    [newMessage, handleChange, sendMessage]
+  );
+
+  console.log('bbb hhh messages', messages);
+
+  return (
+    <ChatboxLayout
+      backgroundColor="var(--color-background)"
+      layoutHeight="calc(100dvh - 56px - 48px)" // 56px + 48px: header height
+      messageComponent={messageComponent}
+      composerComponent={composerComponent}
+    />
+  );
+}
+
+const useSendMessage = () => {
+  const { chatroomId } = useParams();
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get('sessionId');
+
+  const sendMessage = async (text: string) => {
+    await NextApi.post(`/api/chat/${chatroomId}`, {
+      body: {
+        sessionId,
+        text: text,
+      },
+    });
+  };
+
+  return { sendMessage };
+};

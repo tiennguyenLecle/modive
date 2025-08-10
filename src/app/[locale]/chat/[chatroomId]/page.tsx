@@ -26,13 +26,13 @@ export default async function ChatRoomPage({
   params: { chatroomId: string };
 }) {
   const { chatroomId } = params;
+  const chatBotName = process.env.DIT_CHATBOT_NAME;
 
   const res = await ChatApi.getMessages(chatroomId, undefined, 20);
-  console.log('RES', res.data.length);
 
   return (
     <div>
-      <ChatRoom messages={res.data} />
+      <ChatRoom messages={res.data} chatBotName={chatBotName!} />
     </div>
   );
 }

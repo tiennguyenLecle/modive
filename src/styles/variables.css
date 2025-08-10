@@ -1,0 +1,14 @@
+/* Define colors for light and dark mode */
+:root {
+  --primary: #ff627b;
+  --secondary: #ffa7b5;
+  --tertiary: #ffdce1;
+  --background: #ffffff;
+  --foreground: #171717;
+  --black: 0 0 0;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}

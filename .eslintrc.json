@@ -17,5 +17,6 @@
         "alwaysTryTypes": true
       }
     }
-  }
+  },
+  "ignorePatterns": ["src/lib/chatbot-modules/*"]
 }

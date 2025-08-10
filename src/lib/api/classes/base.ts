@@ -13,25 +13,52 @@ export class BaseApiClient {
     this.defaultHeaders = new Headers(defaultHeaders);
   }
 
-  protected async handleResponse<T>(response: Response): Promise<T> {
+  protected async handleResponse<T>(
+    response: Response,
+    context: { method: HttpMethod; url: string }
+  ): Promise<T> {
     if (!response.ok) {
-      let errorData;
+      let parsedBody: unknown = undefined;
       try {
-        errorData = await response.json();
-      } catch (e) {
-        errorData = { message: response.statusText };
+        parsedBody = await response.clone().json();
+      } catch (_) {
+        try {
+          parsedBody = await response.text();
+        } catch (_) {
+          parsedBody = undefined;
+        }
       }
-      const errorMessage = errorData?.message || 'An unknown error occurred';
-      throw new Error(
-        `HTTP error! status: ${response.status}, message: ${errorMessage}`
-      );
+
+      const bodyHasMessage =
+        typeof parsedBody === 'object' &&
+        parsedBody !== null &&
+        'message' in (parsedBody as Record<string, unknown>);
+
+      const messageFromBody = bodyHasMessage
+        ? (parsedBody as Record<string, unknown>).message
+        : undefined;
+
+      const errorMessage =
+        (typeof messageFromBody === 'string' && messageFromBody) ||
+        `HTTP ${response.status} ${response.statusText}`;
+
+      throw new ApiError({
+        status: response.status,
+        statusText: response.statusText,
+        url: context.url || response.url,
+        method: context.method,
+        body: parsedBody,
+        message: errorMessage,
+      });
     }
+
     if (
       response.status === 204 ||
       response.headers.get('Content-Length') === '0'
     ) {
       return undefined as T;
     }
+
     return response.json() as T;
   }
 
@@ -72,10 +99,21 @@ export class BaseApiClient {
         headers,
         body: bodyToSend,
       });
-      return this.handleResponse<T>(response);
+      return this.handleResponse<T>(response, { method, url: fullUrl });
     } catch (error) {
       console.error(`API request failed for ${method} ${fullUrl}:`, error);
-      throw error;
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      // Wrap unknown/network errors into ApiError for consistent handling
+      throw new ApiError({
+        status: 0,
+        statusText: 'NetworkError',
+        url: fullUrl,
+        method,
+        body: undefined,
+        message: error instanceof Error ? error.message : 'Network error',
+      });
     }
   }
 
@@ -97,5 +135,30 @@ export class BaseApiClient {
 
   public delete<T>(url: string, options?: RequestOptions) {
     return this.request<T>('DELETE', url, options);
+  }
+}
+
+export class ApiError extends Error {
+  public status: number;
+  public statusText: string;
+  public url: string;
+  public method: HttpMethod;
+  public body?: unknown;
+
+  constructor(params: {
+    status: number;
+    statusText: string;
+    url: string;
+    method: HttpMethod;
+    body?: unknown;
+    message?: string;
+  }) {
+    super(params.message ?? `HTTP ${params.status} ${params.statusText}`);
+    this.name = 'ApiError';
+    this.status = params.status;
+    this.statusText = params.statusText;
+    this.url = params.url;
+    this.method = params.method;
+    this.body = params.body;
   }
 }

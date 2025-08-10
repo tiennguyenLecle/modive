@@ -29,8 +29,12 @@ export type ApiHandler = (
 // --- Specialized Validation HOFs ---
 
 /**
- * Validates the request's URL path parameters against a Zod schema.
- * On success, attaches the data to `context.validatedParams`.
+ * HOF: Validate URL path parameters by  Zod.
+ *
+ * - Source: `context.params` from Next.js App Router dynamic segments
+ * - Example: `api/chat/123` → `{ chatroomId: '123' }`
+ * - On success, attaches parsed data to `context.validatedParams`.
+ * - Typical use: validate IDs, slugs from URL path.
  */
 export function withValidatedParams<T extends z.ZodType<any, any>>(schema: T) {
   return function (handler: ApiHandler): ApiHandler {
@@ -38,6 +42,7 @@ export function withValidatedParams<T extends z.ZodType<any, any>>(schema: T) {
       try {
         // The dynamic route parameters are in `context.params`
         const paramsToValidate = context.params ?? {};
+
         context.validatedParams = schema.parse(paramsToValidate);
         return handler(request, context);
       } catch (error) {
@@ -48,8 +53,13 @@ export function withValidatedParams<T extends z.ZodType<any, any>>(schema: T) {
 }
 
 /**
- * Validates the request's URL query parameters against a Zod schema.
- * On success, attaches the data to `context.validatedQuery`.
+ * HOF: Validate URL query parameters by Zod.
+ *
+ * - Source: `request.nextUrl.searchParams` converted to object via `Object.fromEntries(...)` (last value for duplicate keys).
+ * - Example: `api/chat/123?limit=10&direction=after` → `{ limit: '10', direction: 'after' }`
+ * - On success, attaches parsed data to `context.validatedQuery`.
+ * - Typical use: validate pagination, filtering, etc.
+ * - Tip: Use `z.coerce.number()` or refinements to convert string query values to the desired types.
  */
 export function withValidatedQuery<T extends z.ZodType<any, any>>(schema: T) {
   return function (handler: ApiHandler): ApiHandler {
@@ -68,8 +78,12 @@ export function withValidatedQuery<T extends z.ZodType<any, any>>(schema: T) {
 }
 
 /**
- * Validates the request's JSON body against a Zod schema.
- * On success, attaches the data to `context.validatedBody`.
+ * HOF: Validate JSON body of request by Zod.
+ *
+ * - Source: `await request.json()` (expects a valid JSON body).
+ * - Example: `api/chat/123` with body `{ message: 'Hello, world!' }` → `{ message: 'Hello, world!' }`
+ * - On success, attaches parsed data to `context.validatedBody`.
+ * - Note: The request body stream is consumed here; do not call `request.json()` again in the handler.
  */
 export function withValidatedBody<T extends z.ZodType<any, any>>(schema: T) {
   return function (handler: ApiHandler): ApiHandler {

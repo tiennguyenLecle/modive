@@ -23,11 +23,11 @@ export default function ChatRoom({
 
   const [messages, setMessages] = useState<Message[]>([]);
 
-  console.log('Message from server', _messages);
-
   useEffect(() => {
     const fetchMessages = async () => {
-      const res = await NextApi.get<any>(`/api/chat/${chatroomId}`);
+      const res = await NextApi.get<any>(
+        `/api/chat/${chatroomId}?limit=1&direction=after&cursor=4d8e554b-07f4-4e2b-9c1d-8b1ba4202a1f`
+      );
 
       console.log('Message from client', res.data);
       setMessages(res.data as Message[]);

@@ -6,7 +6,6 @@ import { useAuth } from '@/lib/authentication/auth-context';
 export default function ViewSession() {
   const { user } = useAuth();
 
-  console.log('user', user);
   return (
     <div>
       <AuthActions />

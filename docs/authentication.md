@@ -15,6 +15,7 @@ This document outlines the authentication and session management architecture fo
 - [Protecting API Routes](#protecting-api-routes)
   - [The `withAuth` HOF](#the-withauth-hof)
   - [Usage with `pipe`](#usage-with-pipe)
+  - [Validation HOFs (Params/Query/Body)](#validation-hofs-paramsquerybody)
 - [Cookie Details](#cookie-details)
 
 ---
@@ -121,6 +122,95 @@ export const POST = pipe(
   withAuth,
   withValidatedBody(mySchema)
 )(myProtectedHandler);
+```
+
+### Validation HOFs (Params/Query/Body)
+
+We provide Higher-Order Functions (HOFs) to validate different parts of an HTTP request using Zod. See implementation in `src/lib/api/middleware/validators.ts`.
+
+- `withValidatedParams(schema)`
+  - Source: `context.params` from Next.js App Router dynamic segments.
+  - Example: `api/chat/123` → `{ chatroomId: '123' }`
+  - On success, attaches parsed data to `context.validatedParams`.
+  - Typical use: validate IDs, slugs from URL path.
+
+- `withValidatedQuery(schema)`
+  - Source: `request.nextUrl.searchParams` converted to an object of strings via `Object.fromEntries(...)`. (e.g., `api/`)
+  - Example: `api/chat/123?limit=10&direction=after` → `{ limit: '10', direction: 'after' }`
+  - On success, attaches parsed data to `context.validatedQuery`.
+  - Tip: Use `z.coerce.number()` or refinements to convert string query values to the desired types.
+
+- `withValidatedBody(schema)`
+  - Source: `await request.json()` (expects a valid JSON body).
+  - Example: `api/chat/123` with body `{ message: 'Hello, world!' }` → `{ message: 'Hello, world!' }`
+  - On success, attaches parsed data to `context.validatedBody`.
+  - Note: The request body stream is consumed here; do not call `request.json()` again in the handler.
+
+Type inference: you can infer types in handlers with `z.infer<typeof schema>`.
+
+Examples
+
+```ts
+// src/app/api/posts/[postId]/route.ts
+import { z } from 'zod';
+
+import { withAuth } from '@/lib/api/middleware/auth';
+import {
+  pipe,
+  withValidatedBody,
+  withValidatedParams,
+  withValidatedQuery,
+  type ApiHandler,
+} from '@/lib/api/middleware/validators';
+
+const paramsSchema = z.object({
+  postId: z.string().min(1),
+});
+
+const querySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  q: z.string().optional(),
+});
+
+const createBodySchema = z.object({
+  title: z.string().min(1),
+  content: z.string().min(1),
+});
+
+type Params = z.infer<typeof paramsSchema>;
+type Query = z.infer<typeof querySchema>;
+type CreateBody = z.infer<typeof createBodySchema>;
+
+const getHandler: ApiHandler = async (request, context) => {
+  const userId = context.user!.id;
+  const { postId } = context.validatedParams as Params;
+  const { page, q } = context.validatedQuery as Query;
+  // ... fetch and return post or related resources
+  return new Response(JSON.stringify({ userId, postId, page, q }), {
+    headers: { 'content-type': 'application/json' },
+  });
+};
+
+const postHandler: ApiHandler = async (request, context) => {
+  const { title, content } = context.validatedBody as CreateBody;
+  // ... create resource
+  return new Response(JSON.stringify({ title, content }), {
+    status: 201,
+    headers: { 'content-type': 'application/json' },
+  });
+};
+
+export const GET = pipe(
+  withAuth,
+  withValidatedParams(paramsSchema),
+  withValidatedQuery(querySchema)
+)(getHandler);
+
+export const POST = pipe(
+  withAuth,
+  withValidatedParams(paramsSchema),
+  withValidatedBody(createBodySchema)
+)(postHandler);
 ```
 
 ## Cookie Details

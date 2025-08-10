@@ -12,7 +12,7 @@
   - [3.3. 🔵 Send Messages](#33-send-messages)
   - [3.4. 🟢 Get Messages](#34-get-messages)
 - [4. ❌ Error Codes Reference](#4-error-codes-reference)
-- [5. 🛠️ Troubleshooting](#5-troubleshooting)
+- [5. 🛠️ Troubleshooting](#5-️-troubleshooting)
 - [6. 📞 Support](#6-support)
 
 ---

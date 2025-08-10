@@ -68,7 +68,7 @@ export default async function LocaleLayout({
       </head>
       <body>
         <Providers locale={locale} messages={messages}>
-          <div className="flex h-full flex-col overflow-auto">{children}</div>
+          {children}
         </Providers>
       </body>
     </html>

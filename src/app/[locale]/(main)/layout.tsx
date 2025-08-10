@@ -1,16 +1,41 @@
+'use client';
+
 import React from 'react';
 
-import { Navigation } from '@/components';
+import Header from '@/components/Header';
+import Navigation from '@/components/Navigation/Navigation';
+import { MainLayoutProvider, useMainLayout } from '@/lib/layout-context';
 
-type HomeLayoutProps = { children?: React.ReactNode };
-
-const HomeLayout = ({ children }: HomeLayoutProps) => {
-  return (
-    <>
-      <div className="my-56">{children}</div>
-      <Navigation className="fixed bottom-0 left-0 right-0 z-50 mx-auto w-360 bg-gray-100" />
-    </>
-  );
+type Props = {
+  children: React.ReactNode;
 };
 
-export default HomeLayout;
+export default function Layout({ children }: Props) {
+  return (
+    <MainLayoutProvider>
+      <App>{children}</App>
+    </MainLayoutProvider>
+  );
+}
+
+function App({ children }: Props) {
+  const { headerVisible, navigationVisible } = useMainLayout();
+
+  return (
+    <div className="flex h-full flex-col overflow-auto">
+      {headerVisible && (
+        <Header showLogoText showSearchIcon showAlarmIcon showCashIcon />
+      )}
+      <main
+        className={
+          `flex-1 overflow-auto ` +
+          (headerVisible ? 'pt-56' : '') +
+          (navigationVisible ? 'pb-56' : '')
+        }
+      >
+        {children}
+      </main>
+      {navigationVisible && <Navigation className="fixed bottom-0 w-full" />}
+    </div>
+  );
+}

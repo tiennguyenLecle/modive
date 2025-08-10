@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+
   /* Define colors for light and dark mode */
   :root {
     --primary: #ff627b;
@@ -27,7 +28,6 @@
   body {
     @apply bg-background font-pretendard text-16 text-foreground;
     margin: 0 auto;
-    width: 360rem;
   }
 }
 
@@ -70,6 +70,7 @@
 }
 
 @layer utilities {
+
   /* Chrome, Safari, and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;

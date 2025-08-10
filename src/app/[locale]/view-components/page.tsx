@@ -2,7 +2,10 @@
 
 import { useRef } from 'react';
 
+import AlarmIcon from '@/assets/icons/alarm.svg';
+import { Badge } from '@/components/Badge';
 import Chapter from '@/components/Chapter';
+import ChatListItem from '@/components/ChatListItem';
 import Modal, { ModalHandle } from '@/components/Modal';
 import RecommendationContainer from '@/components/Recommendation/Container';
 import ContentsCard from '@/components/Recommendation/ContentsCard';
@@ -58,6 +61,26 @@ export default function ComponentsPage() {
       >
         <p className="text-gray-00">Would you like to withdraw?</p>
       </Modal>
+
+      <h2>Chat list item</h2>
+      <ChatListItem
+        imageSrc="https://picsum.photos/seed/1/60"
+        imageAlt="User Avatar"
+        title="First shooting day -CH1. Honeymoon"
+        description="It's awkward to be like you? lol"
+        time="09:32 pm"
+        count={100}
+      />
+
+      <h2>Badge</h2>
+      <Badge.Wrapper count={3} showZero>
+        <AlarmIcon width={24} height={24} className="text-primary" />
+      </Badge.Wrapper>
+
+      <div className="flex items-center justify-between p-2">
+        <p>New message</p>
+        <Badge.CountNode count={3} showZero />
+      </div>
     </div>
   );
 }

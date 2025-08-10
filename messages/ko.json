@@ -64,6 +64,10 @@
   "components": {
     "chapter": {
       "seeMore": "챕터 초기화"
+    },
+    "chat_list_item": {
+      "top_fixing": "Top fixing",
+      "deletion": "Deletion"
     }
   },
   "contentsCard": {

@@ -31,7 +31,7 @@ export default function Navigation({ className, ...rest }: NavigationProps) {
       <NavItem href={ROUTES.CHAT} icon={<NavChat />} text={t('chat')} />
       <NavItem href={ROUTES.GOODS} icon={<NavVase />} text={t('goods')} />
       <NavItem
-        href={ROUTES.MY_PAGE}
+        href={ROUTES.MANAGEMENT.INDEX}
         icon={<NavPerson />}
         activeIcon={<NavPersonFilled />}
         text={t('me')}

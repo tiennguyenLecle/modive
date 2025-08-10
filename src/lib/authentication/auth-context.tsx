@@ -2,8 +2,10 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { User } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
 
 import { createSupabaseClient } from '@/lib/supabase/client';
+import { ROUTES } from '@/utils/constants';
 
 type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 
@@ -19,6 +21,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const supabase = useMemo(() => createSupabaseClient(), []);
   const [user, setUser] = useState<User | null>(null);
 
@@ -64,6 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    router.push(ROUTES.HOME);
   };
 
   const value: AuthContextValue = {

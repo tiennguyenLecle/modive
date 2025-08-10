@@ -4,15 +4,15 @@
 
 ## 📋 Table of Contents
 
-- [🌟 Overview](#overview)
-- [🔐 Authentication](#authentication)
-- [📡 API Endpoints](#api-endpoints)
+- [🌟 Overview](#overview-1)
+- [🔐 Authentication](#authentication-1)
+- [📡 API Endpoints](#api-endpoints-1)
   - [1. 🔵 Create New Session](#1-create-new-session)
   - [2. 🟢 Search Existing Sessions](#2-search-existing-sessions)
   - [3. 🔵 Send Messages](#3-send-messages)
   - [4. 🟢 Get Messages](#4-get-messages)
-- [❌ Error Codes Reference](#error-codes-reference)
-- [🛠️ Troubleshooting](#troubleshooting)
+- [❌ Error Codes Reference](#error-codes-reference-1)
+- [🛠️ Troubleshooting](#troubleshooting-1)
 
 ---
 

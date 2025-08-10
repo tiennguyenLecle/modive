@@ -3,7 +3,7 @@
 import React, { useImperativeHandle, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
-import BaselineErrorIcon from '@/assets/icons/baseline-error.svg';
+import { BaselineError } from '@/assets/icons';
 import { Button, Modal, ModalHandle } from '@/components';
 
 const ModalWidrawal = React.forwardRef<ModalHandle>((_, ref) => {
@@ -31,7 +31,7 @@ const ModalWidrawal = React.forwardRef<ModalHandle>((_, ref) => {
       showCloseButton={false}
       header={
         <div className="flex items-center gap-4">
-          <BaselineErrorIcon className="size-18 text-primary" />
+          <BaselineError className="size-18 text-primary" />
           <p className="text-16 font-semibold text-gray-00">
             {t('withdrawal_notification')}
           </p>

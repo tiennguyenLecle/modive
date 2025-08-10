@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 
-import AlarmIcon from '@/assets/icons/alarm.svg';
+import { Alarm } from '@/assets/icons';
 import {
   Badge,
   Chapter,
@@ -77,7 +77,7 @@ export default function ComponentsPage() {
       <div className="p-2">
         <h2>Badge</h2>
         <Badge.Wrapper count={3} showZero>
-          <AlarmIcon width={24} height={24} className="text-primary" />
+          <Alarm width={24} height={24} className="text-primary" />
         </Badge.Wrapper>
         <Badge.CountNode count={3} showZero />
       </div>

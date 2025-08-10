@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 
-import ArrowRight from '@/assets/icons/arrow-right.svg';
+import { ArrowRight } from '@/assets/icons';
 import { Header } from '@/components';
 import { Link } from '@/lib/navigation';
 import { ROUTES } from '@/utils/constants';

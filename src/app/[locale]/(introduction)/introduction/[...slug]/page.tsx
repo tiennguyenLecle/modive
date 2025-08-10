@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import Direction from '@/assets/icons/direction.svg';
+import { Direction } from '@/assets/icons';
 import WeMarriedBanner from '@/assets/images/we-married-banner.png';
 import { ChatCard, MenuTab } from '@/components';
 

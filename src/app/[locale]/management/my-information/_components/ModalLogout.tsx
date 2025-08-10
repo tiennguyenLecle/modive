@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
-import InfoIcon from '@/assets/icons/info.svg';
+import { Info } from '@/assets/icons';
 import { Button, Modal, ModalHandle } from '@/components';
 import { useAuth } from '@/lib/authentication/auth-context';
 
@@ -32,7 +32,7 @@ const ModalLogout = React.forwardRef<ModalHandle>((_, ref) => {
       showCloseButton={false}
       header={
         <div className="flex items-center gap-4">
-          <InfoIcon className="size-18 text-primary" />
+          <Info className="size-18 text-primary" />
           <p className="text-16 font-semibold text-gray-00">
             {t('log_out_notification')}
           </p>

@@ -3,9 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 
-import PencilIcon from '@/assets/icons/pencil.svg';
-import Google from '@/assets/icons/social-google.svg';
-import KakaoTalk from '@/assets/icons/social-kakao-talk.svg';
+import { Pencil, SocialGoogle, SocialKakaoTalk } from '@/assets/icons';
 import { Header, ModalHandle } from '@/components';
 import { useAuth } from '@/lib/authentication/auth-context';
 
@@ -36,7 +34,7 @@ const MyInformation = () => {
                 {user?.user_metadata?.name}
               </p>
               <div className="flex size-24 items-center justify-center rounded-8 border border-gray-70">
-                <PencilIcon className="size-14 text-gray-40" />
+                <Pencil className="size-14 text-gray-40" />
               </div>
             </div>
           </div>
@@ -48,7 +46,7 @@ const MyInformation = () => {
             <div className="flex items-center gap-8">
               {user?.app_metadata?.provider === 'kakao' && (
                 <>
-                  <KakaoTalk className="size-20 rounded-5" />
+                  <SocialKakaoTalk className="size-20 rounded-5" />
                   <p className="text-14 font-semibold text-gray-00">
                     {t('kakao')}
                   </p>
@@ -56,7 +54,7 @@ const MyInformation = () => {
               )}
               {user?.app_metadata?.provider === 'google' && (
                 <>
-                  <Google className="size-20 rounded-5" />
+                  <SocialGoogle className="size-20 rounded-5" />
                   <p className="text-14 font-semibold text-gray-00">
                     {t('google')}
                   </p>

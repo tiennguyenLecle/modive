@@ -1,12 +1,14 @@
 import { ComponentProps } from 'react';
 import { useTranslations } from 'next-intl';
 
-import NavChat from '@/assets/icons/nav-chat.svg';
-import NavHomeFilled from '@/assets/icons/nav-home-filled.svg';
-import NavHome from '@/assets/icons/nav-home.svg';
-import NavPersonFilled from '@/assets/icons/nav-person-filled.svg';
-import NavPerson from '@/assets/icons/nav-person.svg';
-import NavVase from '@/assets/icons/nav-vase.svg';
+import {
+  NavChat,
+  NavHome,
+  NavHomeFilled,
+  NavPerson,
+  NavPersonFilled,
+  NavVase,
+} from '@/assets/icons';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 

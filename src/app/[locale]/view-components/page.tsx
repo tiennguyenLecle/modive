@@ -71,14 +71,14 @@ export default function ComponentsPage() {
         count={100}
       />
 
-      <h2>Badge</h2>
-      <Badge.Wrapper count={3} showZero>
-        <AlarmIcon width={24} height={24} className="text-primary" />
-      </Badge.Wrapper>
-
-      <div className="flex items-center justify-between p-2">
-        <p>New message</p>
+      <div className="p-2">
+        <h2>Badge</h2>
+        <Badge.Wrapper count={3} showZero>
+          <AlarmIcon width={24} height={24} className="text-primary" />
+        </Badge.Wrapper>
         <Badge.CountNode count={3} showZero />
+      </div>
+      <div className="p-2">
         <h2>Story Component</h2>
 
         <div className="flex flex-col gap-16 bg-white p-16">

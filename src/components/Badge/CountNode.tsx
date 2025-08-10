@@ -32,7 +32,7 @@ const BadgeCountNode = ({
     <div
       className={cx(
         'bg-primary',
-        'flex items-center justify-center',
+        'inline-flex items-center justify-center',
         'text-12 font-semibold text-gray-100',
         isPill && 'px-4'
       )}

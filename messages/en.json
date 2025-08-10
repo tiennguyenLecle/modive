@@ -98,7 +98,8 @@
     "cancel": "cancellation",
     "check": "check",
     "log_out_notification": "Log out notification",
-    "log_out_description": "Would you like to log out?"
+    "log_out_description": "Would you like to log out?",
+    "google": "Google"
   },
   "chat": {
     "chapter": "Chapter",

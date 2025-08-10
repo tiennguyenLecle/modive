@@ -104,6 +104,7 @@
     "cancel": "취소",
     "check": "확인",
     "log_out_notification": "로그아웃 알림",
-    "log_out_description": "로그아웃 하시겠습니까?"
+    "log_out_description": "로그아웃 하시겠습니까?",
+    "google": "Google"
   }
 }

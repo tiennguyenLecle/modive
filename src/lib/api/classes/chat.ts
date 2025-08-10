@@ -5,6 +5,7 @@ export class ChatApiClient extends BaseApiClient {
   private universeId: string;
   private chatbotName: string;
   private chatApiId: string;
+  private bundleId: string;
 
   constructor() {
     const CHAT_API_BASE_URL = process.env.DIT_API_BASE_URL;
@@ -12,13 +13,15 @@ export class ChatApiClient extends BaseApiClient {
     const CHAT_API_ID = process.env.X_API_ID;
     const CHAT_UNIVERSE_ID = process.env.DIT_CHATBOT_UNIVERSE_ID;
     const CHAT_BOT_NAME = process.env.DIT_CHATBOT_NAME;
+    const CHAT_BUNDLE_ID = process.env.DIT_CHATBOT_BUNDLE_ID;
 
     if (
       !CHAT_API_BASE_URL ||
       !CHAT_API_KEY ||
       !CHAT_API_ID ||
       !CHAT_UNIVERSE_ID ||
-      !CHAT_BOT_NAME
+      !CHAT_BOT_NAME ||
+      !CHAT_BUNDLE_ID
     ) {
       throw new Error('Missing required Chat API environment variables.');
     }
@@ -31,6 +34,7 @@ export class ChatApiClient extends BaseApiClient {
     this.universeId = CHAT_UNIVERSE_ID;
     this.chatbotName = CHAT_BOT_NAME;
     this.chatApiId = CHAT_API_ID;
+    this.bundleId = CHAT_BUNDLE_ID;
   }
 
   // --- Utility Methods for Chat API ---
@@ -68,7 +72,7 @@ export class ChatApiClient extends BaseApiClient {
   }
 
   public createSession(userId: string) {
-    return this.post(`/v3/universe/${this.universeId}`, {
+    return this.post(`/v3/universe/${this.bundleId}`, {
       body: {
         endUserId: userId,
         endUserMetadata: '',

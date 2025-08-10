@@ -1,9 +1,11 @@
-import RecommendationContainer from '@/components/Recommendation/Container';
-import ContentsCard from '@/components/Recommendation/ContentsCard';
-import ContentsCardList from '@/components/Recommendation/ContentsCardList';
+import RecommendationContainer from './Container';
+import ContentsCard from './ContentsCard';
+import ContentsCardList from './ContentsCardList';
 
-export const Recommendation = {
+const Recommendation = {
   Container: RecommendationContainer,
   ContentsCard,
   ContentsCardList,
 };
+
+export default Recommendation;

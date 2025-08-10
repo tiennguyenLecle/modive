@@ -2,8 +2,7 @@ import React, { useImperativeHandle, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
 import InfoIcon from '@/assets/icons/info.svg';
-import Button from '@/components/Button';
-import Modal, { ModalHandle } from '@/components/Modal';
+import { Button, Modal, ModalHandle } from '@/components';
 import { useAuth } from '@/lib/authentication/auth-context';
 
 const ModalLogout = React.forwardRef<ModalHandle>((_, ref) => {

@@ -3,12 +3,15 @@
 import { useRef } from 'react';
 
 import AlarmIcon from '@/assets/icons/alarm.svg';
-import { Badge } from '@/components/Badge';
-import Chapter from '@/components/Chapter';
-import ChatListItem from '@/components/ChatListItem';
-import Modal, { ModalHandle } from '@/components/Modal';
-import RecommendationContainer from '@/components/Recommendation/Container';
-import { Story } from '@/components/Story';
+import {
+  Badge,
+  Chapter,
+  ChatListItem,
+  Modal,
+  ModalHandle,
+  Recommendation,
+  Story,
+} from '@/components';
 
 export default function ComponentsPage() {
   const modalRef = useRef<ModalHandle>(null);
@@ -43,7 +46,7 @@ export default function ComponentsPage() {
         ]}
       />
       <h2>Recommendation</h2>
-      <RecommendationContainer />
+      <Recommendation.Container />
       <h2>Modal</h2>
       <button onClick={() => modalRef.current?.open()}>open modal</button>
       <Modal

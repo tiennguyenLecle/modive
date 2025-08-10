@@ -10,7 +10,7 @@ import React, {
 import { AnimatePresence, motion } from 'framer-motion';
 
 import CloseIcon from '@/assets/icons/close.svg';
-import Button from '@/components/Button';
+import { Button } from '@/components';
 import { cx } from '@/utils/method';
 
 export type ModalHandle = {

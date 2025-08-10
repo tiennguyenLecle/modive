@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import Navigation from '@/components/Navigation/Navigation';
+import { Navigation } from '@/components';
 
 type CommonLayoutProps = { children?: React.ReactNode };
 

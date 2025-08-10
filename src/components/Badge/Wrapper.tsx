@@ -1,7 +1,8 @@
 import React, { ComponentProps } from 'react';
 
-import BadgeCountNode from '@/components/Badge/CountNode';
 import { cx } from '@/utils/method';
+
+import BadgeCountNode from './CountNode';
 
 type BadgeWrapperProps = ComponentProps<'span'> & {
   count?: number;

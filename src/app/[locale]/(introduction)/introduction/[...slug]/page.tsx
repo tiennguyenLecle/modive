@@ -4,8 +4,7 @@ import Image from 'next/image';
 
 import Direction from '@/assets/icons/direction.svg';
 import WeMarriedBanner from '@/assets/images/we-married-banner.png';
-import { ChatCard } from '@/components/ChatCard';
-import MenuTab from '@/components/MenuTab';
+import { ChatCard, MenuTab } from '@/components';
 
 const IntroductionDetailPage = () => {
   const t = useTranslations('introduction');

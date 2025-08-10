@@ -6,8 +6,7 @@ import { useTranslations } from 'next-intl';
 import PencilIcon from '@/assets/icons/pencil.svg';
 import Google from '@/assets/icons/social-google.svg';
 import KakaoTalk from '@/assets/icons/social-kakao-talk.svg';
-import Header from '@/components/Header';
-import { ModalHandle } from '@/components/Modal';
+import { Header, ModalHandle } from '@/components';
 import { useAuth } from '@/lib/authentication/auth-context';
 
 import ModalLogout from './_components/ModalLogout';

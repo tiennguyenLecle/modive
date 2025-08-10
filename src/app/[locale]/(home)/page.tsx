@@ -1,8 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
 import Banner2 from '@/assets/images/banner2.svg';
-import Header from '@/components/Header';
-import { Recommendation } from '@/components/Recommendation';
+import { Header, Recommendation } from '@/components';
 
 export const generateMetadata = async ({
   params: { locale },

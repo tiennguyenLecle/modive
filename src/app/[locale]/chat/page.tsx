@@ -1,7 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-import { Navigation } from '@/components';
-import MenuTab from '@/components/MenuTab';
+import { MenuTab, Navigation } from '@/components';
 import { ChatApi } from '@/lib/api/server';
 import { getServerAuth } from '@/lib/authentication/server-auth';
 

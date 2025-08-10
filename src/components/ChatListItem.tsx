@@ -6,8 +6,7 @@ import Image from 'next/image';
 
 import PinIcon from '@/assets/icons/pin.svg';
 import TrashIcon from '@/assets/icons/trash.svg';
-import { Badge } from '@/components/Badge';
-import Modal, { ModalHandle } from '@/components/Modal';
+import { Badge, Modal, ModalHandle } from '@/components';
 
 type ChatListItemProps = ComponentProps<'div'> & {
   imageSrc: string;

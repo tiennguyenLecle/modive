@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 
-import ContentsCardList from '@/components/Recommendation/ContentsCardList';
+import ContentsCardList from './ContentsCardList';
 
 type RecommendationProps = ComponentProps<'div'> & {};
 

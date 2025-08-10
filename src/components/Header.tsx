@@ -9,7 +9,7 @@ import ArrowRight from '@/assets/icons/arrow-right.svg';
 import CashIcon from '@/assets/icons/cash.svg';
 import LogoText from '@/assets/icons/logo-text.svg';
 import SearchIcon from '@/assets/icons/search.svg';
-import { Badge } from '@/components/Badge';
+import { Badge } from '@/components';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 

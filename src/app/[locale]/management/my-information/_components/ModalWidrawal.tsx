@@ -4,8 +4,7 @@ import React, { useImperativeHandle, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
 import BaselineErrorIcon from '@/assets/icons/baseline-error.svg';
-import Button from '@/components/Button';
-import Modal, { ModalHandle } from '@/components/Modal';
+import { Button, Modal, ModalHandle } from '@/components';
 
 const ModalWidrawal = React.forwardRef<ModalHandle>((_, ref) => {
   const t = useTranslations('my_information');

@@ -10352,6 +10352,7 @@ const MessageListComponent = React.forwardRef(
     },
     ref
   ) => {
+    const isTopRef = React.useRef(false);
     const [msgs, setMsgs] = useMessageCache(
       conversationId || '',
       messages || [],
@@ -10360,7 +10361,6 @@ const MessageListComponent = React.forwardRef(
     const virtuosoRef = React.useRef(null);
     const [hasShowScrollToEndButton, setHasShowScrollToEndButton] =
       React.useState(false);
-    const [isTop, setIsTop] = React.useState(false);
     // Forward the ref to the parent component
     React.useEffect(() => {
       if (ref) {
@@ -10395,9 +10395,12 @@ const MessageListComponent = React.forwardRef(
           ? jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
               children: [
                 jsxRuntimeExports.jsx(jr, {
+                  computeItemKey: (index, item) => item.id,
                   className: `c-message-list-component`,
                   followOutput: isAtBottom => {
-                    if (isAtBottom || !isTop) {
+                    // scroll to end when isAtBottom is true or be at middle of the list
+                    // when data length changed
+                    if (isAtBottom || !isTopRef.current) {
                       return true;
                     }
                     return false;
@@ -10405,8 +10408,6 @@ const MessageListComponent = React.forwardRef(
                   ref: virtuosoRef,
                   totalCount: msgs?.length,
                   data: msgs,
-                  initialTopMostItemIndex:
-                    msgs?.length > 0 ? msgs?.length - 1 : 0,
                   increaseViewportBy: { top: 300, bottom: 300 },
                   itemContent: index =>
                     jsxRuntimeExports.jsx(Row, { index: index }),
@@ -10414,9 +10415,11 @@ const MessageListComponent = React.forwardRef(
                     if (!ref) return;
                     const handleScroll = async () => {
                       if (ref?.scrollTop <= window.innerHeight / 3) {
+                        isTopRef.current = true;
                         await onLoadMorePreviousData?.();
                       } else {
-                        setIsTop(false);
+                        if (!isTopRef.current) return;
+                        isTopRef.current = false;
                       }
                     };
                     ref.addEventListener('scroll', handleScroll);
@@ -10435,6 +10438,7 @@ const MessageListComponent = React.forwardRef(
                     className: `c-chatbox-scroll-to-end-button`,
                     icon: '↓',
                     onClick: () => {
+                      isTopRef.current = false;
                       scrollToEnd(virtuosoRef.current, msgs);
                       scrollToEndButtonProps?.onClick?.();
                     },

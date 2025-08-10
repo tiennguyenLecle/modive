@@ -20,6 +20,7 @@ import {
   ChatboxLayout,
   MessageInfoProps,
   MessageList,
+  scrollToEnd,
 } from '@/lib/chatbot-modules';
 
 import '@/lib/chatbot-modules/dist/styles.css';
@@ -52,13 +53,25 @@ export default function Chatbot({
   const [isPreviousLoading, setIsPreviousLoading] = useState(false);
   const messagesRef = useRef<Message[]>(initialMessages || []);
   const prevLoadMoreRef = useRef<boolean>(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
+
+  const hasBeforeMessages = useRef(false);
 
   useEffect(() => {
     setMessages(initialMessages);
+    setTimeout(() => {
+      if (messageListRef.current) {
+        messageListRef.current.scrollToIndex({
+          index: messagesRef.current.length - 1,
+          align: 'end',
+          behavior: 'instant',
+        });
+      }
+    }, 100);
   }, [initialMessages, setMessages]);
 
   const handleLoadMore = useCallback(async () => {
+    console.log('day nhe');
     if (prevLoadMoreRef.current) return;
     prevLoadMoreRef.current = true;
     setIsPreviousLoading(true);
@@ -86,6 +99,7 @@ export default function Chatbot({
       }, 100);
     } else {
       prevLoadMoreRef.current = true;
+      hasBeforeMessages.current = true;
       setIsPreviousLoading(false);
     }
   }, [messages, isPreviousLoading]);
@@ -119,10 +133,14 @@ export default function Chatbot({
     }
   };
 
-  const mappedMessages = (messages: Message[]): MessageInfoProps[] => {
+  const mappedMessages = (
+    messages: Message[],
+    hasMorePrevious = false
+  ): MessageInfoProps[] => {
     const seenIds = new Set<string>();
 
-    const baseMapped = messages
+    // 1) filter + basic map (kèm createdDate để so sánh ngày)
+    const base = messages
       .filter(msg => !filterMessageConditions(msg.message, msg.id, seenIds))
       .map(msg => ({
         id: msg.id,
@@ -133,11 +151,51 @@ export default function Chatbot({
         message:
           msg.id === 'temparareryChatbotItemId' ? <LoadingDots /> : msg.message,
         createdAt: msg.created_at ? dayjs(msg.created_at).format('HH:mm') : '',
+        createdDate: msg.created_at
+          ? dayjs(msg.created_at).format('YYYY-MM-DD')
+          : null,
         avatarUrl: DEFAULT_IMAGE_URL,
         messageArray: handleMessageText(msg.message),
       }));
 
-    return baseMapped;
+    // 2) iterate and insert date headers only when appropriate
+    const out: MessageInfoProps[] = [];
+    for (let i = 0; i < base.length; i++) {
+      const current = base[i];
+      const prev = base[i - 1]; // undefined nếu i === 0
+      const curDate = current.createdDate;
+      const prevDate = prev?.createdDate ?? null;
+
+      // Should we insert a system date header before `current`?
+      // - If there is a previous item and its date differs → yes.
+      // - If there is NO previous (i === 0) AND we DON'T have more older messages (hasMorePrevious === false) → yes.
+      // - Otherwise (i === 0 && hasMorePrevious === true) -> NO (we cannot be sure this is the first-of-day).
+      const shouldInsertHeader =
+        curDate &&
+        ((prevDate && prevDate !== curDate) || (!prev && !hasMorePrevious));
+
+      if (shouldInsertHeader) {
+        const pretty = dayjs(curDate).format('dddd, MMMM D, YYYY');
+        out.push({
+          id: `system_date_${curDate}`, // stable id per date
+          chatroomId: current.chatroomId,
+          speakerType: 'system',
+          speakerId: 'system',
+          name: 'system',
+          message: `---- ${pretty} ----`,
+          contentOverride: `---- ${pretty} ----`,
+          createdAt: '',
+          avatarUrl: '',
+          messageArray: [],
+          createdDate: curDate,
+        });
+      }
+
+      out.push(current);
+    }
+
+    // 3) remove the temporary createdDate field before returning (optional)
+    return out.map(({ createdDate, ...rest }) => rest as MessageInfoProps);
   };
 
   const messageComponent = useMemo(
@@ -158,7 +216,7 @@ export default function Chatbot({
         }
       />
     ),
-    [messages, handleLoadMore, isPreviousLoading, messageListRef, chatroomId]
+    [handleLoadMore, isPreviousLoading, chatroomId]
   );
 
   const composerComponent = useMemo(
@@ -206,7 +264,6 @@ export default function Chatbot({
                 `/api/chat/${chatroomId}?limit=20&direction=after&cursor=${lastMessageId}`
               );
               const newMessages = res?.data ?? [];
-              console.log('bbb newMessages', newMessages);
 
               if (newMessages.length >= 2) {
                 // Có đủ 2 messages => add ngay
@@ -215,7 +272,7 @@ export default function Chatbot({
                 setNewMessage('');
                 clearInterval(interval);
               } else if (Date.now() - startTime >= 30000) {
-                // Hết 20s
+                // Hết 30s
                 if (newMessages.length === 1) {
                   // Thêm error field
                   const erroredMessage = { ...newMessages[0], error: true };
@@ -234,8 +291,6 @@ export default function Chatbot({
     ),
     [newMessage, handleChange, sendMessage]
   );
-
-  console.log('bbb hhh messages', messages);
 
   return (
     <ChatboxLayout

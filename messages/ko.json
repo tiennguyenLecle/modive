@@ -5,6 +5,19 @@
     "goods": "굿즈",
     "me": "마이"
   },
+  "cms": {
+    "menu": {
+      "data_management": "데이터 관리",
+      "content": "콘텐츠",
+      "goods": "굿즈",
+      "notifications": "알림",
+      "announcement": "공지사항",
+      "faq": "FAQ",
+      "interface": "인터페이스",
+      "user_management": "유저 관리",
+      "cms": "CMS"
+    }
+  },
   "navigation": {
     "back_home": "홈으로 돌아가기"
   },

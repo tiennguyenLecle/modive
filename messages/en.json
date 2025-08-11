@@ -5,6 +5,19 @@
     "goods": "Goods",
     "me": "Me"
   },
+  "cms": {
+    "menu": {
+      "data_management": "Data Management",
+      "content": "Content",
+      "goods": "Goods",
+      "notifications": "Notifications",
+      "announcement": "Announcement",
+      "faq": "FAQ",
+      "interface": "Interface",
+      "user_management": "User Management",
+      "cms": "CMS"
+    }
+  },
   "navigation": {
     "back_home": "Back Home"
   },

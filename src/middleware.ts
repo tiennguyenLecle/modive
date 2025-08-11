@@ -56,7 +56,8 @@ export default async function middleware(request: NextRequest) {
     ) || '/';
 
   // Refresh Supabase session cookies and read user
-  response = await updateSession(request, NextResponse.next());
+  // Preserve i18n headers by passing the intl middleware response forward
+  response = await updateSession(request, response);
   // Supabase @supabase/ssr set cookie auth in chunked format with custom prefix.
   // With current configuration (cookieOptions.name = 'modive.sb-auth_token.'), the cookie name will be 'modive.sb-auth_token.0', 'modive.sb-auth_token.1'.
 

@@ -12,15 +12,12 @@ import {
 import { useParams, useSearchParams } from 'next/navigation';
 
 import { NextApi } from '@/lib/api';
-import { Message, SpeakerType } from '@/lib/api/types/chat.types';
-// @ts-ignore
-//disable eslin
+import { Message } from '@/lib/api/types/chat.types';
+
 import {
-  ChatboxComposer,
   ChatboxLayout,
   MessageInfoProps,
   MessageList,
-  scrollToEnd,
 } from '@/lib/chatbot-modules';
 
 import '@/lib/chatbot-modules/dist/styles.css';
@@ -31,9 +28,11 @@ import { useAtom } from 'jotai';
 
 import { messagesAtom } from '@/atoms/messagesAtom';
 import { filterMessageConditions } from '@/utils/method';
+import { formatDateOrTime } from '@/utils/formatTime';
 
 import Composer from './Composer.client';
 import { LoadingDots } from './Loading.client';
+import styles from './ChatRoom.module.scss';
 
 
 type ChatbotProps = ComponentProps<'div'> & {
@@ -139,6 +138,17 @@ export default function Chatbot({
     }
   };
 
+  const handleAlign = (speaker_type: string) => {
+    switch (speaker_type) {
+      case 'user':
+        return 'right';
+      case 'chatbot':
+        return 'left';
+      default:
+        return 'center';
+    }
+  };
+
   const mappedMessages = (
     messages: Message[],
     hasMorePrevious = false
@@ -152,14 +162,13 @@ export default function Chatbot({
         id: msg.id,
         chatroomId: msg.chatroom_id,
         speakerType: msg.speaker_type ?? 'user',
+        align: handleAlign(msg.speaker_type ?? 'user'),
         speakerId: msg.speaker_id,
         name: msg.speaker_id,
         message:
           msg.id === 'temparareryChatbotItemId' ? <LoadingDots /> : msg.message,
-        createdAt: msg.created_at ? dayjs(msg.created_at).format('HH:mm') : '',
-        createdDate: msg.created_at
-          ? dayjs(msg.created_at).format('YYYY-MM-DD')
-          : null,
+        createdAt: formatDateOrTime(msg.created_at ?? '', 'time'),
+        createdDate: msg.created_at ? dayjs(msg.created_at).format('YYYY-MM-DD') : null,
         avatarUrl: DEFAULT_IMAGE_URL,
         messageArray: handleMessageText(msg.message),
       }));
@@ -181,15 +190,15 @@ export default function Chatbot({
         ((prevDate && prevDate !== curDate) || (!prev && !hasMorePrevious));
 
       if (shouldInsertHeader) {
-        const pretty = dayjs(curDate).format('dddd, MMMM D, YYYY');
+        const pretty = formatDateOrTime(curDate, 'date');
         out.push({
           id: `system_date_${curDate}`, // stable id per date
           chatroomId: current.chatroomId,
           speakerType: 'system',
           speakerId: 'system',
           name: 'system',
-          message: `---- ${pretty} ----`,
-          contentOverride: `---- ${pretty} ----`,
+          message: `${pretty}`,
+          contentOverride: `${pretty}`,
           createdAt: '',
           avatarUrl: '',
           messageArray: [],
@@ -229,6 +238,7 @@ export default function Chatbot({
 
   return (
     <ChatboxLayout
+      className={styles.chatboxLayout}
       backgroundColor="var(--color-background)"
       layoutHeight="calc(100dvh - 56px - 48px)" // 56px + 48px: header height
       messageComponent={messageComponent}

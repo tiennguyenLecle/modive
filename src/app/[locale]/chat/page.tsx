@@ -30,6 +30,8 @@ export default async function Home() {
 
 
 
+
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-56 items-center justify-center border-b border-t border-gray-80">

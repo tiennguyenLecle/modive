@@ -4,6 +4,7 @@ import { ChatApi } from '@/lib/api/server';
 
 import ChatRoom from './ChatRoom.client';
 import { getServerAuth } from '@/lib/authentication/server-auth';
+import '@/styles/variables.css';
 
 export const revalidate = 0;
 

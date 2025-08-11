@@ -6,6 +6,63 @@
   --background: #ffffff;
   --foreground: #171717;
   --black: 0 0 0;
+  --text-primary: #250F09;
+  --text-secondary: #333333;
+
+
+  /* Avatar */
+  --avatar-border-radius: 50%;
+  --avatar-background-color: #F0EFF1;
+  --avatar-image-border-radius: 50%;
+  --avatar-width-small: 40px;
+  --avatar-height-small: 40px;
+
+  /* Time Label */
+  --time-label-font-size: 12px;
+  --time-label-font-weight: 400;
+  --time-label-line-height: 100%;
+  --time-label-text-color: #250F09;
+  --time-label-error-color: #FF554A;
+
+  /* Message Text */
+  --message-padding: 12px;
+  --message-border-radius: 0;
+  --message-background-color: transparent;
+  --message-color: #250F09;
+  --message-box-shadow: 0;
+  --message-border-color: transparent;
+  --message-font-size: 14px;
+  --message-font-weight: 400;
+  --message-line-height: 100%;
+  --message-letter-spacing: 0;
+  --message-background-color-left: #F7F7F8;
+  --message-color-left: #250F09;
+  --message-border-radius-left: 6px 6px 6px 0px;
+  --message-background-color-right: #FF627B;
+  --message-color-right: #FFFFFF;
+  --message-border-radius-right: 6px 6px 0px 6px;
+
+  /* Message Image */
+  --message-image-width: 100px;
+  --message-image-height: 100px;
+  --message-image-border-radius: 16px;
+  --message-image-border-color: transparent;
+  --message-image-width-small: 100px;
+  --message-image-height-small: 100px;
+  --message-image-width-medium: 100px;
+  --message-image-height-medium: 100px;
+  --message-image-width-large: 100px;
+  --message-image-height-large: 100px;
+
+  /* Message Video */
+  --message-video-width: 100px;
+  --message-video-height: 100px;
+  --message-video-border-radius: 16px;
+  --message-video-border-color: transparent;
+  --message-video-blur: 3px;
+
+  /* Chatbox Layout */
+  --c-padding: 16px;
 }
 
 .dark {

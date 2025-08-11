@@ -2,11 +2,13 @@
 
 import { useRef } from 'react';
 
+import AlarmIcon from '@/assets/icons/alarm.svg';
+import { Badge } from '@/components/Badge';
 import Chapter from '@/components/Chapter';
+import ChatListItem from '@/components/ChatListItem';
 import Modal, { ModalHandle } from '@/components/Modal';
 import RecommendationContainer from '@/components/Recommendation/Container';
-import ContentsCard from '@/components/Recommendation/ContentsCard';
-import ContentsCardList from '@/components/Recommendation/ContentsCardList';
+import { Story } from '@/components/Story';
 
 export default function ComponentsPage() {
   const modalRef = useRef<ModalHandle>(null);
@@ -58,6 +60,41 @@ export default function ComponentsPage() {
       >
         <p className="text-gray-00">Would you like to withdraw?</p>
       </Modal>
+
+      <h2>Chat list item</h2>
+      <ChatListItem
+        imageSrc="https://picsum.photos/seed/1/60"
+        imageAlt="User Avatar"
+        title="First shooting day -CH1. Honeymoon"
+        description="It's awkward to be like you? lol"
+        time="09:32 pm"
+        count={100}
+      />
+
+      <div className="p-2">
+        <h2>Badge</h2>
+        <Badge.Wrapper count={3} showZero>
+          <AlarmIcon width={24} height={24} className="text-primary" />
+        </Badge.Wrapper>
+        <Badge.CountNode count={3} showZero />
+      </div>
+      <div className="p-2">
+        <h2>Story Component</h2>
+
+        <div className="flex flex-col gap-16 bg-white p-16">
+          <Story.Text>
+            {
+              'You have made their debut only after a tough trainee life. But the public&apos;s response is still cold ... We got married. He will appear in the reality entertainment program We Got Married to show a virtual marriage.'
+            }
+          </Story.Text>
+          <Story.Image
+            src="https://picsum.photos/seed/1/400"
+            alt="Story Image"
+            width={160}
+            height={160}
+          />
+        </div>
+      </div>
     </div>
   );
 }

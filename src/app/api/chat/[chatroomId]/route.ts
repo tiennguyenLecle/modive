@@ -5,6 +5,7 @@ import {
   pipe,
   withValidatedBody,
   withValidatedParams,
+  withValidatedQuery,
   type HandlerContext,
 } from '@/lib/api';
 import { withAuth } from '@/lib/api/middleware/auth';
@@ -15,6 +16,12 @@ import { ChatApi } from '@/lib/api/server';
 // Schema to validate the `chatroomId` from the URL path
 const paramsSchema = z.object({
   chatroomId: z.uuid({ message: 'Invalid chatroom ID format.' }),
+});
+
+const querySchema = z.object({
+  cursor: z.string().optional(),
+  limit: z.coerce.number().optional(),
+  direction: z.enum(['before', 'after']).optional(),
 });
 
 type ChatRoomParams = z.infer<typeof paramsSchema>;
@@ -32,15 +39,9 @@ async function getMessagesHandler(
 ) {
   try {
     const { chatroomId } = context.validatedParams;
-    const { searchParams } = new URL(request.url);
-    const cursor = searchParams.get('cursor') ?? '';
-    const limit = searchParams.get('limit')
-      ? parseInt(searchParams.get('limit')!)
-      : 10;
-    const direction = searchParams.get('direction') as
-      | 'before'
-      | 'after'
-      | undefined;
+    const { cursor, limit, direction } = context.validatedQuery;
+
+    console.log('NEXT API - receive query params', cursor, limit, direction);
 
     const messages = await ChatApi.getMessages(
       chatroomId,
@@ -50,15 +51,18 @@ async function getMessagesHandler(
     );
     return NextResponse.json(messages);
   } catch (error: any) {
-    return NextResponse.json(
-      { error: { message: 'Failed to retrieve chat messages.' } },
-      { status: 502 }
-    );
+    console.log('NEXT API - catch chat error', error);
+
+    return NextResponse.json(error);
   }
 }
 
 // Validate the URL parameter before executing the handler
-export const GET = pipe(withValidatedParams(paramsSchema))(getMessagesHandler);
+export const GET = pipe(
+  // withAuth,
+  withValidatedParams(paramsSchema),
+  withValidatedQuery(querySchema)
+)(getMessagesHandler);
 
 // --- CREATE A NEW MESSAGE ---
 
@@ -75,13 +79,13 @@ async function createMessageHandler(
   try {
     const { chatroomId } = context.validatedParams;
     const { sessionId, text } = context.validatedBody as CreateMessageBody;
-    const { id: userId, name: userName } = context.session?.user!;
+    const { id: userId, user_metadata } = context.user!;
     const newMessage = await ChatApi.createMessage(
       sessionId,
       chatroomId,
       userId!,
       text,
-      userName!,
+      user_metadata.name || '',
       'male',
       '2000-01-01'
     );

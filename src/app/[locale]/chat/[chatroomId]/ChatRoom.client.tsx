@@ -1,6 +1,7 @@
 'use client';
 
-import { ComponentProps } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
 
 import { ProgressBar } from '@/components';
 import { Message } from '@/lib/api/types/chat.types';

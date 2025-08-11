@@ -64,6 +64,10 @@
   "components": {
     "chapter": {
       "seeMore": "Chapter initialization"
+    },
+    "chat_list_item": {
+      "top_fixing": "상단 고정",
+      "deletion": "삭제하기"
     }
   },
   "contentsCard": {
@@ -91,6 +95,18 @@
     "kakao": "kakaotalk",
     "withdrawal": "Membership withdrawal",
     "logout": "Log out",
-    "my_infomation": "My information"
+    "my_infomation": "My information",
+    "withdrawal_notification": "Withdrawal notification",
+    "withdrawal_description": "Would you like to withdraw?",
+    "withdrawal_description2": "(*If you withdraw now, you can't use the service)",
+    "cancel": "cancellation",
+    "check": "check",
+    "log_out_notification": "Log out notification",
+    "log_out_description": "Would you like to log out?",
+    "google": "Google"
+  },
+  "chat": {
+    "chapter": "Chapter",
+    "generalization": "Generalization"
   }
 }

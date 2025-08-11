@@ -1,11 +1,11 @@
 'use client';
 
-import { Provider } from 'jotai';
-import { SessionProvider } from 'next-auth/react';
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 
 import AntdRegistry from '@/lib/antd-registry';
+import { AuthProvider } from '@/lib/authentication/auth-context';
 import { ThemeRegistry } from '@/lib/theme-registry';
+import { Provider } from 'jotai';
 
 type Props = {
   children: React.ReactNode;
@@ -19,14 +19,14 @@ type Props = {
  */
 export const Providers = ({ children, messages, locale }: Props) => {
   return (
-    <SessionProvider>
-      <ThemeRegistry>
-        <NextIntlClientProvider locale={locale} messages={messages}>
+    <ThemeRegistry>
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <AuthProvider>
           <AntdRegistry>
             <Provider>{children}</Provider>
           </AntdRegistry>
-        </NextIntlClientProvider>
-      </ThemeRegistry>
-    </SessionProvider>
+        </AuthProvider>
+      </NextIntlClientProvider>
+    </ThemeRegistry>
   );
 };

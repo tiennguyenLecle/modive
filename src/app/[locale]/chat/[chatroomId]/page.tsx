@@ -32,7 +32,7 @@ export default async function ChatRoomPage({
 
   return (
     <div>
-      <ChatRoom messages={res.data} chatBotName={chatBotName!} />
+      <ChatRoom messages={res.data ?? []} chatBotName={chatBotName!} />
     </div>
   );
 }

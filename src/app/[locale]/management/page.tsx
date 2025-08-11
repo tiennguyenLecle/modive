@@ -1,9 +1,10 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 
 import ArrowRight from '@/assets/icons/arrow-right.svg';
 import Header from '@/components/Header';
+import { Link } from '@/lib/navigation';
+import { ROUTES } from '@/utils/constants';
 
 const MyPage = () => {
   const t = useTranslations('my_page');
@@ -18,7 +19,7 @@ const MyPage = () => {
       />
       <div className="flex flex-col gap-8">
         <div className="flex flex-col bg-white px-16">
-          <Link href="/my-page/my-information">
+          <Link href={ROUTES.MANAGEMENT.MY_INFORMATION}>
             <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
               <p className="text-16 font-normal text-gray-00">
                 {t('my_infomation')}
@@ -26,7 +27,6 @@ const MyPage = () => {
               <ArrowRight className="h-18 w-18 text-gray-00" />
             </div>
           </Link>
-
           <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
             <p className="text-16 font-normal text-gray-00">{t('my_money')}</p>
             <ArrowRight className="h-18 w-18 text-gray-00" />

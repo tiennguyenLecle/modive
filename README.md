@@ -142,7 +142,7 @@ A brief overview of the key directories in this project:
 
 This project contains important architectural patterns that are documented to help developers understand key decisions.
 
-- **Authentication**: Explains the OAuth2 flow, session management, and API protection using `next-auth`. See the [Authentication Documentation](./docs/authentication.md).
+- **Authentication**: Explains the OAuth2 flow, session management, and API protection using Supabase Auth (`@supabase/supabase-js`, `@supabase/ssr`). See the [Authentication Documentation](./docs/authentication.md).
 - **Middleware**: Handles request processing for internationalization. For a detailed explanation, see the [Middleware Documentation](./docs/middleware.md).
 - **API Client**: Manages communication with external and internal APIs. For a detailed explanation, please see the [API Client Documentation](./src/lib/api/README.md).
 

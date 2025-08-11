@@ -21,11 +21,11 @@
   html {
     /* In this project, use 1 rem as default spacing unit (1rem = 1px) */
     font-size: 6.25%;
-    @apply overflow-x-hidden bg-primary;
+    @apply overflow-x-hidden;
   }
 
   body {
-    @apply bg-background font-pretendard text-16 text-foreground;
+    @apply bg-primary font-pretendard text-16 text-foreground;
     margin: 0 auto;
   }
 }
@@ -84,7 +84,12 @@
 }
 
 .main-layout {
-  @apply flex h-full flex-col;
+  @apply flex h-full flex-col bg-background;
+}
+
+.main-layout.device-desktop {
+  max-width: 768rem;
+  margin: 0 auto;
 }
 
 .main-layout > .page-wrapper {

@@ -34,7 +34,7 @@ const Header = ({
   return (
     <header
       className={cx(
-        'flex min-h-56 w-full items-center justify-center bg-white px-16',
+        'relative flex min-h-56 w-full items-center justify-center bg-white px-16',
         className
       )}
       {...rest}

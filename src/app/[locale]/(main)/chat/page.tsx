@@ -1,6 +1,7 @@
+import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 
-import { MenuTab, Navigation } from '@/components';
+import { Header, MenuTab } from '@/components';
 import { ChatApi } from '@/lib/api/server';
 import { getServerAuth } from '@/lib/authentication/server-auth';
 
@@ -18,8 +19,12 @@ export const generateMetadata = async ({
   };
 };
 
-export default async function Home() {
-  const t = await getTranslations();
+export default async function Home({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
+  const t = await getTranslations({ namespace: 'chat_page', locale });
   const user = await getServerAuth();
   if (!user) {
     return <div>No session</div>;
@@ -28,29 +33,26 @@ export default async function Home() {
   const chatBotName = process.env.DIT_CHATBOT_NAME;
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex h-56 items-center justify-center border-b border-t border-gray-80">
-        <h1 className="mb-4 text-16 font-semibold">Chat</h1>
-      </div>
-      <div className="flex min-h-0 flex-1 flex-col">
+    <>
+      <Header pageTitle={t('metadata.title')} />
+      <main>
         <MenuTab
           tabs={[
             {
               key: 'general',
-              label: t('chat.generalization'),
+              label: t('generalization'),
               children: <div>Generalization</div>,
             },
             {
               key: 'chapter',
-              label: t('chat.chapter'),
+              label: t('chapter'),
               children: <div>Chapter</div>,
             },
           ]}
           defaultActiveKey="general"
         />
         <ChatView sessions={chatSession.data} chatBotName={chatBotName!} />
-      </div>
-      <Navigation />
-    </div>
+      </main>
+    </>
   );
 }

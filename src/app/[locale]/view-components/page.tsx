@@ -17,7 +17,7 @@ export default function ComponentsPage() {
   const modalRef = useRef<ModalHandle>(null);
 
   return (
-    <div>
+    <main>
       <h1>Components</h1>
       <h2>Chapter</h2>
       <Chapter
@@ -115,6 +115,6 @@ export default function ComponentsPage() {
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

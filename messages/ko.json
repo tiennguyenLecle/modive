@@ -43,7 +43,8 @@
     "metadata": {
       "title": "굿즈",
       "description": "굿즈를 확인하세요"
-    }
+    },
+    "title": "굿즈"
   },
   "me_page": {
     "metadata": {
@@ -77,12 +78,6 @@
     "chat": "채팅하기",
     "personal_relationship": "인물관계도",
     "chapter_entrance": "챕터 입장"
-  },
-  "chat": {
-    "chat": {
-      "title": "",
-      "description": ""
-    }
   },
   "my_page": {
     "my_infomation": "내 정보",

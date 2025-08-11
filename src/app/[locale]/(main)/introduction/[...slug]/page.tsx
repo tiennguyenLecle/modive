@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
@@ -10,7 +11,7 @@ const IntroductionDetailPage = () => {
   const t = useTranslations('introduction');
 
   return (
-    <div className="bg-white">
+    <main className="bg-white">
       <Image
         src={WeMarriedBanner}
         alt="We Married"
@@ -54,7 +55,7 @@ const IntroductionDetailPage = () => {
         ]}
         defaultActiveKey="chat"
       />
-    </div>
+    </main>
   );
 };
 

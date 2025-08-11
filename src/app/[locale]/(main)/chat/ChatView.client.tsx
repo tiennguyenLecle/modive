@@ -2,10 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useAuth } from '@/lib/authentication/auth-context';
 import { Link } from '@/lib/navigation';
 
-// Define a more specific type for the expected data prop
 interface ChatViewProps {
   sessions: any;
   chatBotName: string;
@@ -23,6 +21,11 @@ export default function ChatView({
 
       <div>
         <div>{chatSessions.data.length}</div>
+        <Link href="/chat/24d4608f-39f8-4d6e-b4ee-6073d0c058c7?sessionId=ab584cb2-c149-488f-9468-e1af8f009248">
+          <button className="rounded-4 bg-primary p-8 text-left text-white">
+            Chat Room: 24d4608f-39f8-4d6e-b4ee-6073d0c058c7
+          </button>
+        </Link>
         <ul className="flex flex-col gap-16">
           {chatSessions.data.map((session: any) => (
             <li key={session.id}>

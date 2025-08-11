@@ -6,18 +6,13 @@ import { Header } from '@/components';
 import { Link } from '@/lib/navigation';
 import { ROUTES } from '@/utils/constants';
 
-const MyPage = () => {
+export default function ManagementPage() {
   const t = useTranslations('my_page');
 
   return (
     <>
-      <Header
-        className="mx-auto w-[360rem]"
-        pageTitle={t('my_page')}
-        showAlarmIcon
-        showCashIcon
-      />
-      <div className="flex flex-col gap-8">
+      <Header pageTitle={t('my_page')} showAlarmIcon showCashIcon />
+      <main className="flex flex-col gap-8">
         <div className="flex flex-col bg-white px-16">
           <Link href={ROUTES.MANAGEMENT.MY_INFORMATION}>
             <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
@@ -74,9 +69,7 @@ const MyPage = () => {
             </p>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
-};
-
-export default MyPage;
+}

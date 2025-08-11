@@ -21,7 +21,7 @@ export default function Navigation({ className, ...rest }: NavigationProps) {
 
   return (
     <nav
-      className={cx('flex h-56 border-t border-gray-90', className)}
+      className={cx('flex h-56 border-t border-gray-90 bg-white', className)}
       {...rest}
     >
       <NavItem

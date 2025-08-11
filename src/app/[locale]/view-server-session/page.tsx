@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 
-import { Navigation } from '@/components';
 import { getServerAuth } from '@/lib/authentication/server-auth';
 import { createClient } from '@/lib/supabase/server';
 
@@ -38,7 +37,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <main className="flex h-full flex-col">
       <div className="flex h-56 items-center justify-center border-b border-t border-gray-80">
         <h1 className="mb-4 text-16 font-semibold">View Session</h1>
       </div>
@@ -46,7 +45,6 @@ export default async function Home() {
         <div>Server Auth State</div>
         <pre>{JSON.stringify(user, null, 2)}</pre>
       </div>
-      <Navigation />
-    </div>
+    </main>
   );
 }

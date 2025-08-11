@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 
-import ArrowRight from '@/assets/icons/arrow-right.svg';
+import { ArrowRight } from '@/assets/icons';
 
 type ChatCardItemProps = ComponentProps<'div'> & {};
 

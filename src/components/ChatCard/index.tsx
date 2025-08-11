@@ -1,7 +1,9 @@
-import ChatCardItem from '@/components/ChatCard/Item';
-import ChatCardList from '@/components/ChatCard/List';
+import ChatCardItem from './Item';
+import ChatCardList from './List';
 
-export const ChatCard = {
+const ChatCard = {
   Item: ChatCardItem,
   List: ChatCardList,
 };
+
+export default ChatCard;

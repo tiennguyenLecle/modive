@@ -14,4 +14,16 @@ export const ROUTES = {
     // NOTI_SETTINGS: '/management/noti-settings',
     // ANNOUNCEMENT: '/management/announcement',
   },
+  CMS: {
+    INDEX: '/cms',
+    DATA_MANAGEMENT: {
+      INDEX: '/cms/data-management',
+      CONTENT: '/cms/data-management/content',
+      GOODS: '/cms/data-management/goods',
+      NOTIFICATIONS: '/cms/data-management/notifications',
+      FAQ: '/cms/data-management/faq',
+    },
+    INTERFACE: '/cms/interface',
+    USER_MANAGEMENT: '/cms/user-management',
+  },
 };

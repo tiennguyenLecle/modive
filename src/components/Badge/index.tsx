@@ -1,7 +1,9 @@
-import BadgeCountNode from '@/components/Badge/CountNode';
-import BadgeWrapper from '@/components/Badge/Wrapper';
+import BadgeCountNode from './CountNode';
+import BadgeWrapper from './Wrapper';
 
-export const Badge = {
+const Badge = {
   CountNode: BadgeCountNode,
   Wrapper: BadgeWrapper,
 };
+
+export default Badge;

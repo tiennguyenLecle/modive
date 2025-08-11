@@ -4,10 +4,8 @@ import React, { ComponentProps, use } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import PinIcon from '@/assets/icons/pin.svg';
-import TrashIcon from '@/assets/icons/trash.svg';
-import { Badge } from '@/components/Badge';
-import Modal, { ModalHandle } from '@/components/Modal';
+import { Pin, Trash } from '@/assets/icons';
+import { Badge, Modal, ModalHandle } from '@/components';
 
 type ChatListItemProps = ComponentProps<'div'> & {
   imageSrc: string;
@@ -55,7 +53,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
               className="flex size-24 items-center justify-center"
               onClick={() => modalRef.current?.open()}
             >
-              <PinIcon className="size-18 text-gray-00" />
+              <Pin className="size-18 text-gray-00" />
             </div>
           </div>
 
@@ -82,7 +80,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
             className="flex h-48 items-center gap-8 px-16 py-4"
             onClick={() => modalRef.current?.close()}
           >
-            <PinIcon className="size-18 text-gray-00" />
+            <Pin className="size-18 text-gray-00" />
             <p className="text-16 font-normal text-gray-00">
               {t('top_fixing')}
             </p>
@@ -92,7 +90,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
             className="flex h-48 items-center gap-8 px-16 py-4"
             onClick={() => modalRef.current?.close()}
           >
-            <TrashIcon className="size-18 text-gray-00" />
+            <Trash className="size-18 text-gray-00" />
             <p className="text-16 font-normal text-gray-00">{t('deletion')}</p>
           </div>
         </div>

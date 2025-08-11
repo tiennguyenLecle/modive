@@ -11,7 +11,6 @@ import { nanumMyeongjo, pretendard } from '@/styles/fonts';
 
 type LayoutProps = {
   children: React.ReactNode;
-  modal: React.ReactNode;
   params: { locale: string };
 };
 
@@ -48,7 +47,6 @@ export async function generateMetadata({
 
 export default async function LocaleLayout({
   children,
-  modal,
   params: { locale },
 }: LayoutProps) {
   const messages = await getMessages();
@@ -70,8 +68,7 @@ export default async function LocaleLayout({
       </head>
       <body>
         <Providers locale={locale} messages={messages}>
-          <div className="flex h-full flex-col overflow-auto">{children}</div>
-          {modal}
+          {children}
         </Providers>
       </body>
     </html>

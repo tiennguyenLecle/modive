@@ -1,6 +1,6 @@
-import ToggleButton from '@/components/Toogle/Button';
-import ToggleChip from '@/components/Toogle/Chip';
-import ToggleTab from '@/components/Toogle/Tab';
+import ToggleButton from './Button';
+import ToggleChip from './Chip';
+import ToggleTab from './Tab';
 
 export const Toogle = {
   Button: ToggleButton,

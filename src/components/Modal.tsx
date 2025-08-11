@@ -9,8 +9,8 @@ import React, {
 } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import CloseIcon from '@/assets/icons/close.svg';
-import Button from '@/components/Button';
+import { Close } from '@/assets/icons';
+import { Button } from '@/components';
 import { cx } from '@/utils/method';
 
 export type ModalHandle = {
@@ -115,7 +115,7 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
                             className="absolute right-16 top-16 flex size-24 items-center justify-center transition"
                             aria-label="Close"
                           >
-                            <CloseIcon className="size-11 text-gray-00" />
+                            <Close className="size-11 text-gray-00" />
                           </button>
                         )}
                       </>

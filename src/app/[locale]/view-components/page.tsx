@@ -2,19 +2,22 @@
 
 import { useRef } from 'react';
 
-import AlarmIcon from '@/assets/icons/alarm.svg';
-import { Badge } from '@/components/Badge';
-import Chapter from '@/components/Chapter';
-import ChatListItem from '@/components/ChatListItem';
-import Modal, { ModalHandle } from '@/components/Modal';
-import RecommendationContainer from '@/components/Recommendation/Container';
-import { Story } from '@/components/Story';
+import { Alarm } from '@/assets/icons';
+import {
+  Badge,
+  Chapter,
+  ChatListItem,
+  Modal,
+  ModalHandle,
+  Recommendation,
+  Story,
+} from '@/components';
 
 export default function ComponentsPage() {
   const modalRef = useRef<ModalHandle>(null);
 
   return (
-    <div>
+    <main>
       <h1>Components</h1>
       <h2>Chapter</h2>
       <Chapter
@@ -43,7 +46,7 @@ export default function ComponentsPage() {
         ]}
       />
       <h2>Recommendation</h2>
-      <RecommendationContainer />
+      <Recommendation.Container />
       <h2>Modal</h2>
       <button onClick={() => modalRef.current?.open()}>open modal</button>
       <Modal
@@ -74,7 +77,7 @@ export default function ComponentsPage() {
       <div className="p-2">
         <h2>Badge</h2>
         <Badge.Wrapper count={3} showZero>
-          <AlarmIcon width={24} height={24} className="text-primary" />
+          <Alarm width={24} height={24} className="text-primary" />
         </Badge.Wrapper>
         <Badge.CountNode count={3} showZero />
       </div>
@@ -95,6 +98,23 @@ export default function ComponentsPage() {
           />
         </div>
       </div>
-    </div>
+      <div className="p-2">
+        <h2>Story Component</h2>
+
+        <div className="flex flex-col gap-16 bg-white p-16">
+          <Story.Text>
+            {
+              'You have made their debut only after a tough trainee life. But the public&apos;s response is still cold ... We got married. He will appear in the reality entertainment program We Got Married to show a virtual marriage.'
+            }
+          </Story.Text>
+          <Story.Image
+            src="https://picsum.photos/seed/1/400"
+            alt="Story Image"
+            width={160}
+            height={160}
+          />
+        </div>
+      </div>
+    </main>
   );
 }

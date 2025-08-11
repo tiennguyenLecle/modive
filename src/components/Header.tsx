@@ -4,12 +4,8 @@ import React, { ComponentProps } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import AlarmIcon from '@/assets/icons/alarm.svg';
-import ArrowRight from '@/assets/icons/arrow-right.svg';
-import CashIcon from '@/assets/icons/cash.svg';
-import LogoText from '@/assets/icons/logo-text.svg';
-import SearchIcon from '@/assets/icons/search.svg';
-import { Badge } from '@/components/Badge';
+import { Alarm, ArrowRight, Cash, LogoText, Search } from '@/assets/icons';
+import { Badge } from '@/components';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
@@ -38,7 +34,7 @@ const Header = ({
   return (
     <header
       className={cx(
-        'fixed left-0 right-0 top-0 z-50 flex min-h-56 items-center justify-center bg-white px-16',
+        'relative flex min-h-56 w-full items-center justify-center bg-white px-16',
         className
       )}
       {...rest}
@@ -66,19 +62,19 @@ const Header = ({
       <div className="absolute right-16 flex items-center gap-12">
         {showSearchIcon && (
           <Link href="#">
-            <SearchIcon width={24} height={24} />
+            <Search width={24} height={24} />
           </Link>
         )}
         {showAlarmIcon && (
           <Link href="#">
             <Badge.Wrapper count={3} showZero>
-              <AlarmIcon width={24} height={24} className="text-gray-00" />
+              <Alarm width={24} height={24} className="text-gray-00" />
             </Badge.Wrapper>
           </Link>
         )}
         {showCashIcon && (
           <Link href="#">
-            <CashIcon width={24} height={24} />
+            <Cash width={24} height={24} />
           </Link>
         )}
       </div>

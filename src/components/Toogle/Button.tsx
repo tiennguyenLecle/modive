@@ -3,8 +3,7 @@
 import React, { ComponentProps, useState } from 'react';
 import { motion } from 'framer-motion';
 
-import CheckIcon from '@/assets/icons/check.svg';
-import CloseIcon from '@/assets/icons/close.svg';
+import { Check, Close } from '@/assets/icons';
 import { cx } from '@/utils/method';
 
 type ToggleButtonProps = ComponentProps<'button'> & {
@@ -44,9 +43,9 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
         }}
       >
         {enabled ? (
-          <CheckIcon className="h-5 w-7 object-cover text-primary" />
+          <Check className="h-5 w-7 object-cover text-primary" />
         ) : (
-          <CloseIcon className="h-7 w-7 object-cover text-gray-00" />
+          <Close className="h-7 w-7 object-cover text-gray-00" />
         )}
       </motion.div>
     </button>

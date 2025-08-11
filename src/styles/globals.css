@@ -21,13 +21,12 @@
   html {
     /* In this project, use 1 rem as default spacing unit (1rem = 1px) */
     font-size: 6.25%;
-    @apply overflow-x-hidden bg-primary;
+    @apply overflow-x-hidden;
   }
 
   body {
-    @apply bg-background font-pretendard text-16 text-foreground;
+    @apply bg-primary font-pretendard text-16 text-foreground;
     margin: 0 auto;
-    width: 360rem;
   }
 }
 
@@ -38,6 +37,21 @@
 
   .container-fluid {
     @apply max-w-full;
+  }
+
+  /* Chrome, Safari, and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Firefox */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  /* IE and Edge */
+  .no-scrollbar {
+    -ms-overflow-style: none;
   }
 }
 
@@ -69,19 +83,28 @@
   animation: fade-out 200ms ease-in forwards;
 }
 
-@layer utilities {
-  /* Chrome, Safari, and Opera */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
+.main-layout {
+  @apply flex h-full flex-col bg-background;
+}
 
-  /* Firefox */
-  .no-scrollbar {
-    scrollbar-width: none;
-  }
+.main-layout.device-desktop {
+  max-width: 768rem;
+  margin: 0 auto;
+}
 
-  /* IE and Edge */
-  .no-scrollbar {
-    -ms-overflow-style: none;
-  }
+.main-layout > .page-wrapper {
+  @apply flex min-h-0 flex-1 flex-col;
+}
+
+.main-layout > .navigation-wrapper {
+  @apply mt-auto max-h-56 overflow-hidden duration-300 ease-in-out;
+}
+
+.main-layout:has([data-no-navigation]) > .navigation-wrapper {
+  max-height: 0;
+  transition-property: max-height;
+}
+
+.main-layout > .page-wrapper > main {
+  @apply min-h-0 flex-1 overflow-auto;
 }

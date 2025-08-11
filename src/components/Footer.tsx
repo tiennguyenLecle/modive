@@ -1,6 +1,6 @@
 import { useLocale, useTranslations } from 'next-intl';
 
-import Logo from '@/assets/icons/logo.svg';
+import { Logo } from '@/assets/icons';
 
 export default function Footer() {
   const t = useTranslations('footer');

@@ -1,14 +1,11 @@
 'use client';
 
-import { ComponentProps, useEffect, useRef, useState } from 'react';
+import { ComponentProps, useRef, useState } from 'react';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import Chevron from '@/assets/icons/chevron.svg';
-import Ellipsis from '@/assets/icons/ellipsis.svg';
-import Lock from '@/assets/icons/lock.svg';
-import Reload from '@/assets/icons/reload.svg';
+import { Chevron, Ellipsis, Lock, Reload } from '@/assets/icons';
 import { useOnClickOutside } from '@/hooks/useClickOutSide';
 import { Link } from '@/lib/navigation';
 import { cx } from '@/utils/method';

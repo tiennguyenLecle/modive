@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 
-import ChatCardItem from '@/components/ChatCard/Item';
+import ChatCardItem from './Item';
 
 type ChatCardListProps = ComponentProps<'div'> & {};
 

@@ -5,6 +5,19 @@
     "goods": "굿즈",
     "me": "마이"
   },
+  "cms": {
+    "menu": {
+      "data_management": "데이터 관리",
+      "content": "콘텐츠",
+      "goods": "굿즈",
+      "notifications": "알림",
+      "announcement": "공지사항",
+      "faq": "FAQ",
+      "interface": "인터페이스",
+      "user_management": "유저 관리",
+      "cms": "CMS"
+    }
+  },
   "navigation": {
     "back_home": "홈으로 돌아가기"
   },
@@ -43,7 +56,8 @@
     "metadata": {
       "title": "굿즈",
       "description": "굿즈를 확인하세요"
-    }
+    },
+    "title": "굿즈"
   },
   "me_page": {
     "metadata": {
@@ -77,12 +91,6 @@
     "chat": "채팅하기",
     "personal_relationship": "인물관계도",
     "chapter_entrance": "챕터 입장"
-  },
-  "chat": {
-    "chat": {
-      "title": "",
-      "description": ""
-    }
   },
   "my_page": {
     "my_infomation": "내 정보",

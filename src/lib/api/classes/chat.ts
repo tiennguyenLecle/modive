@@ -128,6 +128,7 @@ export class ChatApiClient extends BaseApiClient {
     //   },
     // });
 
+
     return this.post(`/v3/universe/session/${sessionId}`, {
       body: {
         userId: this.chatApiId,

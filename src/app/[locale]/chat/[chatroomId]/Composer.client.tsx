@@ -3,12 +3,12 @@
 import { memo, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
-import { useSession } from 'next-auth/react';
 
 import { messagesAtom } from '@/atoms/messagesAtom';
 import { NextApi } from '@/lib/api';
 import { Message, SpeakerType } from '@/lib/api/types/chat.types';
 import { ChatboxComposer } from '@/lib/chatbot-modules';
+import { useAuth } from '@/lib/authentication/auth-context';
 
 type ComposerProps = {
   chatroomId: string;
@@ -18,7 +18,7 @@ type ComposerProps = {
 
 const Composer = memo(
   ({ chatroomId, chatbotName, sendMessage }: ComposerProps) => {
-    const { data: session } = useSession();
+    const { user } = useAuth();
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useAtom(messagesAtom);
     const messagesRef = useRef<Message[]>([]);
@@ -26,11 +26,12 @@ const Composer = memo(
       setNewMessage(e.target.value);
     };
 
+
     const mockNewMessageUser = {
       id: 'newMessageUserItemId',
       chatroom_id: chatroomId,
       speaker_type: 'user' as SpeakerType,
-      speaker_id: session?.user?.id,
+      speaker_id: user?.id,
       message: newMessage,
       created_at: dayjs().toISOString(),
     };

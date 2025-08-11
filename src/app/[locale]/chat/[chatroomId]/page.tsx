@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { ChatApi } from '@/lib/api/server';
 
 import ChatRoom from './ChatRoom.client';
+import { getServerAuth } from '@/lib/authentication/server-auth';
 
 export const revalidate = 0;
 
@@ -30,9 +31,14 @@ export default async function ChatRoomPage({
 
   const res = await ChatApi.getMessages(chatroomId, undefined, 20);
 
+  const user = await getServerAuth();
+  if (!user) {
+    return <div>No session</div>;
+  }
+
   return (
     <div>
-      <ChatRoom messages={res.data ?? []} chatBotName={chatBotName!} />
+      <ChatRoom currentUserId={user.id} messages={res.data ?? []} chatBotName={chatBotName!} />
     </div>
   );
 }

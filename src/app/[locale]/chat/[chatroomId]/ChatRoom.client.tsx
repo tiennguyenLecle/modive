@@ -1,7 +1,6 @@
 'use client';
 
-import { ComponentProps, useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { ComponentProps } from 'react';
 
 import { ProgressBar } from '@/components';
 import { Message } from '@/lib/api/types/chat.types';
@@ -12,12 +11,14 @@ import Chatbot from './Chatbot.client';
 type ChatRoomProps = ComponentProps<'div'> & {
   messages: Message[];
   chatBotName: string;
+  currentUserId: string;
 };
 
 export default function ChatRoom({
   messages,
   className,
   chatBotName,
+  currentUserId,
   ...props
 }: ChatRoomProps) {
   return (
@@ -29,7 +30,7 @@ export default function ChatRoom({
         <span>Favorability 1</span>
         <ProgressBar percentage={10} />
       </div>
-      <Chatbot messages={messages} chatbotName={chatBotName} />
+      <Chatbot messages={messages} chatbotName={chatBotName} currentUserId={currentUserId} />
     </div>
   );
 }

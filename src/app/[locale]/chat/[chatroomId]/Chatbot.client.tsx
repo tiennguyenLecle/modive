@@ -27,7 +27,7 @@ import '@/lib/chatbot-modules/dist/styles.css';
 
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
-import { useSession } from 'next-auth/react';
+
 
 import { messagesAtom } from '@/atoms/messagesAtom';
 import { filterMessageConditions } from '@/utils/method';
@@ -35,9 +35,11 @@ import { filterMessageConditions } from '@/utils/method';
 import Composer from './Composer.client';
 import { LoadingDots } from './Loading.client';
 
+
 type ChatbotProps = ComponentProps<'div'> & {
   messages: Message[];
   chatbotName: string;
+  currentUserId: string;
 };
 
 const DEFAULT_IMAGE_URL = 'https://cdn3.emoji.gg/emojis/10098-pervy-look.png';
@@ -45,6 +47,7 @@ const DEFAULT_IMAGE_URL = 'https://cdn3.emoji.gg/emojis/10098-pervy-look.png';
 export default function Chatbot({
   messages: initialMessages,
   chatbotName,
+  currentUserId,
 }: ChatbotProps) {
   const { sendMessage } = useSendMessage();
   const [messages, setMessages] = useAtom(messagesAtom);
@@ -54,7 +57,9 @@ export default function Chatbot({
   const [isPreviousLoading, setIsPreviousLoading] = useState(false);
   const messagesRef = useRef<Message[]>(initialMessages || []);
   const prevLoadMoreRef = useRef<boolean>(false);
-  const { data: session } = useSession();
+  console.log('messages', messages);
+
+
 
   const hasBeforeMessages = useRef(false);
 
@@ -220,78 +225,7 @@ export default function Chatbot({
     [handleLoadMore, isPreviousLoading, chatroomId]
   );
 
-  const composerComponent = useMemo(
-    () => (
-      <ChatboxComposer
-        textareaProps={{
-          value: newMessage,
-          onChange: handleChange,
-          autoSize: {
-            minRows: 1,
-            maxRows: 5,
-          },
-        }}
-        sendButtonComponent={{
-          onClick: async () => {
-            let lastMessageId = messages[messages.length - 1]?.id;
-            const newMessageUser = {
-              id: '1',
-              chatroom_id: chatroomId as string,
-              speaker_type: 'user' as SpeakerType,
-              speaker_id: session?.user?.id,
-              message: newMessage,
-              created_at: dayjs().toISOString(),
-            };
 
-            const temparareryChatbotItem = {
-              id: 'temparareryChatbotItemId',
-              chatroom_id: chatroomId as string,
-              speaker_type: 'chatbot' as SpeakerType,
-              speaker_id: chatbotName,
-              message: 'Thinking',
-              created_at: dayjs().toISOString(),
-            };
-
-            setMessages((prev: Message[]) => [
-              ...prev,
-              newMessageUser,
-              temparareryChatbotItem,
-            ]);
-            await sendMessage(newMessage);
-
-            const startTime = Date.now();
-            const interval = setInterval(async () => {
-              const res: any = await NextApi.get(
-                `/api/chat/${chatroomId}?limit=20&direction=after&cursor=${lastMessageId}`
-              );
-              const newMessages = res?.data ?? [];
-
-              if (newMessages.length >= 2) {
-                // Có đủ 2 messages => add ngay
-                messagesRef.current = [...messages, ...newMessages];
-                setMessages(messagesRef.current);
-                setNewMessage('');
-                clearInterval(interval);
-              } else if (Date.now() - startTime >= 30000) {
-                // Hết 30s
-                if (newMessages.length === 1) {
-                  // Thêm error field
-                  const erroredMessage = { ...newMessages[0], error: true };
-                  messagesRef.current = [...messages, erroredMessage];
-                  setMessages(messagesRef.current);
-                }
-                // Nếu 0 tin nhắn mới thì không add gì
-                clearInterval(interval);
-              }
-            }, 2000);
-          },
-          disabled: !newMessage.trim(),
-          children: 'Send',
-        }}
-      />
-    ),
-    [newMessage, handleChange, sendMessage]
-  );
 
   return (
     <ChatboxLayout

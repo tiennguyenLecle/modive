@@ -32,6 +32,7 @@ import { useSession } from 'next-auth/react';
 import { messagesAtom } from '@/atoms/messagesAtom';
 import { filterMessageConditions } from '@/utils/method';
 
+import Composer from './Composer.client';
 import { LoadingDots } from './Loading.client';
 
 type ChatbotProps = ComponentProps<'div'> & {
@@ -297,7 +298,13 @@ export default function Chatbot({
       backgroundColor="var(--color-background)"
       layoutHeight="calc(100dvh - 56px - 48px)" // 56px + 48px: header height
       messageComponent={messageComponent}
-      composerComponent={composerComponent}
+      composerComponent={
+        <Composer
+          chatroomId={chatroomId as string}
+          chatbotName={chatbotName}
+          sendMessage={sendMessage}
+        />
+      }
     />
   );
 }

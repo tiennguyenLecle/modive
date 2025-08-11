@@ -1370,6 +1370,51 @@ function requireJsxRuntime () {
 
 var jsxRuntimeExports = requireJsxRuntime();
 
+var styles$8 = {"chatboxLayoutContainer":"ChatboxLayout-module__chatboxLayoutContainer___1XhgN"};
+
+const ChatboxLayout = React.memo((props) => {
+    const { layoutHeight = '100dvh', className = '', backgroundColor, backgroundImage, style = {}, showTopInfo = false, headerComponent, topInfoComponent, messageComponent, composerComponent, ...rest } = props;
+    const [composerHeight, setComposerHeight] = React.useState(0);
+    const [firstRender, setFirstRender] = React.useState(true);
+    const backgroundStyle = React.useMemo(() => ({
+        backgroundColor: backgroundColor || 'var(--chatbox-bg-color, #fff)',
+        backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
+        backgroundSize: backgroundImage ? 'cover' : undefined,
+        backgroundRepeat: backgroundImage ? 'no-repeat' : undefined,
+    }), [backgroundColor, backgroundImage]);
+    const mergedStyle = React.useMemo(() => ({
+        ...backgroundStyle,
+        ...style,
+        height: `calc(${layoutHeight} - ${composerHeight}px)`,
+        // add transition to the height of the messages container
+        // when composer height changed
+        transition: !firstRender ? 'height 0.3s ease-in-out' : undefined,
+    }), [backgroundStyle, style, layoutHeight, composerHeight, firstRender]);
+    const renderTopInfo = () => {
+        if (!showTopInfo || !topInfoComponent)
+            return null;
+        return topInfoComponent;
+    };
+    React.useEffect(() => {
+        const composer = document.querySelector('.c-chatbox-layout-composer');
+        if (composer) {
+            const resizeObserver = new ResizeObserver(() => {
+                setComposerHeight(composer.clientHeight ?? 44);
+            });
+            resizeObserver.observe(composer);
+            return () => {
+                resizeObserver.disconnect();
+            };
+        }
+    }, [layoutHeight]);
+    // set first render to false after 50ms
+    React.useEffect(() => {
+        const timeout = setTimeout(() => setFirstRender(false), 50);
+        return () => clearTimeout(timeout);
+    }, []);
+    return (jsxRuntimeExports.jsxs("div", { className: `${styles$8.chatboxLayoutContainer} c-chatbox-layout-container ${className}`, style: { height: layoutHeight }, ...rest, children: [headerComponent, jsxRuntimeExports.jsxs("div", { className: "c-chatbox-layout", style: mergedStyle, children: [renderTopInfo(), messageComponent] }), jsxRuntimeExports.jsx("div", { className: "c-chatbox-layout-composer", children: composerComponent })] }));
+});
+
 function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx$1(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}
 
 /**
@@ -1380,26 +1425,26 @@ function cn$2(...inputs) {
     return clsx$1(inputs);
 }
 
-var styles$8 = {"badge":"Badge-module__badge___KM-kT"};
+var styles$7 = {"badge":"Badge-module__badge___KM-kT"};
 
 const Badge = ({ children, className = '' }) => {
-    return jsxRuntimeExports.jsx("span", { className: cn$2(styles$8.badge, className), children: children });
+    return jsxRuntimeExports.jsx("span", { className: cn$2(styles$7.badge, className), children: children });
 };
 
-var styles$7 = {"button":"Button-module__button___Uc5-f"};
+var styles$6 = {"button":"Button-module__button___Uc5-f"};
 
 const Button = ({ children, variant = 'primary', size = 'medium', icon, iconPosition = 'left', isDisabled, href, className, ...props }) => {
-    return href ? (jsxRuntimeExports.jsx("a", { href: href, className: cn$2(styles$7.button, `c-button-link`, `c-button-${size}`, isDisabled && 'disabled', className), children: href })) : (jsxRuntimeExports.jsxs("button", { className: cn$2(styles$7.button, `c-button-${variant}`, `c-button-${size}`, `c-button-icon-${iconPosition}`, className), disabled: isDisabled, ...props, children: [icon && jsxRuntimeExports.jsx("span", { className: "c-button-icon", children: icon }), children] }));
+    return href ? (jsxRuntimeExports.jsx("a", { href: href, className: cn$2(styles$6.button, `c-button-link`, `c-button-${size}`, isDisabled && 'disabled', className), children: href })) : (jsxRuntimeExports.jsxs("button", { className: cn$2(styles$6.button, `c-button-${variant}`, `c-button-${size}`, `c-button-icon-${iconPosition}`, className), disabled: isDisabled, ...props, children: [icon && jsxRuntimeExports.jsx("span", { className: "c-button-icon", children: icon }), children] }));
 };
 
 const IconDoubleCheck = ({ color = 'currentColor', width = 14, height = 10, className, ...props }) => {
     return (jsxRuntimeExports.jsxs("svg", { width: width, height: height, viewBox: "0 0 14 10", fill: "none", xmlns: "http://www.w3.org/2000/svg", className: className, ...props, children: [jsxRuntimeExports.jsx("path", { fillRule: "evenodd", clipRule: "evenodd", d: "M13.8271 0.621766C14.035 0.803607 14.056 1.11949 13.8742 1.32731L6.87418 9.3273C6.78305 9.43145 6.65283 9.49317 6.51453 9.49778C6.37622 9.50238 6.24219 9.44946 6.14433 9.35161L3.14433 6.35161C2.94907 6.15634 2.94907 5.83976 3.14433 5.6445C3.3396 5.44924 3.65618 5.44924 3.85144 5.6445L6.47353 8.26659L13.1216 0.668802C13.3034 0.460983 13.6193 0.439925 13.8271 0.621766Z", fill: color }), jsxRuntimeExports.jsx("path", { fillRule: "evenodd", clipRule: "evenodd", d: "M0.144494 5.64455C0.339756 5.44929 0.656338 5.44929 0.8516 5.64455L3.8516 8.64455C4.04686 8.83981 4.04686 9.1564 3.8516 9.35166C3.65634 9.54692 3.33976 9.54692 3.14449 9.35166L0.144493 6.35166C-0.0507687 6.1564 -0.0507687 5.83981 0.144494 5.64455Z", fill: color }), jsxRuntimeExports.jsx("path", { fillRule: "evenodd", clipRule: "evenodd", d: "M10.8257 0.621168C11.0339 0.80263 11.0555 1.11847 10.8741 1.32662L6.62407 6.20162C6.4426 6.40977 6.12676 6.4314 5.91861 6.24994C5.71046 6.06848 5.68883 5.75264 5.87029 5.54449L10.1203 0.669487C10.3018 0.461338 10.6176 0.439705 10.8257 0.621168Z", fill: color })] }));
 };
 
-var styles$6 = {"timeLabel":"TimeLabel-module__timeLabel___G0eeA"};
+var styles$5 = {"timeLabel":"TimeLabel-module__timeLabel___G0eeA"};
 
 const TimeLabel = ({ time, className, icon, iconPosition = 'end', hasIcon = false, isError = false, ...props }) => {
-    return (jsxRuntimeExports.jsxs("div", { className: cn$2(styles$6.timeLabel, isError && 'c-time-label-error', iconPosition === 'start' && 'c-time-label-icon-start', className), ...props, title: time, children: [jsxRuntimeExports.jsx("p", { className: "c-time-label-value", children: time }), (hasIcon || !!icon) && (jsxRuntimeExports.jsx("span", { className: "c-time-label-icon", children: icon || jsxRuntimeExports.jsx(IconDoubleCheck, {}) }))] }));
+    return (jsxRuntimeExports.jsxs("div", { className: cn$2(styles$5.timeLabel, isError && 'c-time-label-error', iconPosition === 'start' && 'c-time-label-icon-start', className), ...props, title: time, children: [jsxRuntimeExports.jsx("p", { className: "c-time-label-value", children: time }), (hasIcon || !!icon) && (jsxRuntimeExports.jsx("span", { className: "c-time-label-icon", children: icon || jsxRuntimeExports.jsx(IconDoubleCheck, {}) }))] }));
 };
 
 function _extends() {
@@ -4220,33 +4265,33 @@ var TextArea = /*#__PURE__*/React.forwardRef(function (_ref, ref) {
   })));
 });
 
-var styles$5 = {"textareaContainer":"Textarea-module__textareaContainer___HNQbK"};
+var styles$4 = {"textareaContainer":"Textarea-module__textareaContainer___HNQbK"};
 
 const Textarea = React.memo(React.forwardRef(({ className = '', disabled, error, startIcon, endIcon, ...props }, ref) => {
-    return (jsxRuntimeExports.jsxs("div", { className: `${styles$5.textareaContainer} ${error ? 'c-textarea-error' : ''} ${disabled ? 'c-textarea-disabled' : ''} ${className}`, children: [startIcon && (jsxRuntimeExports.jsx("span", { className: "c-textarea-start-icon", children: startIcon })), jsxRuntimeExports.jsx(TextArea, { ref: ref, disabled: disabled, ...props }), endIcon && jsxRuntimeExports.jsx("span", { className: "c-textarea-end-icon", children: endIcon })] }));
+    return (jsxRuntimeExports.jsxs("div", { className: `${styles$4.textareaContainer} ${error ? 'c-textarea-error' : ''} ${disabled ? 'c-textarea-disabled' : ''} ${className}`, children: [startIcon && (jsxRuntimeExports.jsx("span", { className: "c-textarea-start-icon", children: startIcon })), jsxRuntimeExports.jsx(TextArea, { ref: ref, disabled: disabled, ...props }), endIcon && jsxRuntimeExports.jsx("span", { className: "c-textarea-end-icon", children: endIcon })] }));
 }));
 
-var styles$4 = {"avatar":"Avatar-module__avatar___9LUr-"};
+var styles$3 = {"avatar":"Avatar-module__avatar___9LUr-"};
 
 const Avatar = ({ children, className = '', src, alt, title, defaultAvatar, shape = 'circle', imageSize = 40, size = imageSize ? 'custom' : 'small', ...props }) => {
-    return (jsxRuntimeExports.jsxs("div", { className: `${styles$4.avatar} c-avatar-${shape} c-avatar-${size} ${className}`, ...props, children: [src && (jsxRuntimeExports.jsx("img", { className: "c-avatar-image", src: src, alt: alt, title: title, style: {
+    return (jsxRuntimeExports.jsxs("div", { className: `${styles$3.avatar} c-avatar-${shape} c-avatar-${size} ${className}`, ...props, children: [src && (jsxRuntimeExports.jsx("img", { className: "c-avatar-image", src: src, alt: alt, title: title, style: {
                     width: imageSize,
                     height: imageSize,
                 } })), defaultAvatar && defaultAvatar, children] }));
 };
 
-var styles$3 = {"message":"Message-module__message___wukte","messageImage":"Message-module__messageImage___MrErV","messageVideo":"Message-module__messageVideo___GpV6K"};
+var styles$2 = {"message":"Message-module__message___wukte","messageImage":"Message-module__messageImage___MrErV","messageVideo":"Message-module__messageVideo___GpV6K"};
 
 const TextMessage = ({ className = '', message, children, position = 'normal', onClick, ...props }) => {
-    return (jsxRuntimeExports.jsxs("div", { className: `${styles$3.message} c-message-${position} ${className}`, onClick: onClick, ...props, children: [jsxRuntimeExports.jsx("span", { className: "c-message-text", children: message }), children] }));
+    return (jsxRuntimeExports.jsxs("div", { className: `${styles$2.message} c-message-${position} ${className}`, onClick: onClick, ...props, children: [jsxRuntimeExports.jsx("span", { className: "c-message-text", children: message }), children] }));
 };
 
 const ImageMessage = ({ className = '', imageUrl, children, size = 'small', onClick, ...props }) => {
-    return (jsxRuntimeExports.jsxs("div", { className: `${styles$3.messageImage} c-message-image-${size} ${className}`, onClick: onClick, ...props, children: [jsxRuntimeExports.jsx("img", { src: imageUrl, alt: "message" }), children] }));
+    return (jsxRuntimeExports.jsxs("div", { className: `${styles$2.messageImage} c-message-image-${size} ${className}`, onClick: onClick, ...props, children: [jsxRuntimeExports.jsx("img", { src: imageUrl, alt: "message" }), children] }));
 };
 
 const VideoMessage = ({ className = '', children, thumbnailUrl, onClick, hasLock = true, customThumbnail, ...props }) => {
-    return (jsxRuntimeExports.jsx("div", { className: `${styles$3.messageVideo} ${className}`, onClick: onClick, ...props, children: hasLock ? (customThumbnail || jsxRuntimeExports.jsx("img", { src: thumbnailUrl, alt: "message" })) : (jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: children })) }));
+    return (jsxRuntimeExports.jsx("div", { className: `${styles$2.messageVideo} ${className}`, onClick: onClick, ...props, children: hasLock ? (customThumbnail || jsxRuntimeExports.jsx("img", { src: thumbnailUrl, alt: "message" })) : (jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: children })) }));
 };
 
 var style = {"topInfo":"TopInfo-module__topInfo___BDy95"};
@@ -4254,51 +4299,6 @@ var style = {"topInfo":"TopInfo-module__topInfo___BDy95"};
 const TopInfo = ({ avatar, name, role, children, avatarSize = 'large', className = '', ...props }) => {
     return (jsxRuntimeExports.jsxs("div", { className: cn$2(style.topInfo, className), ...props, children: [jsxRuntimeExports.jsxs("div", { className: "c-top-info-user-section", children: [jsxRuntimeExports.jsx(Avatar, { src: avatar, size: avatarSize, className: "c-top-info-avatar" }), jsxRuntimeExports.jsxs("div", { className: "c-top-info-name-and-role", children: [jsxRuntimeExports.jsx("span", { className: "c-top-info-name", children: name }), jsxRuntimeExports.jsx(Badge, { children: role })] })] }), children] }));
 };
-
-var styles$2 = {"chatboxLayoutContainer":"ChatboxLayout-module__chatboxLayoutContainer___1XhgN"};
-
-const ChatboxLayout = React.memo((props) => {
-    const { layoutHeight = '100dvh', className = '', backgroundColor, backgroundImage, topInfoComponentOverride, style = {}, showTopInfo = false, headerComponent, topInfoProps, messageComponent, composerComponent, ...rest } = props;
-    const [composerHeight, setComposerHeight] = React.useState(0);
-    const [firstRender, setFirstRender] = React.useState(true);
-    const backgroundStyle = React.useMemo(() => ({
-        backgroundColor: backgroundColor || 'var(--chatbox-bg-color, #fff)',
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-        backgroundSize: backgroundImage ? 'cover' : undefined,
-        backgroundRepeat: backgroundImage ? 'no-repeat' : undefined,
-    }), [backgroundColor, backgroundImage]);
-    const mergedStyle = React.useMemo(() => ({
-        ...backgroundStyle,
-        ...style,
-        height: `calc(${layoutHeight} - ${composerHeight}px)`,
-        // add transition to the height of the messages container
-        // when composer height changed
-        transition: !firstRender ? 'height 0.3s ease-in-out' : undefined,
-    }), [backgroundStyle, style, layoutHeight, composerHeight, firstRender]);
-    const renderTopInfo = () => {
-        if (!showTopInfo)
-            return null;
-        return (topInfoComponentOverride || (jsxRuntimeExports.jsx(TopInfo, { className: "c-chatbox-top-info", ...topInfoProps })));
-    };
-    React.useEffect(() => {
-        const composer = document.querySelector('.c-chatbox-layout-composer');
-        if (composer) {
-            const resizeObserver = new ResizeObserver(() => {
-                setComposerHeight(composer.clientHeight ?? 44);
-            });
-            resizeObserver.observe(composer);
-            return () => {
-                resizeObserver.disconnect();
-            };
-        }
-    }, [layoutHeight]);
-    // set first render to false after 50ms
-    React.useEffect(() => {
-        const timeout = setTimeout(() => setFirstRender(false), 50);
-        return () => clearTimeout(timeout);
-    }, []);
-    return (jsxRuntimeExports.jsxs("div", { className: `${styles$2.chatboxLayoutContainer} c-chatbox-layout-container ${className}`, style: { height: layoutHeight }, ...rest, children: [headerComponent, jsxRuntimeExports.jsxs("div", { className: "c-chatbox-layout", style: mergedStyle, children: [renderTopInfo(), messageComponent] }), jsxRuntimeExports.jsx("div", { className: "c-chatbox-layout-composer", children: composerComponent })] }));
-});
 
 var styles$1 = {"chatboxComposer":"ChatboxComposer-module__chatboxComposer___u8BG-"};
 
@@ -7727,8 +7727,11 @@ const scrollToEnd = (virtuosoRef, messages) => {
 
 var styles = {"msgComponent":"MessageList-module__msgComponent___buiq1","messageListContainer":"MessageList-module__messageListContainer___-6o9-"};
 
+// Create a override component OR customize props to render message
 const MessageComponent = React.memo(({ item, className = '', textMessageOverride, imageMessageOverride, videoMessageOverride, textMessageProps, imageMessageProps, videoMessageProps, timeLabelProps, avatarProps, }) => {
-    const { avatarUrl, message, speakerType, createdAt, contentOverride, name, videoMessageContent, messageArray, align = 'center', } = item;
+    const { avatarUrl, message, // render message (text)
+    speakerType, createdAt, contentOverride, name, videoMessageContent, messageArray, // render message array (include texts, images, videos for each message item)
+    align = 'center', } = item;
     const handleRenderContentByType = (item) => {
         if (!item)
             return jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: message });
@@ -7867,7 +7870,6 @@ const MESSAGE_CACHE_TYPE = {
 const memoryCache = new Map();
 const useMessageCache = (conversationId, initial, cache) => {
     const [messages, setMessages] = React.useState(initial);
-    const [isInitialized, setIsInitialized] = React.useState(false);
     React.useEffect(() => {
         setMessages(initial);
     }, [initial]);
@@ -7880,9 +7882,7 @@ const useMessageCache = (conversationId, initial, cache) => {
             if (!message || !otherMessage)
                 return false;
             return (message.id === otherMessage.id &&
-                message.message === otherMessage.message &&
-                message.createdAt === otherMessage.createdAt &&
-                message.speakerId === otherMessage.speakerId);
+                message.message === otherMessage.message);
         });
     };
     // Helper function to save messages to cache
@@ -7899,7 +7899,7 @@ const useMessageCache = (conversationId, initial, cache) => {
     }, [cache, conversationId]);
     // Get messages from cache
     React.useEffect(() => {
-        if (!cache || isInitialized)
+        if (!cache)
             return;
         const getMessagesFromCache = async () => {
             let cachedMessages = null;
@@ -7933,21 +7933,19 @@ const useMessageCache = (conversationId, initial, cache) => {
                 setMessages(initial);
                 saveToCache(initial);
             }
-            setIsInitialized(true);
         };
         getMessagesFromCache();
-    }, [conversationId, cache, initial, saveToCache, isInitialized]);
+    }, [conversationId, cache, initial, saveToCache]);
     // Update cache when messages change (for new messages added via onNewMessage)
     React.useEffect(() => {
-        if (!cache || isInitialized)
+        if (!cache)
             return;
         saveToCache(messages);
-    }, [messages, cache, conversationId, saveToCache, isInitialized]);
+    }, [messages, cache, conversationId, saveToCache]);
     return [messages, setMessages];
 };
 
-const MessageListComponent = React.forwardRef(({ messages = [], conversationId = '', className = '', onLoadMorePreviousData, cache = false, showScrollToEndButton = true, virtuosoProps, scrollToEndButtonProps, emptyDataComponent, isPrevLoading = false, isPrevLoadingComponent, customMessageComponentProps, }, ref) => {
-    const isTopRef = React.useRef(false);
+const MessageListComponent = React.forwardRef(({ messages = [], conversationId = '', className = '', onLoadMorePreviousData, cache = false, showScrollToEndButton = true, emptyDataComponent, isPrevLoading = false, prevLoadingComponent, customMessageComponentProps, virtuosoProps, scrollToEndButtonProps, }, ref) => {
     const [msgs, setMsgs] = useMessageCache(conversationId || '', messages || [], cache);
     const virtuosoRef = React.useRef(null);
     const [hasShowScrollToEndButton, setHasShowScrollToEndButton] = React.useState(false);
@@ -7970,25 +7968,12 @@ const MessageListComponent = React.forwardRef(({ messages = [], conversationId =
         setMsgs(messages);
     }, [messages, setMsgs]);
     return (jsxRuntimeExports.jsxs("div", { className: `${styles.messageListContainer} ${className}`, children: [isPrevLoading &&
-                (isPrevLoadingComponent || (jsxRuntimeExports.jsx("div", { className: "c-message-list-loading", children: "Loading..." }))), msgs?.length > 0 ? (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx(jr, { className: `c-message-list-component`, followOutput: (isAtBottom) => {
-                            // scroll to end when isAtBottom is true or be at middle of the list
-                            // when data length changed
-                            if (isAtBottom || !isTopRef.current) {
-                                return true;
-                            }
-                            return false;
-                        }, ref: virtuosoRef, totalCount: msgs?.length, data: msgs, increaseViewportBy: { top: 300, bottom: 300 }, itemContent: (index) => jsxRuntimeExports.jsx(Row, { index: index }), scrollerRef: (ref) => {
+                (prevLoadingComponent || (jsxRuntimeExports.jsx("div", { className: "c-message-list-loading", children: "Loading..." }))), msgs?.length > 0 ? (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx(jr, { className: `c-message-list-component`, ref: virtuosoRef, totalCount: msgs?.length, data: msgs, increaseViewportBy: { top: 300, bottom: 300 }, itemContent: (index) => jsxRuntimeExports.jsx(Row, { index: index }), scrollerRef: (ref) => {
                             if (!ref)
                                 return;
                             const handleScroll = async () => {
                                 if (ref?.scrollTop <= window.innerHeight / 3) {
-                                    isTopRef.current = true;
                                     await onLoadMorePreviousData?.();
-                                }
-                                else {
-                                    if (!isTopRef.current)
-                                        return;
-                                    isTopRef.current = false;
                                 }
                             };
                             ref.addEventListener('scroll', handleScroll);
@@ -7998,7 +7983,6 @@ const MessageListComponent = React.forwardRef(({ messages = [], conversationId =
                         }, atBottomStateChange: (isBottom) => {
                             setHasShowScrollToEndButton(!isBottom);
                         }, ...virtuosoProps }), showScrollToEndButton && hasShowScrollToEndButton && (jsxRuntimeExports.jsx(Button, { className: `c-chatbox-scroll-to-end-button`, icon: '↓', onClick: () => {
-                            isTopRef.current = false;
                             scrollToEnd(virtuosoRef.current, msgs);
                             scrollToEndButtonProps?.onClick?.();
                         }, ...scrollToEndButtonProps }))] })) : (jsxRuntimeExports.jsx("div", { className: `c-message-list-empty`, children: emptyDataComponent || 'No messages' }))] }));

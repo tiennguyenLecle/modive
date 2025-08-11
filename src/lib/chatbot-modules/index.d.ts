@@ -11,6 +11,20 @@ import { VirtuosoProps } from 'react-virtuoso';
 import * as idb from 'idb';
 import { ClassValue } from 'clsx';
 
+type ChatboxLayoutProps = ComponentProps<'div'> & {
+  layoutHeight?: string;
+  className?: string;
+  backgroundColor?: string;
+  backgroundImage?: string;
+  headerComponent?: ReactNode;
+  showTopInfo?: boolean;
+  messageComponent?: ReactNode;
+  composerComponent?: ReactNode;
+  topInfoComponent?: ReactNode;
+};
+
+declare const ChatboxLayout: react.MemoExoticComponent<(props: ChatboxLayoutProps) => react_jsx_runtime.JSX.Element>;
+
 type TopInfoProps = ComponentProps<'div'> & {
   avatar?: string;
   name?: string;
@@ -19,21 +33,6 @@ type TopInfoProps = ComponentProps<'div'> & {
   children?: ReactNode;
   avatarSize?: 'small' | 'medium' | 'large';
 };
-
-type ChatboxLayoutProps = ComponentProps<'div'> & {
-  layoutHeight?: string;
-  className?: string;
-  backgroundColor?: string;
-  backgroundImage?: string;
-  headerComponent?: ReactNode;
-  topInfoComponentOverride?: ReactNode;
-  showTopInfo?: boolean;
-  topInfoProps?: TopInfoProps;
-  messageComponent?: ReactNode;
-  composerComponent?: ReactNode;
-};
-
-declare const ChatboxLayout: react.MemoExoticComponent<(props: ChatboxLayoutProps) => react_jsx_runtime.JSX.Element>;
 
 declare const TopInfo: ({ avatar, name, role, children, avatarSize, className, ...props }: TopInfoProps) => react_jsx_runtime.JSX.Element;
 
@@ -83,7 +82,7 @@ type MessageListProps = {
   scrollToEndButtonProps?: ButtonProps;
   emptyDataComponent?: ReactNode;
   isPrevLoading?: boolean;
-  isPrevLoadingComponent?: ReactNode;
+  prevLoadingComponent?: ReactNode;
   customMessageComponentProps?: Omit<MessageComponentProps, 'item'>;
 };
 

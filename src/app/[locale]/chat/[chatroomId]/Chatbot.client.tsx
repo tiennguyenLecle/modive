@@ -155,8 +155,11 @@ export default function Chatbot({
   ): MessageInfoProps[] => {
     const seenIds = new Set<string>();
 
-    // 1) filter + basic map (kèm createdDate để so sánh ngày)
+    // filter message and map to message info props
+
+    // create base array
     const base = messages
+      // filter message by conditions
       .filter(msg => !filterMessageConditions(msg.message, msg.id, seenIds))
       .map(msg => ({
         id: msg.id,
@@ -173,18 +176,16 @@ export default function Chatbot({
         messageArray: handleMessageText(msg.message),
       }));
 
-    // 2) iterate and insert date headers only when appropriate
+
     const out: MessageInfoProps[] = [];
+
+    // handle to create system item - date header
     for (let i = 0; i < base.length; i++) {
       const current = base[i];
-      const prev = base[i - 1]; // undefined nếu i === 0
+      const prev = base[i - 1];
       const curDate = current.createdDate;
       const prevDate = prev?.createdDate ?? null;
 
-      // Should we insert a system date header before `current`?
-      // - If there is a previous item and its date differs → yes.
-      // - If there is NO previous (i === 0) AND we DON'T have more older messages (hasMorePrevious === false) → yes.
-      // - Otherwise (i === 0 && hasMorePrevious === true) -> NO (we cannot be sure this is the first-of-day).
       const shouldInsertHeader =
         curDate &&
         ((prevDate && prevDate !== curDate) || (!prev && !hasMorePrevious));
@@ -192,7 +193,7 @@ export default function Chatbot({
       if (shouldInsertHeader) {
         const pretty = formatDateOrTime(curDate, 'date');
         out.push({
-          id: `system_date_${curDate}`, // stable id per date
+          id: `system_date_${curDate}`,
           chatroomId: current.chatroomId,
           speakerType: 'system',
           speakerId: 'system',
@@ -224,7 +225,7 @@ export default function Chatbot({
         className={'px-16'}
         ref={messageListRef}
         isPrevLoading={isPreviousLoading}
-        isPrevLoadingComponent={
+        prevLoadingComponent={
           <div className="flex h-40 w-full items-center justify-center text-16">
             Loading...
           </div>

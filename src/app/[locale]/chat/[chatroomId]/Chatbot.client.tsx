@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  ChangeEvent,
   ComponentProps,
   useCallback,
   useEffect,
@@ -25,12 +24,15 @@ import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 
 import { messagesAtom } from '@/atoms/messagesAtom';
+
 import { formatDateOrTime } from '@/utils/formatTime';
 import { filterMessageConditions } from '@/utils/method';
 
 import styles from './ChatRoom.module.scss';
 import Composer from './Composer.client';
 import { LoadingDots } from './Loading.client';
+import { handleAlign, DEFAULT_IMAGE_URL, handleMessageText } from './utils';
+
 
 type ChatbotProps = ComponentProps<'div'> & {
   messages: Message[];
@@ -38,55 +40,46 @@ type ChatbotProps = ComponentProps<'div'> & {
   currentUserId: string;
 };
 
-const DEFAULT_IMAGE_URL = 'https://cdn3.emoji.gg/emojis/10098-pervy-look.png';
 
 export default function Chatbot({
   messages: initialMessages,
   chatbotName,
-  currentUserId,
 }: ChatbotProps) {
-  const { sendMessage } = useSendMessage();
-  const [messages, setMessages] = useAtom(messagesAtom);
-  const [newMessage, setNewMessage] = useState('');
-  const { chatroomId } = useParams();
-  const messageListRef = useRef<any>(null);
-  const [isPreviousLoading, setIsPreviousLoading] = useState(false);
-  const messagesRef = useRef<Message[]>(initialMessages || []);
-  const prevLoadMoreRef = useRef<boolean>(false);
-  console.log('messages', messages);
 
-  const hasBeforeMessages = useRef(false);
+  const { sendMessage } = useSendMessage();
+
+  const [messages, setMessages] = useAtom(messagesAtom);
+
+  const { chatroomId } = useParams();
+
+  const [isPreviousLoading, setIsPreviousLoading] = useState(false);
+
+  const prevLoadMoreRef = useRef<boolean>(false);
+  // ref to message list
+  const messageListRef = useRef<any>(null);
+  // check if there are more messages before the current messages
+  const noDataRef = useRef(false);
 
   useEffect(() => {
     setMessages(initialMessages);
-    setTimeout(() => {
-      if (messageListRef.current) {
-        messageListRef.current.scrollToIndex({
-          index: messagesRef.current.length - 1,
-          align: 'end',
-          behavior: 'instant',
-        });
-      }
-    }, 100);
   }, [initialMessages, setMessages]);
 
   const handleLoadMore = useCallback(async () => {
-    console.log('day nhe');
-    if (prevLoadMoreRef.current) return;
+    if (prevLoadMoreRef.current || noDataRef.current) return;
     prevLoadMoreRef.current = true;
     setIsPreviousLoading(true);
 
-    const prevMessages = messagesRef?.current?.length;
-    const beforeIdx = messagesRef?.current?.[0]?.id;
+    const prevMessages = messages?.length;
+    const beforeIdx = messages?.[0]?.id;
 
     const res: any = await NextApi.get(
       `/api/chat/${chatroomId}?direction=before&cursor=${beforeIdx}&limit=20`
     );
 
     if (res?.data?.length > 0) {
-      const newData = [...res.data.reverse(), ...messagesRef?.current];
+
+      const newData = [...res.data.reverse(), ...messages];
       setMessages(newData);
-      messagesRef.current = newData;
       prevLoadMoreRef.current = false;
 
       setTimeout(() => {
@@ -97,52 +90,14 @@ export default function Chatbot({
         });
         setIsPreviousLoading(false);
       }, 100);
+
     } else {
       prevLoadMoreRef.current = true;
-      hasBeforeMessages.current = true;
+      noDataRef.current = true;
       setIsPreviousLoading(false);
     }
   }, [messages, isPreviousLoading]);
 
-  const handleChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-    setNewMessage(e.target.value);
-  }, []);
-
-  const handleMessageText = (message: string) => {
-    if (typeof message === 'string' && /\n+/.test(message)) {
-      const parts = message?.split(/\n+/)?.filter(Boolean) || [];
-      if (parts.length === 0) return [];
-
-      return parts.map(part => {
-        const isImage = part.startsWith('::image{id=');
-
-        if (isImage) {
-          const imageId = part?.split('{id=')[1]?.split('}')[0];
-
-          return {
-            type: 'image',
-            imageUrl: DEFAULT_IMAGE_URL,
-            message: '',
-          };
-        }
-        return {
-          type: 'text',
-          message: part,
-        };
-      });
-    }
-  };
-
-  const handleAlign = (speaker_type: string) => {
-    switch (speaker_type) {
-      case 'user':
-        return 'right';
-      case 'chatbot':
-        return 'left';
-      default:
-        return 'center';
-    }
-  };
 
   const mappedMessages = (
     messages: Message[],
@@ -163,14 +118,16 @@ export default function Chatbot({
         align: handleAlign(msg.speaker_type ?? 'user'),
         speakerId: msg.speaker_id,
         name: msg.speaker_id,
-        message:
-          msg.id === 'temparareryChatbotItemId' ? <LoadingDots /> : msg.message,
+        message: msg.message,
         createdAt: formatDateOrTime(msg.created_at ?? '', 'time'),
         createdDate: msg.created_at
           ? dayjs(msg.created_at).format('YYYY-MM-DD')
           : null,
         avatarUrl: DEFAULT_IMAGE_URL,
-        messageArray: handleMessageText(msg.message),
+        messageArray: msg.id === 'temparareryChatbotItemId' ? [{
+            type: 'loading',
+            message: 'Loading...',
+        }] : handleMessageText(msg.message),
       }));
 
     const out: MessageInfoProps[] = [];
@@ -196,9 +153,6 @@ export default function Chatbot({
           name: 'system',
           message: `${pretty}`,
           contentOverride: `${pretty}`,
-          createdAt: '',
-          avatarUrl: '',
-          messageArray: [],
           createdDate: curDate,
         });
       }
@@ -209,6 +163,7 @@ export default function Chatbot({
     // 3) remove the temporary createdDate field before returning (optional)
     return out.map(({ createdDate, ...rest }) => rest as MessageInfoProps);
   };
+
 
   const messageComponent = useMemo(
     () => (
@@ -221,6 +176,7 @@ export default function Chatbot({
         className={'px-16'}
         ref={messageListRef}
         isPrevLoading={isPreviousLoading}
+        responseLoadingComponent={<LoadingDots />}
         prevLoadingComponent={
           <div className="flex h-40 w-full items-center justify-center text-16">
             Loading...
@@ -228,7 +184,7 @@ export default function Chatbot({
         }
       />
     ),
-    [handleLoadMore, isPreviousLoading, chatroomId]
+    [handleLoadMore, isPreviousLoading, chatroomId, messages]
   );
 
   return (

@@ -31,6 +31,7 @@ const Composer = memo(
     chatbotName,
     sendMessage,
     isChapterMode = false,
+
   }: ComposerProps) => {
     const { user } = useAuth();
     const [newMessage, setNewMessage] = useState('');
@@ -58,22 +59,24 @@ const Composer = memo(
       message: 'Thinking',
       created_at: dayjs().toISOString(),
     };
+    
 
     const handleSendMessage = async () => {
+      let currentMessages = [...messages];
       if (!newMessage.trim()) return;
 
-      let lastMessageId = messages[messages.length - 1]?.id ?? '';
 
-      setMessages((prev: Message[]) => [
-        ...prev,
-        mockNewMessageUser,
-        mockResponseChatbotItem,
-      ]);
-      setNewMessage('');
+      let lastMessageId = currentMessages[currentMessages.length - 1]?.id ?? '';
+      currentMessages = [...currentMessages, mockNewMessageUser, mockResponseChatbotItem];
+
+      setMessages(currentMessages);
+
+      
       await sendMessage(newMessage);
 
       const startTime = Date.now();
       const interval = setInterval(async () => {
+        
         const res: any = await NextApi.get(
           `/api/chat/${chatroomId}?limit=20&direction=after&cursor=${lastMessageId}`
         );
@@ -81,20 +84,21 @@ const Composer = memo(
 
         if (newMessages.length >= 2) {
           // Got 2 messages => add immediately
-          messagesRef.current = [...messages, ...newMessages];
-          setMessages(messagesRef.current);
+          currentMessages = [...currentMessages, ...newMessages];
+          setMessages(currentMessages);
           clearInterval(interval);
+
         } else if (Date.now() - startTime >= 30000) {
           // After 30s
           if (newMessages.length === 1) {
             // Thêm error field - Because we don't receive response from chatbot
             const erroredMessage = { ...newMessages[0], error: true };
-            messagesRef.current = [...messages, erroredMessage];
-            setMessages(messagesRef.current);
+            currentMessages = [...currentMessages, erroredMessage];
+            setMessages(currentMessages);
           }
-
           clearInterval(interval);
         }
+
       }, 2000);
     };
 
@@ -129,7 +133,7 @@ const Composer = memo(
             }
           }
           sendButtonComponent={{
-            onClick: async () => await handleSendMessage(),
+            onClick: handleSendMessage,
             isDisabled: isDisabled,
             children: isDisabled ? <DirectDisabledIcon /> : <DirectIcon />,
           }}

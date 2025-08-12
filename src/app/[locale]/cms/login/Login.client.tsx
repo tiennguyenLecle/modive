@@ -14,7 +14,7 @@ export default function CmsLoginClient() {
 
   const redirectPathAfterLogin = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
-    return params.get('callbackUrl') || '/cms';
+    return params.get('callbackUrl') || undefined;
   }, []);
 
   // Handle credential sign-in using Admin session cookie prefix

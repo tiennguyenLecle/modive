@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Layout, Menu, type MenuProps } from 'antd';
+import { Button, Layout, Menu, type MenuProps } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Logo } from '@/assets/icons';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { Link, usePathname } from '@/lib/navigation';
 import { ROUTES } from '@/utils/constants';
 
 export default function CmsSidebar() {
+  const { signOut } = useAuth();
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations('cms.menu');
@@ -105,6 +107,16 @@ export default function CmsSidebar() {
         onOpenChange={keys => setOpenKeys(keys as string[])}
         className="border-r-0"
       />
+      <div className="p-12">
+        <Button
+          type="text"
+          block
+          onClick={() => signOut()}
+          className="!justify-start"
+        >
+          {t('sign_out')}
+        </Button>
+      </div>
     </Layout.Sider>
   );
 }

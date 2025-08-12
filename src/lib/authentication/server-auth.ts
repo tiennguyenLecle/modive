@@ -1,7 +1,7 @@
 import { cache } from 'react';
 import { User } from '@supabase/supabase-js';
 
-import { createServerSupabase } from '@/lib/supabase/_factory.server';
+import { createServerSupabase } from '@/lib/supabase/factory.server';
 
 export type ServerAuthResult = User | null;
 
@@ -10,8 +10,8 @@ export type ServerAuthResult = User | null;
  * Uses Supabase server client (per-request) to read session and user.
  */
 export const getServerAuth = cache(
-  async (kind: 'user' | 'admin' = 'user'): Promise<ServerAuthResult> => {
-    const supabase = await createServerSupabase(kind);
+  async (kind?: 'user' | 'admin'): Promise<ServerAuthResult> => {
+    const supabase = createServerSupabase(kind || 'user');
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       return null;

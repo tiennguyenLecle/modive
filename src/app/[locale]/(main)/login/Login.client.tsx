@@ -7,15 +7,6 @@ import { useAuth } from '@/lib/authentication/auth-context';
 export default function LoginClient() {
   const { signInWithProvider } = useAuth();
 
-  // Tính sẵn redirectTo 1 lần ở client
-  const redirectTo = useMemo(() => {
-    const params = new URLSearchParams(window.location.search);
-    const callbackUrl = params.get('callbackUrl') || '/view-session';
-    return `${window.location.origin}/api/auth/callback?redirect=${encodeURIComponent(
-      callbackUrl
-    )}`;
-  }, []);
-
   return (
     <>
       <h3>Login</h3>
@@ -23,7 +14,7 @@ export default function LoginClient() {
       <button
         className="rounded-4 bg-primary p-8 text-white"
         onClick={async () => {
-          await signInWithProvider('google', redirectTo);
+          await signInWithProvider('google');
         }}
       >
         Login with Google
@@ -31,7 +22,7 @@ export default function LoginClient() {
       <button
         className="rounded-4 bg-primary p-8 text-white"
         onClick={async () => {
-          await signInWithProvider('kakao', redirectTo);
+          await signInWithProvider('kakao');
         }}
       >
         Login with KakaoTalk
@@ -39,7 +30,7 @@ export default function LoginClient() {
       {/* <button
         className="rounded-4 bg-primary p-8 text-white"
         onClick={async () => {
-          await signInWithProvider('apple', redirectTo);
+          await signInWithProvider('apple');
         }}
       >
         Login with Apple

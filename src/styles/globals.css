@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-
   /* Define colors for light and dark mode */
   :root {
     --primary: #ff627b;
@@ -97,19 +96,38 @@
   margin: 0 auto;
 }
 
-.main-layout>.page-wrapper {
+.main-layout > .page-wrapper {
   @apply flex min-h-0 flex-1 flex-col;
 }
 
-.main-layout>.navigation-wrapper {
+.main-layout > .navigation-wrapper {
   @apply mt-auto max-h-56 overflow-hidden duration-300 ease-in-out;
 }
 
-.main-layout:has([data-no-navigation])>.navigation-wrapper {
+.main-layout:has([data-no-navigation]) > .navigation-wrapper {
   max-height: 0;
   transition-property: max-height;
 }
 
-.main-layout>.page-wrapper>main {
+.main-layout > .page-wrapper > main {
   @apply min-h-0 flex-1 overflow-auto;
+}
+
+.admin-layout {
+  @apply flex !min-h-screen;
+}
+
+.admin-layout > .sidebar-wrapper {
+  max-width: 200rem;
+  overflow: hidden;
+  @apply duration-300 ease-in-out;
+}
+
+.admin-layout:has([data-no-sidebar]) > .sidebar-wrapper {
+  max-width: 0;
+  transition-property: max-width;
+}
+
+.admin-layout > .page-wrapper {
+  @apply flex-1;
 }

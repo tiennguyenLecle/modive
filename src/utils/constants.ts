@@ -9,6 +9,7 @@ export const COOKIE_PREFIX_SB_ADMIN = 'modive.admin-auth_token';
 
 export const ROUTES = {
   HOME: '/',
+  LOGIN: '/login',
   CHAT: '/chat',
   GOODS: '/goods',
   MANAGEMENT: {
@@ -20,6 +21,7 @@ export const ROUTES = {
   },
   CMS: {
     INDEX: '/cms',
+    LOGIN: '/cms/login',
     DATA_MANAGEMENT: {
       INDEX: '/cms/data-management',
       CONTENT: '/cms/data-management/content',

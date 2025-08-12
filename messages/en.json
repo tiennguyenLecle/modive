@@ -15,7 +15,8 @@
       "faq": "FAQ",
       "interface": "Interface",
       "user_management": "User Management",
-      "cms": "CMS"
+      "cms": "CMS",
+      "sign_out": "Sign out"
     },
     "login": {
       "title": "CMS Login",

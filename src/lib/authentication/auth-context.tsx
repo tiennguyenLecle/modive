@@ -4,8 +4,10 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
-import { createBrowserSupabase } from '@/lib/supabase/_factory';
+import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { ROUTES } from '@/utils/constants';
+
+import { NextApi } from '../api';
 
 type AuthContextValue = {
   user: User | null;
@@ -64,16 +66,17 @@ export function AuthProvider({ children, kind }: AuthProviderProps) {
     provider: 'google' | string,
     redirectTo?: string
   ) => {
-    const defaultRedirectPath = kind === 'admin' ? '/cms' : '/';
-    const callbackBase =
-      kind === 'admin' ? '/api/admin/auth/callback' : '/api/auth/callback';
+    const defaultRedirectPath =
+      kind === 'admin' ? ROUTES.CMS.DATA_MANAGEMENT.CONTENT : ROUTES.HOME;
+
     const redirect =
       redirectTo ||
-      `${window.location.origin}${callbackBase}?redirect=${encodeURIComponent(
-        defaultRedirectPath
-      )}`;
+      `${window.location.origin}/api/auth/${kind}/callback?redirect=${encodeURIComponent(defaultRedirectPath)}`;
+
     await supabase.auth.signInWithOAuth({
       provider: provider as any,
+      // Redirect to the Next auth callback route to sync the session with the server
+      // Then back to the defaultRedirectPath for the browser
       options: { redirectTo: redirect },
     });
   };
@@ -90,15 +93,14 @@ export function AuthProvider({ children, kind }: AuthProviderProps) {
     if (error) throw new Error(error.message);
     const redirectPath =
       redirectTo ||
-      (kind === 'admin'
-        ? ROUTES.CMS.INDEX
-        : ROUTES.CMS.DATA_MANAGEMENT.CONTENT);
+      (kind === 'admin' ? ROUTES.CMS.DATA_MANAGEMENT.CONTENT : ROUTES.HOME);
     router.push(redirectPath);
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    router.push(kind === 'admin' ? ROUTES.CMS.INDEX : ROUTES.HOME);
+    await supabase.auth.signOut().then(() => {
+      router.push(kind === 'admin' ? ROUTES.CMS.LOGIN : ROUTES.HOME);
+    });
   };
 
   const value: AuthContextValue = {

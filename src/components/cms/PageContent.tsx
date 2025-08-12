@@ -1,3 +1,5 @@
+import { ComponentProps } from 'react';
+
 import { cx } from '@/utils/method';
 
 import { CmsBreadCrumb } from '.';
@@ -6,19 +8,23 @@ type PageContentProps = {
   children?: React.ReactNode;
   utility?: React.ReactNode;
   blank?: boolean;
-};
+} & ComponentProps<'main'>;
 
 export default function PageContent({
   children,
   utility,
   blank = false,
+  className,
+  ...props
 }: PageContentProps) {
   return (
     <main
       className={cx(
         'flex min-h-screen flex-col p-16',
-        blank ? 'bg-transparent' : 'bg-gray-80'
+        blank ? 'bg-transparent' : 'bg-gray-80',
+        className
       )}
+      {...props}
     >
       {!blank && (
         <div className="mb-16 flex items-center justify-between">

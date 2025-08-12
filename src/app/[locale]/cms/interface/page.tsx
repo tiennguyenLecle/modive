@@ -1,9 +1,20 @@
+import { Button } from 'antd';
+
 import { PageContent } from '@/components/cms';
+import MainEditor from '@/components/cms/interface/MainEditor';
+import MobilePreview from '@/components/cms/interface/MobilePreview';
+import BannerUpload from '@/components/cms/Upload';
+import { CMSInterfaceProvider } from '@/lib/context/CMSInterface';
 
 export default function Page() {
   return (
-    <PageContent>
-      <h1 className="text-xl font-semibold">Interface</h1>
+    <PageContent utility={<Button type="primary">Save</Button>}>
+      <CMSInterfaceProvider>
+        <div className="flex gap-4">
+          <MainEditor />
+          <MobilePreview />
+        </div>
+      </CMSInterfaceProvider>
     </PageContent>
   );
 }

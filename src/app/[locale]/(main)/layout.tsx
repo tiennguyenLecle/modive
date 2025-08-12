@@ -26,7 +26,7 @@ export default function Layout({ children }: Props) {
   })();
 
   return (
-    <AuthProvider kind="user">
+    <AuthProvider role="user">
       <div className={cx('main-layout', deviceClassName)}>
         <div className="page-wrapper">{children}</div>
         <div className="navigation-wrapper">

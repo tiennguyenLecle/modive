@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
+import { type Role } from '@/lib/authentication/auth.types';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { ROUTES } from '@/utils/constants';
 
@@ -27,12 +28,12 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 type AuthProviderProps = {
   children: React.ReactNode;
-  kind: 'user' | 'admin';
+  role: Role;
 };
 
-export function AuthProvider({ children, kind }: AuthProviderProps) {
+export function AuthProvider({ children, role }: AuthProviderProps) {
   const router = useRouter();
-  const supabase = useMemo(() => createBrowserSupabase(kind), [kind]);
+  const supabase = useMemo(() => createBrowserSupabase(role), [role]);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -67,11 +68,11 @@ export function AuthProvider({ children, kind }: AuthProviderProps) {
     redirectTo?: string
   ) => {
     const defaultRedirectPath =
-      kind === 'admin' ? ROUTES.CMS.DATA_MANAGEMENT.CONTENT : ROUTES.HOME;
+      role === 'admin' ? ROUTES.CMS.DATA_MANAGEMENT.CONTENT : ROUTES.HOME;
 
     const redirect =
       redirectTo ||
-      `${window.location.origin}/api/auth/${kind}/callback?redirect=${encodeURIComponent(defaultRedirectPath)}`;
+      `${window.location.origin}/api/auth/${role}/callback?redirect=${encodeURIComponent(defaultRedirectPath)}`;
 
     await supabase.auth.signInWithOAuth({
       provider: provider as any,
@@ -93,13 +94,13 @@ export function AuthProvider({ children, kind }: AuthProviderProps) {
     if (error) throw new Error(error.message);
     const redirectPath =
       redirectTo ||
-      (kind === 'admin' ? ROUTES.CMS.DATA_MANAGEMENT.CONTENT : ROUTES.HOME);
+      (role === 'admin' ? ROUTES.CMS.DATA_MANAGEMENT.CONTENT : ROUTES.HOME);
     router.push(redirectPath);
   };
 
   const signOut = async () => {
     await supabase.auth.signOut().then(() => {
-      router.push(kind === 'admin' ? ROUTES.CMS.LOGIN : ROUTES.HOME);
+      router.push(role === 'admin' ? ROUTES.CMS.LOGIN : ROUTES.HOME);
     });
   };
 

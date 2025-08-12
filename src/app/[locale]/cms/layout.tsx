@@ -11,7 +11,7 @@ type Props = {
 export default function CmsLayout({ children }: Props) {
   return (
     <AntdRegistry>
-      <AuthProvider kind="admin">
+      <AuthProvider role="admin">
         <div className="admin-layout">
           <div className="sidebar-wrapper">
             <CmsSidebar />

@@ -2,9 +2,8 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
+import { type Role } from '@/lib/authentication/auth.types';
 import { COOKIE_PREFIX_SB, COOKIE_PREFIX_SB_ADMIN } from '@/utils/constants';
-
-export type ServerClientKind = 'user' | 'admin';
 
 export type NextCookiesAdapter = {
   get: (name: string) => string | undefined;
@@ -12,11 +11,11 @@ export type NextCookiesAdapter = {
 };
 
 export function createServerSupabase(
-  kind: ServerClientKind,
+  role: Role,
   cookiesAdapter?: NextCookiesAdapter
 ): SupabaseClient {
   const cookieName =
-    kind === 'admin' ? COOKIE_PREFIX_SB_ADMIN : COOKIE_PREFIX_SB;
+    role === 'admin' ? COOKIE_PREFIX_SB_ADMIN : COOKIE_PREFIX_SB;
 
   // Default adapter uses next/headers cookies store when no adapter is provided
   const adapter: NextCookiesAdapter = cookiesAdapter || {

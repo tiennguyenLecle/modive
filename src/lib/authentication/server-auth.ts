@@ -3,6 +3,8 @@ import { User } from '@supabase/supabase-js';
 
 import { createServerSupabase } from '@/lib/supabase/factory.server';
 
+import { Role } from './auth.types';
+
 export type ServerAuthResult = User | null;
 
 /**
@@ -10,8 +12,8 @@ export type ServerAuthResult = User | null;
  * Uses Supabase server client (per-request) to read session and user.
  */
 export const getServerAuth = cache(
-  async (kind?: 'user' | 'admin'): Promise<ServerAuthResult> => {
-    const supabase = createServerSupabase(kind || 'user');
+  async (role?: Role): Promise<ServerAuthResult> => {
+    const supabase = createServerSupabase(role || 'user');
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       return null;

@@ -4,10 +4,11 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
-import { createSupabaseClient } from '@/lib/supabase/client';
+import { type Role } from '@/lib/authentication/auth.types';
+import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { ROUTES } from '@/utils/constants';
 
-type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
+import { NextApi } from '../api';
 
 type AuthContextValue = {
   user: User | null;
@@ -15,14 +16,24 @@ type AuthContextValue = {
     provider: 'google' | string,
     redirectTo?: string
   ) => Promise<void>;
+  signInWithCredential: (
+    email: string,
+    password: string,
+    redirectTo?: string
+  ) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+type AuthProviderProps = {
+  children: React.ReactNode;
+  role: Role;
+};
+
+export function AuthProvider({ children, role }: AuthProviderProps) {
   const router = useRouter();
-  const supabase = useMemo(() => createSupabaseClient(), []);
+  const supabase = useMemo(() => createBrowserSupabase(role), [role]);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -56,23 +67,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     provider: 'google' | string,
     redirectTo?: string
   ) => {
+    const defaultRedirectPath =
+      role === 'admin' ? ROUTES.CMS.DATA_MANAGEMENT.CONTENT : ROUTES.HOME;
+
     const redirect =
       redirectTo ||
-      `${window.location.origin}/api/auth/callback?redirect=${encodeURIComponent('/')}`;
+      `${window.location.origin}/api/auth/${role}/callback?redirect=${encodeURIComponent(defaultRedirectPath)}`;
+
     await supabase.auth.signInWithOAuth({
       provider: provider as any,
+      // Redirect to the Next auth callback route to sync the session with the server
+      // Then back to the defaultRedirectPath for the browser
       options: { redirectTo: redirect },
     });
   };
 
+  const signInWithCredential = async (
+    email: string,
+    password: string,
+    redirectTo?: string
+  ) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw new Error(error.message);
+    const redirectPath =
+      redirectTo ||
+      (role === 'admin' ? ROUTES.CMS.DATA_MANAGEMENT.CONTENT : ROUTES.HOME);
+    router.push(redirectPath);
+  };
+
   const signOut = async () => {
-    await supabase.auth.signOut();
-    router.push(ROUTES.HOME);
+    await supabase.auth.signOut().then(() => {
+      router.push(role === 'admin' ? ROUTES.CMS.LOGIN : ROUTES.HOME);
+    });
   };
 
   const value: AuthContextValue = {
     user,
     signInWithProvider,
+    signInWithCredential,
     signOut,
   };
 

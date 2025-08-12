@@ -1,11 +1,13 @@
 import dynamic from 'next/dynamic';
 
+import { PageContent } from '@/components/cms';
+
 const LoginClient = dynamic(() => import('./Login.client'), { ssr: false });
 
 export default function LoginPage() {
   return (
-    <main className="flex flex-col items-center justify-center gap-16">
-      <LoginClient />;
-    </main>
+    <PageContent blank data-no-sidebar>
+      <LoginClient />
+    </PageContent>
   );
 }

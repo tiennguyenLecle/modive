@@ -1,7 +1,9 @@
 import { cache } from 'react';
 import { User } from '@supabase/supabase-js';
 
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabase } from '@/lib/supabase/factory.server';
+
+import { Role } from './auth.types';
 
 export type ServerAuthResult = User | null;
 
@@ -9,11 +11,13 @@ export type ServerAuthResult = User | null;
  * Returns server-side auth state similar to useAuth() on client.
  * Uses Supabase server client (per-request) to read session and user.
  */
-export const getServerAuth = cache(async (): Promise<ServerAuthResult> => {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) {
-    return null;
+export const getServerAuth = cache(
+  async (role?: Role): Promise<ServerAuthResult> => {
+    const supabase = createServerSupabase(role || 'user');
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) {
+      return null;
+    }
+    return data.user;
   }
-  return data.user;
-});
+);

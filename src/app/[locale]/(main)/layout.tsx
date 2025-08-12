@@ -2,6 +2,7 @@ import React from 'react';
 import { headers } from 'next/headers';
 
 import { Navigation } from '@/components';
+import { AuthProvider } from '@/lib/authentication/auth-context';
 import { cx } from '@/utils/method';
 
 type Props = {
@@ -25,11 +26,13 @@ export default function Layout({ children }: Props) {
   })();
 
   return (
-    <div className={cx('main-layout', deviceClassName)}>
-      <div className="page-wrapper">{children}</div>
-      <div className="navigation-wrapper">
-        <Navigation />
+    <AuthProvider role="user">
+      <div className={cx('main-layout', deviceClassName)}>
+        <div className="page-wrapper">{children}</div>
+        <div className="navigation-wrapper">
+          <Navigation />
+        </div>
       </div>
-    </div>
+    </AuthProvider>
   );
 }

@@ -25,8 +25,12 @@
   }
 
   body {
-    @apply bg-primary font-pretendard text-16 text-foreground;
+    @apply font-pretendard text-16 text-foreground;
     margin: 0 auto;
+  }
+
+  body:has(.main-layout) {
+    @apply bg-primary;
   }
 }
 
@@ -107,4 +111,23 @@
 
 .main-layout > .page-wrapper > main {
   @apply min-h-0 flex-1 overflow-auto;
+}
+
+.admin-layout {
+  @apply flex !min-h-screen;
+}
+
+.admin-layout > .sidebar-wrapper {
+  max-width: 200rem;
+  overflow: hidden;
+  @apply duration-300 ease-in-out;
+}
+
+.admin-layout:has([data-no-sidebar]) > .sidebar-wrapper {
+  max-width: 0;
+  transition-property: max-width;
+}
+
+.admin-layout > .page-wrapper {
+  @apply flex-1;
 }

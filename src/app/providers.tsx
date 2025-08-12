@@ -2,8 +2,6 @@
 
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 
-import AntdRegistry from '@/lib/antd-registry';
-import { AuthProvider } from '@/lib/authentication/auth-context';
 import { ThemeRegistry } from '@/lib/theme-registry';
 
 type Props = {
@@ -20,9 +18,7 @@ export const Providers = ({ children, messages, locale }: Props) => {
   return (
     <ThemeRegistry>
       <NextIntlClientProvider locale={locale} messages={messages}>
-        <AuthProvider>
-          <AntdRegistry>{children}</AntdRegistry>
-        </AuthProvider>
+        {children}
       </NextIntlClientProvider>
     </ThemeRegistry>
   );

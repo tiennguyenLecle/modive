@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+
   /* Define colors for light and dark mode */
   :root {
     --primary: #ff627b;
@@ -25,8 +26,12 @@
   }
 
   body {
-    @apply bg-primary font-pretendard text-16 text-foreground;
+    @apply font-pretendard text-16 text-foreground;
     margin: 0 auto;
+  }
+
+  body:has(.main-layout) {
+    @apply bg-primary;
   }
 }
 
@@ -92,19 +97,19 @@
   margin: 0 auto;
 }
 
-.main-layout > .page-wrapper {
+.main-layout>.page-wrapper {
   @apply flex min-h-0 flex-1 flex-col;
 }
 
-.main-layout > .navigation-wrapper {
+.main-layout>.navigation-wrapper {
   @apply mt-auto max-h-56 overflow-hidden duration-300 ease-in-out;
 }
 
-.main-layout:has([data-no-navigation]) > .navigation-wrapper {
+.main-layout:has([data-no-navigation])>.navigation-wrapper {
   max-height: 0;
   transition-property: max-height;
 }
 
-.main-layout > .page-wrapper > main {
+.main-layout>.page-wrapper>main {
   @apply min-h-0 flex-1 overflow-auto;
 }

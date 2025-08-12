@@ -2,6 +2,10 @@
  * The common prefix for all cookies set by the Supabase client.
  */
 export const COOKIE_PREFIX_SB = 'modive.sb-auth_token';
+/**
+ * A separate cookie prefix for Admin sessions to isolate from user cookies.
+ */
+export const COOKIE_PREFIX_SB_ADMIN = 'modive.admin-auth_token';
 
 export const ROUTES = {
   HOME: '/',

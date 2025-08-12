@@ -16,6 +16,16 @@
       "interface": "Interface",
       "user_management": "User Management",
       "cms": "CMS"
+    },
+    "login": {
+      "title": "CMS Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "or": "or",
+      "signin_google": "Sign in with Google",
+      "signin_kakao": "Sign in with KakaoTalk",
+      "error_generic": "Sign in failed"
     }
   },
   "navigation": {

@@ -17,7 +17,7 @@ export default function LoginClient() {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-16">
+    <>
       <h3>Login</h3>
       <p>Choose a login method to continue.</p>
       <button
@@ -44,6 +44,6 @@ export default function LoginClient() {
       >
         Login with Apple
       </button> */}
-    </div>
+    </>
   );
 }

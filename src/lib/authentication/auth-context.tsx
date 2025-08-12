@@ -4,10 +4,8 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
-import { createSupabaseClient } from '@/lib/supabase/client';
+import { createBrowserSupabase } from '@/lib/supabase/_factory';
 import { ROUTES } from '@/utils/constants';
-
-type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 
 type AuthContextValue = {
   user: User | null;
@@ -15,14 +13,24 @@ type AuthContextValue = {
     provider: 'google' | string,
     redirectTo?: string
   ) => Promise<void>;
+  signInWithCredential: (
+    email: string,
+    password: string,
+    redirectTo?: string
+  ) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+type AuthProviderProps = {
+  children: React.ReactNode;
+  kind: 'user' | 'admin';
+};
+
+export function AuthProvider({ children, kind }: AuthProviderProps) {
   const router = useRouter();
-  const supabase = useMemo(() => createSupabaseClient(), []);
+  const supabase = useMemo(() => createBrowserSupabase(kind), [kind]);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -56,23 +64,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     provider: 'google' | string,
     redirectTo?: string
   ) => {
+    const defaultRedirectPath = kind === 'admin' ? '/cms' : '/';
+    const callbackBase =
+      kind === 'admin' ? '/api/admin/auth/callback' : '/api/auth/callback';
     const redirect =
       redirectTo ||
-      `${window.location.origin}/api/auth/callback?redirect=${encodeURIComponent('/')}`;
+      `${window.location.origin}${callbackBase}?redirect=${encodeURIComponent(
+        defaultRedirectPath
+      )}`;
     await supabase.auth.signInWithOAuth({
       provider: provider as any,
       options: { redirectTo: redirect },
     });
   };
 
+  const signInWithCredential = async (
+    email: string,
+    password: string,
+    redirectTo?: string
+  ) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw new Error(error.message);
+    const redirectPath =
+      redirectTo ||
+      (kind === 'admin'
+        ? ROUTES.CMS.INDEX
+        : ROUTES.CMS.DATA_MANAGEMENT.CONTENT);
+    router.push(redirectPath);
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.push(ROUTES.HOME);
+    router.push(kind === 'admin' ? ROUTES.CMS.INDEX : ROUTES.HOME);
   };
 
   const value: AuthContextValue = {
     user,
     signInWithProvider,
+    signInWithCredential,
     signOut,
   };
 

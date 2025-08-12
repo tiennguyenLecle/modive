@@ -4,28 +4,42 @@ import { memo, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 
+import AsteristkDisabledIcon from '@/assets/icons/asterisk-disabled.svg';
+import AsteristkIcon from '@/assets/icons/asterisk.svg';
+import DirectDisabledIcon from '@/assets/icons/direct-disabled.svg';
+import DirectIcon from '@/assets/icons/direct.svg';
+import TipDisabledIcon from '@/assets/icons/tip-disabled.svg';
+import TipIcon from '@/assets/icons/tip.svg';
 import { messagesAtom } from '@/atoms/messagesAtom';
 import { NextApi } from '@/lib/api';
 import { Message, SpeakerType } from '@/lib/api/types/chat.types';
-import { ChatboxComposer } from '@/lib/chatbot-modules';
 import { useAuth } from '@/lib/authentication/auth-context';
+import { ChatboxComposer } from '@/lib/chatbot-modules';
+
+import styles from './Composer.module.scss';
 
 type ComposerProps = {
   chatroomId: string;
   chatbotName: string;
   sendMessage: (text: string) => Promise<void>;
+  isChapterMode: boolean;
 };
 
 const Composer = memo(
-  ({ chatroomId, chatbotName, sendMessage }: ComposerProps) => {
+  ({
+    chatroomId,
+    chatbotName,
+    sendMessage,
+    isChapterMode = false,
+  }: ComposerProps) => {
     const { user } = useAuth();
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useAtom(messagesAtom);
     const messagesRef = useRef<Message[]>([]);
+
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setNewMessage(e.target.value);
     };
-
 
     const mockNewMessageUser = {
       id: 'newMessageUserItemId',
@@ -45,59 +59,82 @@ const Composer = memo(
       created_at: dayjs().toISOString(),
     };
 
+    const handleSendMessage = async () => {
+      if (!newMessage.trim()) return;
+
+      let lastMessageId = messages[messages.length - 1]?.id ?? '';
+
+      setMessages((prev: Message[]) => [
+        ...prev,
+        mockNewMessageUser,
+        mockResponseChatbotItem,
+      ]);
+      setNewMessage('');
+      await sendMessage(newMessage);
+
+      const startTime = Date.now();
+      const interval = setInterval(async () => {
+        const res: any = await NextApi.get(
+          `/api/chat/${chatroomId}?limit=20&direction=after&cursor=${lastMessageId}`
+        );
+        const newMessages = res?.data ?? [];
+
+        if (newMessages.length >= 2) {
+          // Got 2 messages => add immediately
+          messagesRef.current = [...messages, ...newMessages];
+          setMessages(messagesRef.current);
+          clearInterval(interval);
+        } else if (Date.now() - startTime >= 30000) {
+          // After 30s
+          if (newMessages.length === 1) {
+            // Thêm error field - Because we don't receive response from chatbot
+            const erroredMessage = { ...newMessages[0], error: true };
+            messagesRef.current = [...messages, erroredMessage];
+            setMessages(messagesRef.current);
+          }
+
+          clearInterval(interval);
+        }
+      }, 2000);
+    };
+
+    const isDisabled = !newMessage.trim();
+
     return (
-      <ChatboxComposer
-        textareaProps={{
-          value: newMessage,
-          onChange: handleChange,
-          autoSize: {
-            minRows: 1,
-            maxRows: 5,
-          },
-        }}
-        sendButtonComponent={{
-          onClick: async () => {
-            if (!newMessage.trim()) return;
-
-            let lastMessageId = messages[messages.length - 1]?.id ?? '';
-
-            setMessages((prev: Message[]) => [
-              ...prev,
-              mockNewMessageUser,
-              mockResponseChatbotItem,
-            ]);
-            await sendMessage(newMessage);
-
-            const startTime = Date.now();
-            const interval = setInterval(async () => {
-              const res: any = await NextApi.get(
-                `/api/chat/${chatroomId}?limit=20&direction=after&cursor=${lastMessageId}`
-              );
-              const newMessages = res?.data ?? [];
-
-              if (newMessages.length >= 2) {
-                // Got 2 messages => add immediately
-                messagesRef.current = [...messages, ...newMessages];
-                setMessages(messagesRef.current);
-                setNewMessage('');
-                clearInterval(interval);
-              } else if (Date.now() - startTime >= 30000) {
-                // After 30s
-                if (newMessages.length === 1) {
-                  // Thêm error field - Because we don't receive response from chatbot
-                  const erroredMessage = { ...newMessages[0], error: true };
-                  messagesRef.current = [...messages, erroredMessage];
-                  setMessages(messagesRef.current);
-                }
-
-                clearInterval(interval);
-              }
-            }, 2000);
-          },
-          disabled: !newMessage.trim(),
-          children: 'Send',
-        }}
-      />
+      <div className={`${styles.composer}`}>
+        <ChatboxComposer
+          beforeComposerOutsideComponent={{
+            onClick: () => console.log('Tip'),
+            disabled: isDisabled,
+            children: isDisabled ? <TipDisabledIcon /> : <TipIcon />,
+          }}
+          textareaProps={{
+            value: newMessage,
+            onChange: handleChange,
+            placeholder: '메시지를 입력하세요',
+            autoSize: {
+              minRows: 1,
+              maxRows: 5,
+            },
+          }}
+          afterComposerInsideComponent={
+            isChapterMode && {
+              onClick: () => console.log('Asterisk'),
+              disabled: isDisabled,
+              children: isDisabled ? (
+                <AsteristkDisabledIcon />
+              ) : (
+                <AsteristkIcon />
+              ),
+            }
+          }
+          sendButtonComponent={{
+            onClick: async () => await handleSendMessage(),
+            isDisabled: isDisabled,
+            children: isDisabled ? <DirectDisabledIcon /> : <DirectIcon />,
+          }}
+        />
+      </div>
     );
   }
 );

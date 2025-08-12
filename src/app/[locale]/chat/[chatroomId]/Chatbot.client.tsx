@@ -13,7 +13,6 @@ import { useParams, useSearchParams } from 'next/navigation';
 
 import { NextApi } from '@/lib/api';
 import { Message } from '@/lib/api/types/chat.types';
-
 import {
   ChatboxLayout,
   MessageInfoProps,
@@ -25,15 +24,13 @@ import '@/lib/chatbot-modules/dist/styles.css';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 
-
 import { messagesAtom } from '@/atoms/messagesAtom';
-import { filterMessageConditions } from '@/utils/method';
 import { formatDateOrTime } from '@/utils/formatTime';
+import { filterMessageConditions } from '@/utils/method';
 
+import styles from './ChatRoom.module.scss';
 import Composer from './Composer.client';
 import { LoadingDots } from './Loading.client';
-import styles from './ChatRoom.module.scss';
-
 
 type ChatbotProps = ComponentProps<'div'> & {
   messages: Message[];
@@ -57,8 +54,6 @@ export default function Chatbot({
   const messagesRef = useRef<Message[]>(initialMessages || []);
   const prevLoadMoreRef = useRef<boolean>(false);
   console.log('messages', messages);
-
-
 
   const hasBeforeMessages = useRef(false);
 
@@ -171,11 +166,12 @@ export default function Chatbot({
         message:
           msg.id === 'temparareryChatbotItemId' ? <LoadingDots /> : msg.message,
         createdAt: formatDateOrTime(msg.created_at ?? '', 'time'),
-        createdDate: msg.created_at ? dayjs(msg.created_at).format('YYYY-MM-DD') : null,
+        createdDate: msg.created_at
+          ? dayjs(msg.created_at).format('YYYY-MM-DD')
+          : null,
         avatarUrl: DEFAULT_IMAGE_URL,
         messageArray: handleMessageText(msg.message),
       }));
-
 
     const out: MessageInfoProps[] = [];
 
@@ -235,8 +231,6 @@ export default function Chatbot({
     [handleLoadMore, isPreviousLoading, chatroomId]
   );
 
-
-
   return (
     <ChatboxLayout
       className={styles.chatboxLayout}
@@ -248,6 +242,7 @@ export default function Chatbot({
           chatroomId={chatroomId as string}
           chatbotName={chatbotName}
           sendMessage={sendMessage}
+          isChapterMode={false}
         />
       }
     />

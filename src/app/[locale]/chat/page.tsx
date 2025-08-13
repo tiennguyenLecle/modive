@@ -28,10 +28,6 @@ export default async function Home() {
   const chatSession: any = await ChatApi.searchSessionsByUserId(user.id);
   const chatBotName = process.env.DIT_CHATBOT_NAME;
 
-
-
-
-
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-56 items-center justify-center border-b border-t border-gray-80">

@@ -7949,7 +7949,12 @@ const useMessageCache = (conversationId, initial, cache) => {
 
 const MessageListComponent = React.forwardRef(({ messages = [], conversationId = '', className = '', onLoadMorePreviousData, cache = false, showScrollToEndButton = true, emptyDataComponent, isPrevLoading = false, prevLoadingComponent, customMessageComponentProps, virtuosoProps, scrollToEndButtonProps, responseLoadingComponent, }, ref) => {
     const [msgs, setMsgs] = useMessageCache(conversationId || '', messages || [], cache);
+    // Store the messages in a ref to avoid re-rendering the component when the messages prop changes
+    const messagesRef = React.useRef(messages);
+    const lastMessageIndexBeforeLoadMore = React.useRef(0);
     const virtuosoRef = React.useRef(null);
+    // Check if the user has scrolled to the top of the list
+    const prevScrollTopRef = React.useRef(false);
     const [hasShowScrollToEndButton, setHasShowScrollToEndButton] = React.useState(false);
     // Forward the ref to the parent component
     React.useEffect(() => {
@@ -7963,14 +7968,18 @@ const MessageListComponent = React.forwardRef(({ messages = [], conversationId =
         }
     }, [ref, virtuosoRef.current]);
     const Row = ({ index }) => {
+        if (!msgs[index]) {
+            return null;
+        }
         return (jsxRuntimeExports.jsx(MessageComponent, { ...customMessageComponentProps, className: "c-message-item", item: msgs[index], responseLoadingComponent: responseLoadingComponent }));
     };
     // Update messages when messages props change
     React.useEffect(() => {
-        setMsgs(messages);
+        setMsgs(messages || []);
+        messagesRef.current = messages;
     }, [messages, setMsgs]);
     React.useEffect(() => {
-        if (msgs?.length === 0)
+        if (msgs?.length === 0 || !msgs)
             return;
         // If the last message is loading, scroll to the end
         const theLastMessage = msgs[msgs?.length - 1];
@@ -7985,18 +7994,23 @@ const MessageListComponent = React.forwardRef(({ messages = [], conversationId =
                                 return true;
                             }
                             return false;
-                        }, increaseViewportBy: { top: 300, bottom: 300 }, itemContent: (index) => jsxRuntimeExports.jsx(Row, { index: index }), scrollerRef: (ref) => {
-                            if (!ref)
+                        }, increaseViewportBy: { top: 300, bottom: 300 }, itemContent: (index) => jsxRuntimeExports.jsx(Row, { index: index }), atTopStateChange: async (isTop) => {
+                            if (!prevScrollTopRef.current) {
+                                prevScrollTopRef.current = true;
                                 return;
-                            const handleScroll = async () => {
-                                if (ref?.scrollTop <= window.innerHeight / 3) {
-                                    await onLoadMorePreviousData?.();
-                                }
-                            };
-                            ref.addEventListener('scroll', handleScroll);
-                            return () => {
-                                ref.removeEventListener('scroll', handleScroll);
-                            };
+                            }
+                            if (isTop) {
+                                lastMessageIndexBeforeLoadMore.current = messages?.length;
+                                await onLoadMorePreviousData?.();
+                                setTimeout(() => {
+                                    virtuosoRef.current?.scrollToIndex?.({
+                                        index: messagesRef.current?.length -
+                                            lastMessageIndexBeforeLoadMore?.current || 0,
+                                        align: 'start',
+                                        behavior: 'instant',
+                                    });
+                                }, 100);
+                            }
                         }, atBottomStateChange: (isBottom) => {
                             setHasShowScrollToEndButton(!isBottom);
                         }, ...virtuosoProps }), showScrollToEndButton && hasShowScrollToEndButton && (jsxRuntimeExports.jsx(Button, { className: `c-chatbox-scroll-to-end-button`, icon: '↓', onClick: () => {

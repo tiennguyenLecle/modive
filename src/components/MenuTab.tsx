@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 
 import { cx } from '@/utils/method';
 
-type TabItem = {
+type TabItem = ComponentProps<'div'> & {
   key: string;
   label: string;
   children?: React.ReactNode;
@@ -26,6 +26,7 @@ const MenuTab: React.FC<MenuTabProps> = ({
   tabs,
   defaultActiveKey,
   onTabChange,
+  className,
   ...props
 }) => {
   const [activeTab, setActiveTab] = useState(defaultActiveKey ?? tabs[0]);
@@ -55,8 +56,8 @@ const MenuTab: React.FC<MenuTabProps> = ({
   }, [activeTab, tabs]);
 
   return (
-    <div className="w-full bg-white p-12">
-      <div className="relative w-full" {...props}>
+    <div className={cx('w-full bg-white', className)} {...props}>
+      <div className="relative w-full">
         <div className="flex items-center gap-12 border-b border-transparent">
           {tabs.map((tab, index) => (
             <button
@@ -66,7 +67,7 @@ const MenuTab: React.FC<MenuTabProps> = ({
               }}
               onClick={() => handleTabClick(tab.key)}
               className={cx(
-                'flex-1 cursor-pointer px-12 pb-16 text-16 font-semibold transition-colors',
+                'flex-1 cursor-pointer px-16 py-12 text-16 font-semibold transition-colors',
                 activeTab === tab.key ? 'text-primary' : 'text-gray-00'
               )}
             >

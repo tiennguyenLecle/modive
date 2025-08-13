@@ -2,7 +2,7 @@ export { default as ActiveLink } from './ActiveLink';
 export { default as Badge } from './Badge';
 export { default as Button } from './Button';
 export { default as Chapter } from './Chapter';
-export { default as ChatCard } from './ChatCard';
+export { default as CharacterCard } from './CharacterCard';
 export { default as ChatListItem } from './ChatListItem';
 export { default as Footer } from './Footer';
 export { default as Header } from './Header';

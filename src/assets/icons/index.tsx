@@ -21,6 +21,7 @@ import Pencil from './pencil.svg';
 import Pin from './pin.svg';
 import Reload from './reload.svg';
 import Search from './search.svg';
+import SocialApple from './social-apple.svg';
 import SocialGoogle from './social-google.svg';
 import SocialKakaoTalk from './social-kakao-talk.svg';
 import Trash from './trash.svg';
@@ -30,26 +31,27 @@ export {
   ArrowRight,
   BaselineError,
   Cash,
+  Check,
+  Chevron,
+  Close,
   Direction,
+  Ellipsis,
   Info,
+  Lock,
+  Logo,
   LogoText,
-  Search,
-  Pencil,
-  SocialGoogle,
-  SocialKakaoTalk,
   NavChat,
   NavHome,
   NavHomeFilled,
   NavPerson,
   NavPersonFilled,
   NavVase,
-  Check,
-  Close,
-  Chevron,
-  Ellipsis,
-  Lock,
-  Reload,
+  Pencil,
   Pin,
+  Reload,
+  Search,
+  SocialApple,
+  SocialGoogle,
+  SocialKakaoTalk,
   Trash,
-  Logo,
 };

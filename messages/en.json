@@ -128,5 +128,12 @@
     "log_out_notification": "Log out notification",
     "log_out_description": "Would you like to log out?",
     "google": "Google"
+  },
+  "login_page": {
+    "title": "Modive",
+    "description": "Talk with a variety of AI characters!",
+    "login_with_google": "Login with Google",
+    "login_with_kakao": "Login with Kakao",
+    "login_with_apple": "Login with Apple"
   }
 }

@@ -27,6 +27,21 @@
       "signin_google": "Sign in with Google",
       "signin_kakao": "Sign in with KakaoTalk",
       "error_generic": "Sign in failed"
+    },
+    "interface": {
+      "contentBlocks": "Content Blocks",
+      "blockTitle": "Content Block Title",
+      "subContentBlocks": "Sub Content block",
+      "addSubBlock": "+ Add Sub Block",
+      "addContentBlock": "+ Add Content Block",
+      "no_banner": "No Hero Banner",
+      "loadContent": "Load content",
+      "delete": "Delete",
+      "hero_banner": "Hero banner",
+      "preview": "Preview",
+      "upload_banner": "Upload Banner Image",
+      "heroBanner": "Hero Banner",
+      "new_block": "New Block"
     }
   },
   "navigation": {

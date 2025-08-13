@@ -2,39 +2,43 @@
 
 import React, { useRef, useState } from 'react';
 import { Button, Card, Input, Select } from 'antd';
+import { useTranslations } from 'next-intl';
 
+import { Trash } from '@/assets/icons';
+import SubBlockEditor from '@/components/cms/interface/SubBlockEditor';
 import BannerUpload from '@/components/cms/Upload';
 import Modal, { ModalHandle } from '@/components/Modal';
 import { useCMSInterface } from '@/lib/context/CMSInterface';
 
 export default function MainEditor() {
+  const t = useTranslations('cms.interface');
+
   const {
     contentBlocks,
     updateBlock,
     addContentBlock,
     deleteContentBlock,
     addSubBlock,
+    updateSubBlock,
   } = useCMSInterface();
   const modalRef = useRef<ModalHandle>(null);
 
   // Local state for modal form
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
-    undefined
-  );
-  const [selectedContent, setSelectedContent] = useState<string | undefined>(
-    undefined
-  );
-  const [activeBlockId, setActiveBlockId] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>();
+  const [selectedContent, setSelectedContent] = useState<string>();
+  const [activeBlockId, setActiveBlockId] = useState<string>('');
+  const [activeSubBlockId, setActiveSubBlockId] = useState<string>('');
 
-  const handleOpenModal = (blockId: string) => {
+  const handleOpenModal = (blockId: string, subId: string) => {
     setActiveBlockId(blockId);
+    setActiveSubBlockId(subId);
     modalRef.current?.open();
   };
 
   const handleLoadConfirm = () => {
-    if (!activeBlockId) return;
+    if (!activeBlockId || !selectedCategory) return;
     // TODO: you can update context here to set content for that sub block
-    console.log('Load content into block:', activeBlockId, {
+    updateSubBlock(activeBlockId, activeSubBlockId, {
       category: selectedCategory,
       content: selectedContent,
     });
@@ -45,33 +49,36 @@ export default function MainEditor() {
     <>
       <div className="flex-1 space-y-12 p-8">
         {/* Hero Banner */}
-        <Card title="Hero Banner">
+        <Card title={t('heroBanner')} className="shadow-lg">
           <BannerUpload />
         </Card>
 
         {/* Content Blocks */}
+        <label className="text-sm mb-1 block w-200 font-medium">
+          {t('contentBlocks')}
+        </label>
         {contentBlocks.map(block => (
           <Card
             key={block.id}
-            title="Content Block"
+            title={block.title || t('new_block')}
             extra={
               <Button
-                danger
+                type="primary"
                 size="small"
                 onClick={() => deleteContentBlock(block.id)}
               >
-                Delete
+                <Trash width={16} height={16} />
               </Button>
             } // optional delete
             styles={{
-              body: { display: 'flex', flexDirection: 'column', gap: '8px' },
+              body: { display: 'flex', flexDirection: 'column', gap: '12px' },
             }}
-            className="shadow-sm"
+            className="shadow-lg"
           >
             {/* Title Input */}
             <div className="mb-3 flex">
               <label className="text-sm mb-1 block w-200 font-medium">
-                Content Block Title
+                {t('blockTitle')}
               </label>
               <Input
                 value={block.title}
@@ -83,24 +90,19 @@ export default function MainEditor() {
             {/* Sub Blocks placeholder */}
             <div className="mb-3 flex">
               <label className="text-sm mb-1 block w-200 font-medium">
-                Content Block Title
+                {t('subContentBlocks')}
               </label>
               <div className="flex w-full flex-col gap-12">
-                {block.subBlocks.map(sub => (
-                  <div key={sub.id} className="flex gap-8">
-                    <Button block onClick={() => handleOpenModal(block.id)}>
-                      Load Content
-                    </Button>
-                    <Button>⇅</Button>
-                    <Button danger>Delete</Button>
-                  </div>
-                ))}
+                <SubBlockEditor
+                  blockId={block.id}
+                  handleOpenModal={handleOpenModal}
+                />
                 <Button
                   type="primary"
                   block
                   onClick={() => addSubBlock(block.id)}
                 >
-                  + Add Sub Block
+                  {t('addSubBlock')}
                 </Button>
               </div>
             </div>
@@ -109,7 +111,7 @@ export default function MainEditor() {
 
         {/* Add Content Block */}
         <Button type="primary" block onClick={addContentBlock}>
-          + Add Content Block
+          {t('addContentBlock')}
         </Button>
       </div>
 

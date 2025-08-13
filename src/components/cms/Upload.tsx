@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 import { useCMSInterface } from '@/lib/context/CMSInterface';
 
@@ -11,6 +13,7 @@ const RECT_WIDTH = 400;
 const RECT_HEIGHT = 200;
 
 const BannerUpload: React.FC = () => {
+  const t = useTranslations('cms.interface');
   const { heroBanner, setHeroBanner } = useCMSInterface();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
@@ -63,11 +66,11 @@ const BannerUpload: React.FC = () => {
           <div style={{ textAlign: 'center' }}>
             <UploadOutlined style={{ fontSize: 32, color: '#999' }} />
             <div style={{ marginTop: 8, color: '#999' }}>
-              Upload Banner Image
+              {t('upload_banner')}
             </div>
           </div>
         ) : (
-          <img
+          <Image
             src={heroBanner}
             alt="Banner Preview"
             style={{

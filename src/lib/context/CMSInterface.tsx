@@ -3,7 +3,7 @@
 
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-type SubContentBlock = { id: string; content?: string };
+export type SubContentBlock = { id: string; category: string; content: string };
 type ContentBlock = { id: string; title: string; subBlocks: SubContentBlock[] };
 
 type CMSInterfaceState = {
@@ -14,6 +14,17 @@ type CMSInterfaceState = {
   addContentBlock: () => void;
   deleteContentBlock: (id: string) => void;
   addSubBlock: (blockId: string) => void;
+  deleteSubBlock: (blockId: string, subId: string) => void;
+  updateSubBlock: (
+    blockId: string,
+    subId: string,
+    changes: Partial<SubContentBlock>
+  ) => void;
+  reorderSubBlocks: (
+    blockId: string,
+    fromIndex: number,
+    toIndex: number
+  ) => void;
 };
 
 const CMSInterfaceContext = createContext<CMSInterfaceState | undefined>(
@@ -49,10 +60,61 @@ export function CMSInterfaceProvider({ children }: { children: ReactNode }) {
         b.id === blockId
           ? {
               ...b,
-              subBlocks: [...b.subBlocks, { id: Date.now().toString() }],
+              subBlocks: [
+                ...b.subBlocks,
+                { id: Date.now().toString(), category: '', content: '' },
+              ],
             }
           : b
       )
+    );
+  };
+
+  const deleteSubBlock = (blockId: string, subId: string) => {
+    setContentBlocks(prev =>
+      prev.map(b =>
+        b.id === blockId
+          ? {
+              ...b,
+              subBlocks: b.subBlocks.filter(sb => sb.id !== subId),
+            }
+          : b
+      )
+    );
+  };
+
+  const updateSubBlock = (
+    blockId: string,
+    subId: string,
+    changes: Partial<SubContentBlock>
+  ) => {
+    setContentBlocks(prev =>
+      prev.map(b =>
+        b.id === blockId
+          ? {
+              ...b,
+              subBlocks: b.subBlocks.map(sb =>
+                sb.id === subId ? { ...sb, ...changes } : sb
+              ),
+            }
+          : b
+      )
+    );
+  };
+
+  const reorderSubBlocks = (
+    blockId: string,
+    fromIndex: number,
+    toIndex: number
+  ) => {
+    setContentBlocks(prev =>
+      prev.map(b => {
+        if (b.id !== blockId) return b;
+        const updated = [...b.subBlocks];
+        const [moved] = updated.splice(fromIndex, 1);
+        updated.splice(toIndex, 0, moved);
+        return { ...b, subBlocks: updated };
+      })
     );
   };
 
@@ -66,6 +128,9 @@ export function CMSInterfaceProvider({ children }: { children: ReactNode }) {
         addContentBlock,
         deleteContentBlock,
         addSubBlock,
+        deleteSubBlock,
+        updateSubBlock,
+        reorderSubBlocks,
       }}
     >
       {children}
@@ -75,6 +140,7 @@ export function CMSInterfaceProvider({ children }: { children: ReactNode }) {
 
 export function useCMSInterface() {
   const ctx = useContext(CMSInterfaceContext);
-  if (!ctx) throw new Error('useCMS must be used within CMSProvider');
+  if (!ctx)
+    throw new Error('useCMSInterface must be used within CMSInterfaceProvider');
   return ctx;
 }

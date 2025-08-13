@@ -27,6 +27,21 @@
       "signin_google": "Google로 로그인",
       "signin_kakao": "카카오톡으로 로그인",
       "error_generic": "로그인에 실패했습니다"
+    },
+    "interface": {
+      "contentBlocks": "콘텐츠 블록",
+      "blockTitle": "콘텐츠 블록 제목",
+      "subContentBlocks": "하위 콘텐츠 블록",
+      "addSubBlock": "+ 하위 블록 추가",
+      "addContentBlock": "+ 콘텐츠 블록 추가",
+      "no_banner": "히어로 배너 없음",
+      "loadContent": "콘텐츠 로드",
+      "delete": "삭제",
+      "hero_banner": "히어로 배너",
+      "preview": "미리보기",
+      "upload_banner": "배너 이미지 업로드",
+      "heroBanner": "영웅 배너",
+      "new_block": "새로운 블록"
     }
   },
   "navigation": {

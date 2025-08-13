@@ -41,6 +41,7 @@ type ChatbotProps = ComponentProps<'div'> & {
 };
 
 
+
 export default function Chatbot({
   messages: initialMessages,
   chatbotName,
@@ -60,17 +61,23 @@ export default function Chatbot({
   // check if there are more messages before the current messages
   const noDataRef = useRef(false);
 
+  // updated messages immediately
+  const updatedMessagesRef = useRef<Message[]>([]);
+
   useEffect(() => {
     setMessages(initialMessages);
+    updatedMessagesRef.current = [...initialMessages];
   }, [initialMessages, setMessages]);
+
 
   const handleLoadMore = useCallback(async () => {
     if (prevLoadMoreRef.current || noDataRef.current) return;
+
     prevLoadMoreRef.current = true;
     setIsPreviousLoading(true);
 
-    const prevMessages = messages?.length;
-    const beforeIdx = messages?.[0]?.id;
+    const prevMessages = updatedMessagesRef.current?.length;
+    const beforeIdx = updatedMessagesRef.current?.[0]?.id;
 
     const res: any = await NextApi.get(
       `/api/chat/${chatroomId}?direction=before&cursor=${beforeIdx}&limit=20`
@@ -78,13 +85,13 @@ export default function Chatbot({
 
     if (res?.data?.length > 0) {
 
-      const newData = [...res.data.reverse(), ...messages];
-      setMessages(newData);
+      updatedMessagesRef.current = [...res.data.reverse(), ...updatedMessagesRef.current];
+      setMessages(updatedMessagesRef.current);
       prevLoadMoreRef.current = false;
 
       setTimeout(() => {
         (messageListRef as any).current.scrollToIndex({
-          index: newData.length - prevMessages,
+          index: updatedMessagesRef.current.length - prevMessages,
           align: 'end',
           behavior: 'instant',
         });

@@ -31,7 +31,6 @@ const Composer = memo(
     chatbotName,
     sendMessage,
     isChapterMode = false,
-
   }: ComposerProps) => {
     const { user } = useAuth();
     const [newMessage, setNewMessage] = useState('');
@@ -59,46 +58,52 @@ const Composer = memo(
       message: 'Thinking',
       created_at: dayjs().toISOString(),
     };
-    
 
     const handleSendMessage = async () => {
-      let currentMessages = [...messages];
+      messagesRef.current = [...messages];
       if (!newMessage.trim()) return;
 
+      let lastMessageId =
+        messagesRef.current[messagesRef.current.length - 1]?.id ?? '';
+      messagesRef.current = [
+        ...messagesRef.current,
+        mockNewMessageUser,
+        mockResponseChatbotItem,
+      ];
 
-      let lastMessageId = currentMessages[currentMessages.length - 1]?.id ?? '';
-      currentMessages = [...currentMessages, mockNewMessageUser, mockResponseChatbotItem];
+      setMessages(messagesRef.current);
 
-      setMessages(currentMessages);
-
-      
       await sendMessage(newMessage);
 
       const startTime = Date.now();
       const interval = setInterval(async () => {
-        
         const res: any = await NextApi.get(
           `/api/chat/${chatroomId}?limit=20&direction=after&cursor=${lastMessageId}`
         );
         const newMessages = res?.data ?? [];
 
+        messagesRef.current = messagesRef.current.filter(
+          msg =>
+            msg.id !== 'temparareryChatbotItemId' &&
+            msg.id !== 'newMessageUserItemId'
+        );
+        console.log('messagesRef.current', messagesRef.current);
+
         if (newMessages.length >= 2) {
           // Got 2 messages => add immediately
-          currentMessages = [...currentMessages, ...newMessages];
-          setMessages(currentMessages);
+          messagesRef.current = [...messagesRef.current, ...newMessages];
+          setMessages(messagesRef.current);
           clearInterval(interval);
-
         } else if (Date.now() - startTime >= 30000) {
           // After 30s
           if (newMessages.length === 1) {
             // Thêm error field - Because we don't receive response from chatbot
             const erroredMessage = { ...newMessages[0], error: true };
-            currentMessages = [...currentMessages, erroredMessage];
-            setMessages(currentMessages);
+            messagesRef.current = [...messagesRef.current, erroredMessage];
+            setMessages(messagesRef.current);
           }
           clearInterval(interval);
         }
-
       }, 2000);
     };
 

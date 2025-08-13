@@ -7,15 +7,7 @@ import WeMarriedBanner from '@/assets/images/we-married-banner.png';
 
 import IntroductionClient from './Introduction.client';
 
-export const generateMetadata = async ({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) => {
-  const t = await getTranslations({
-    namespace: 'introduction.metadata',
-    locale,
-  });
+export const generateMetadata = async ({}: {}) => {
   return {
     title: 'TODO: work name',
     description: 'TODO: work description',

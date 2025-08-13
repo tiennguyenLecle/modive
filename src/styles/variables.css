@@ -6,7 +6,8 @@
   --background: #ffffff;
   --foreground: #171717;
   --border: #f0eff1;
-  --placeholder: #9c9eb0;
+  --placeholder-text: #9c9eb0;
+  --placeholder-bg: #f7f7f8;
   --black: 0 0 0;
   --text-primary: #250f09;
   --text-secondary: #333333;

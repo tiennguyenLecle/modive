@@ -31,7 +31,6 @@ const Composer = memo(
     chatbotName,
     sendMessage,
     isChapterMode = false,
-
   }: ComposerProps) => {
     const { user } = useAuth();
     const [newMessage, setNewMessage] = useState('');
@@ -59,24 +58,24 @@ const Composer = memo(
       message: 'Thinking',
       created_at: dayjs().toISOString(),
     };
-    
 
     const handleSendMessage = async () => {
       let currentMessages = [...messages];
       if (!newMessage.trim()) return;
 
-
       let lastMessageId = currentMessages[currentMessages.length - 1]?.id ?? '';
-      currentMessages = [...currentMessages, mockNewMessageUser, mockResponseChatbotItem];
+      currentMessages = [
+        ...currentMessages,
+        mockNewMessageUser,
+        mockResponseChatbotItem,
+      ];
 
       setMessages(currentMessages);
 
-      
       await sendMessage(newMessage);
 
       const startTime = Date.now();
       const interval = setInterval(async () => {
-        
         const res: any = await NextApi.get(
           `/api/chat/${chatroomId}?limit=20&direction=after&cursor=${lastMessageId}`
         );
@@ -87,7 +86,6 @@ const Composer = memo(
           currentMessages = [...currentMessages, ...newMessages];
           setMessages(currentMessages);
           clearInterval(interval);
-
         } else if (Date.now() - startTime >= 30000) {
           // After 30s
           if (newMessages.length === 1) {
@@ -98,7 +96,6 @@ const Composer = memo(
           }
           clearInterval(interval);
         }
-
       }, 2000);
     };
 
@@ -107,11 +104,14 @@ const Composer = memo(
     return (
       <div className={`${styles.composer}`}>
         <ChatboxComposer
-          beforeComposerOutsideComponent={{
-            onClick: () => console.log('Tip'),
-            disabled: isDisabled,
-            children: isDisabled ? <TipDisabledIcon /> : <TipIcon />,
-          }}
+          beforeComposerOutside={
+            <button
+              className="chatbox-composer-before-outside"
+              disabled={isDisabled}
+            >
+              {isDisabled ? <TipDisabledIcon /> : <TipIcon />}
+            </button>
+          }
           textareaProps={{
             value: newMessage,
             onChange: handleChange,
@@ -121,16 +121,15 @@ const Composer = memo(
               maxRows: 5,
             },
           }}
-          afterComposerInsideComponent={
-            isChapterMode && {
-              onClick: () => console.log('Asterisk'),
-              disabled: isDisabled,
-              children: isDisabled ? (
-                <AsteristkDisabledIcon />
-              ) : (
-                <AsteristkIcon />
-              ),
-            }
+          afterComposerInside={
+            isChapterMode && (
+              <button
+                className="chatbox-composer-after-inside"
+                disabled={isDisabled}
+              >
+                {isDisabled ? <AsteristkDisabledIcon /> : <AsteristkIcon />}
+              </button>
+            )
           }
           sendButtonComponent={{
             onClick: handleSendMessage,

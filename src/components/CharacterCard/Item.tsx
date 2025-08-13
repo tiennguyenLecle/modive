@@ -9,7 +9,7 @@ const CharacterCardItem = ({ className, ...props }: CharacterCardItemProps) => {
   return (
     <div
       className={cx(
-        'flex min-h-90 gap-12 border-b border-gray bg-white py-8 transition-colors duration-300 hover:bg-gray-90/40',
+        'flex min-h-90 cursor-pointer gap-12 border-b border-gray bg-white py-8 transition-colors duration-300 hover:bg-gray-90/40',
         className
       )}
       {...props}

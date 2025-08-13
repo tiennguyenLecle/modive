@@ -7,6 +7,10 @@ export const COOKIE_PREFIX_SB = 'modive.sb-auth_token';
  */
 export const COOKIE_PREFIX_SB_ADMIN = 'modive.admin-auth_token';
 
+export const STORAGE = {
+  HIDE_GUIDE_TO_USE: 'hide_guide_to_use',
+};
+
 export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',

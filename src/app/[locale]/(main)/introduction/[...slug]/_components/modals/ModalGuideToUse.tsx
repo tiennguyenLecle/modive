@@ -4,6 +4,7 @@ import React, { useImperativeHandle, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button, Modal, ModalHandle } from '@/components';
+import { STORAGE } from '@/utils/constants';
 
 const ModalGuideToUse = React.forwardRef<ModalHandle>((_, ref) => {
   const t = useTranslations('introduction.modal_guide_to_use');
@@ -35,7 +36,16 @@ const ModalGuideToUse = React.forwardRef<ModalHandle>((_, ref) => {
           </Button>
 
           <label className="flex items-center justify-center gap-4">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              onChange={e => {
+                if (e.target.checked) {
+                  localStorage.setItem(STORAGE.HIDE_GUIDE_TO_USE, 'true');
+                } else {
+                  localStorage.removeItem(STORAGE.HIDE_GUIDE_TO_USE);
+                }
+              }}
+            />
             <span>{t('do_not_see_again')}</span>
           </label>
         </div>

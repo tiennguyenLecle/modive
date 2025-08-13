@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 import { Heart } from '@/assets/icons';
 import { Button, Modal, ModalHandle } from '@/components';
+import { STORAGE } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
 import ModalExistChatRoom from './ModalExistChatRoom';
@@ -28,8 +29,11 @@ const ModalCharacter = React.forwardRef<ModalHandle>((_, ref) => {
   };
 
   const handleConfirm = async () => {
-    // modalGuideToUseRef.current?.open();
-    modalExistChatRoomRef.current?.open();
+    if (!localStorage.getItem(STORAGE.HIDE_GUIDE_TO_USE)) {
+      modalGuideToUseRef.current?.open();
+    }
+
+    // modalExistChatRoomRef.current?.open();
     handleClose();
   };
 

@@ -47,7 +47,6 @@ export default function Chatbot({
   // Update messages when new ones are loaded
   useEffect(() => {
     if (updatedMessagesRef?.current?.length > 0) {
-      console.log('updatedMessagesRef', updatedMessagesRef.current);
       setMessages(updatedMessagesRef.current);
     }
   }, [updatedMessagesRef?.current, setMessages]);
@@ -78,7 +77,7 @@ export default function Chatbot({
     <ChatboxLayout
       className={styles.chatboxLayout}
       backgroundColor="var(--color-background)"
-      layoutHeight="calc(100dvh - 56px - 48px)"
+      layoutHeight="calc(100dvh - 56px - 48px)" // 56px + 48px: header height + 10px: padding top of composer
       messageComponent={messageComponent}
       composerComponent={
         <Composer

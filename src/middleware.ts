@@ -73,10 +73,12 @@ export default async function middleware(request: NextRequest) {
   // With current configuration (cookieOptions.name = 'modive.sb-auth_token.'), the cookie name will be 'modive.sb-auth_token.0', 'modive.sb-auth_token.1'.
 
   const isLoggedIn = Boolean(
-    request.cookies.get(`${COOKIE_PREFIX_SB}.0`)?.value
+    request.cookies.get(`${COOKIE_PREFIX_SB}.0`)?.value ||
+      request.cookies.get(COOKIE_PREFIX_SB)?.value
   );
   const isAdminLoggedIn = Boolean(
-    request.cookies.get(`${COOKIE_PREFIX_SB_ADMIN}`)?.value
+    request.cookies.get(`${COOKIE_PREFIX_SB_ADMIN}.0`)?.value ||
+      request.cookies.get(COOKIE_PREFIX_SB_ADMIN)?.value
   );
 
   // Determine if the current route is public

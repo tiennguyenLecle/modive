@@ -58,7 +58,6 @@ function LoginButton({
   children,
   icon,
   className,
-  onClick,
   ...props
 }: {
   children: React.ReactNode;

@@ -1,8 +1,13 @@
 import { getTranslations } from 'next-intl/server';
 
 import { ChatApi } from '@/lib/api/server';
+import { getServerAuth } from '@/lib/authentication/server-auth';
 
 import ChatRoom from './ChatRoom.client';
+
+import '@/styles/variables.css';
+
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -24,12 +29,22 @@ export default async function ChatRoomPage({
   params: { chatroomId: string };
 }) {
   const { chatroomId } = params;
+  const chatBotName = process.env.DIT_CHATBOT_NAME;
 
-  const res = await ChatApi.getMessages(chatroomId, undefined, 4, 'after');
+  const res = await ChatApi.getMessages(chatroomId, undefined, 20);
+
+  const user = await getServerAuth();
+  if (!user) {
+    return <div>No session</div>;
+  }
 
   return (
-    <div>
-      <ChatRoom messages={res.data} />
+    <div data-no-navigation>
+      <ChatRoom
+        currentUserId={user.id}
+        messages={res.data ?? []}
+        chatBotName={chatBotName!}
+      />
     </div>
   );
 }

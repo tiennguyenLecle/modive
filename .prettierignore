@@ -21,3 +21,6 @@ test-results/
 
 # Misc
 coverage/ 
+
+# Chatbot modules
+src/lib/cchatbot-modules/

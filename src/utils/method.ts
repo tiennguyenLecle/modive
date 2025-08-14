@@ -65,3 +65,23 @@ const _isPlainObject = (value: unknown): value is Record<string, unknown> => {
   const prototype = Object.getPrototypeOf(value);
   return prototype === Object.prototype || prototype === null;
 };
+
+export const filterMessageConditions = (
+  message: string,
+  id: string,
+  seenIds: Set<string>
+): boolean => {
+  const regex = /\[SYSTEM]|<think>|[ERROR]/;
+
+  if (regex.test(message)) return true; // match pattern
+  if (seenIds.has(id)) return true; // duplicate id
+  if (
+    message.includes(
+      'Something went wrong, internally. But this might not be a problem. This is informational message.'
+    )
+  )
+    return true;
+
+  seenIds.add(id);
+  return false;
+};

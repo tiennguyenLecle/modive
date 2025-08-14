@@ -1,0 +1,165 @@
+.chatboxLayout {
+  :global {
+    .c-message-item {
+      .c-msg-content {
+        max-width: calc(100% - 40px - 56px);
+      }
+      .c-msg-name {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text-secondary);
+      }
+    }
+
+    .c-msg-system {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 100%;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      padding: 13px 0;
+      text-align: center;
+      &::after {
+        content: '';
+        position: absolute;
+        height: 1px;
+        width: 20%;
+        top: 50%;
+        transform: translate(10%, -50%);
+        right: 10%;
+        background-color: #f0eff1;
+      }
+      &::before {
+        content: '';
+        position: absolute;
+        height: 1px;
+        width: 20%;
+        top: 50%;
+        transform: translate(-10%, -50%);
+        left: 10%;
+        background-color: #f0eff1;
+      }
+    }
+  }
+}
+
+// -- Start -- Composer styles
+.composer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  width: 100%;
+  min-height: 56px;
+  background: var(--background);
+  border-top: 1px solid var(--border);
+  box-sizing: border-box;
+
+  :global(.chatbox-composer-before-outside) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    background: transparent;
+    border-radius: 50%;
+    padding: 8px;
+
+    &:disabled,
+    &.disabled {
+      background: var(--placeholder-bg);
+      cursor: not-allowed;
+    }
+
+    svg {
+      width: 24px;
+      aspect-ratio: 1;
+    }
+  }
+
+  :global(.chatbox-composer-after-inside) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    padding: 8px;
+
+    &:disabled,
+    &.disabled {
+      pointer-events: none;
+    }
+
+    svg {
+      width: 18px;
+      aspect-ratio: 1;
+    }
+  }
+
+  :global(.c-chatbox-composer-textarea) {
+    border: 1px solid var(--border);
+    background: var(--placeholder-bg);
+    border-radius: 5px;
+    min-height: 40px;
+    padding: 11.5px 8px;
+    margin: 0 8px;
+    min-height: 40px;
+    transition: border-color 0.2s ease;
+
+    &:focus-within {
+      border-color: var(--primary);
+      background: var(--background);
+
+      textarea {
+        background: transparent;
+        color: var(--foreground);
+
+        &::placeholder {
+          line-height: 1.3;
+          color: var(--foreground);
+        }
+      }
+    }
+
+    textarea {
+      background: transparent;
+      color: var(--foreground);
+
+      &::placeholder {
+        line-height: 1.3;
+        color: var(--placeholder-text);
+      }
+    }
+  }
+
+  :global(.c-chatbox-composer-send-button) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--primary);
+    cursor: pointer;
+    padding: 11px;
+
+    &:disabled,
+    &.disabled {
+      background: var(--placeholder-bg);
+      border: 1px solid var(--border);
+      cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+      background: transparent;
+    }
+  }
+}
+
+// -- End -- Composer styles

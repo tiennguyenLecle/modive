@@ -1,83 +1,50 @@
 'use client';
 
-import { ComponentProps, useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { ComponentProps, useEffect } from 'react';
+import { useSetAtom } from 'jotai';
 
+import { messagesAtom } from '@/atoms/messagesAtom';
 import { ProgressBar } from '@/components';
-import { NextApi } from '@/lib/api';
 import { Message } from '@/lib/api/types/chat.types';
 import { cx } from '@/utils/method';
 
+import Chatbot from './Chatbot.client';
+
 type ChatRoomProps = ComponentProps<'div'> & {
   messages: Message[];
+  chatBotName: string;
+  currentUserId: string;
 };
 
 export default function ChatRoom({
-  messages: _messages,
+  messages,
   className,
+  chatBotName,
+  currentUserId,
   ...props
 }: ChatRoomProps) {
-  const { sendMessage } = useSendMessage();
-
-  const { chatroomId } = useParams();
-
-  const [messages, setMessages] = useState<Message[]>([]);
+  const setMessages = useSetAtom(messagesAtom);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const res = await NextApi.get<any>(
-        `/api/chat/${chatroomId}?limit=1&direction=after&cursor=4d8e554b-07f4-4e2b-9c1d-8b1ba4202a1f`
-      );
-
-      console.log('Message from client', res.data);
-      setMessages(res.data as Message[]);
+    return () => {
+      setMessages([]);
     };
-    fetchMessages();
-  }, [chatroomId]);
+  }, []);
 
   return (
     <div className={cx('flex h-full flex-col', className)} {...props}>
       <div className="container flex h-56 items-center border-b border-t border-gray-80">
-        <h1 className="mb-4 text-16 font-semibold">Kang Lee -hyun</h1>
+        <h1 className="mb-4 text-16 font-semibold">{chatBotName}</h1>
       </div>
       <div className="container flex h-48 items-center border-b border-t border-gray-80">
         <span>Favorability 1</span>
         <ProgressBar percentage={10} />
       </div>
-      <ul className="container flex min-h-0 flex-1 flex-col gap-20 overflow-auto py-16">
-        {messages.map(message => (
-          <li key={message.id}>
-            <span>{message.message}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="container">
-        <button
-          className="rounded-4 bg-primary p-8 text-left text-white"
-          onClick={() => {
-            sendMessage('Hello, how are you today?');
-          }}
-        >
-          Send example message
-        </button>
-      </div>
+      <Chatbot
+        messages={messages}
+        chatbotName={chatBotName}
+        currentUserId={currentUserId}
+      />
     </div>
   );
 }
-
-const useSendMessage = () => {
-  const { chatroomId } = useParams();
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get('sessionId');
-
-  const sendMessage = async (text: string) => {
-    await NextApi.post(`/api/chat/${chatroomId}`, {
-      body: {
-        sessionId,
-        text,
-      },
-    });
-  };
-
-  return { sendMessage };
-};

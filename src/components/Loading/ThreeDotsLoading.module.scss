@@ -1,0 +1,32 @@
+.threeDotsLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  span {
+    display: block;
+    width: 4px;
+    height: 4px;
+    background: #2c1b13;
+    border-radius: 50%;
+    animation: bounce 0.6s infinite ease-in-out;
+
+    @for $i from 1 through 3 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{($i - 1) * 0.1}s;
+      }
+    }
+  }
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-6px);
+  }
+}

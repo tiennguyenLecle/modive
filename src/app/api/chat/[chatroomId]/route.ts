@@ -54,10 +54,6 @@ async function getMessagesHandler(
     console.log('NEXT API - catch chat error', error);
 
     return NextResponse.json(error);
-    return NextResponse.json(
-      { error: { message: 'Failed to retrieve chat messages.' } },
-      { status: 502 }
-    );
   }
 }
 

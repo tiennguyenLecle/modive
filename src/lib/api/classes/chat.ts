@@ -111,22 +111,23 @@ export class ChatApiClient extends BaseApiClient {
     gender: string,
     dateOfBirth: string
   ) {
-    console.log('Send message payload: ', {
-      userId: this.chatApiId,
-      command: {
-        type: 'SEND_MESSAGE_TO_CHATROOM',
-        messages: [text],
-        metadata: {},
-        senderId: userId,
-        chatroomId: `${this.chatbotName}-${userId}`,
-        senderType: 'user',
-        appContext: {
-          username: userName,
-          gender,
-          dob: dateOfBirth,
-        },
-      },
-    });
+    // console.log('Send message payload: ', {
+    //   userId: this.chatApiId,
+    //   command: {
+    //     type: 'SEND_MESSAGE_TO_CHATROOM',
+    //     messages: [text],
+    //     metadata: {},
+    //     senderId: userId,
+    //     chatroomId: `${this.chatbotName}-${userId}`,
+    //     senderType: 'user',
+    //     appContext: {
+    //       username: userName,
+    //       gender,
+    //       dob: dateOfBirth,
+    //     },
+    //   },
+    // });
+
 
     return this.post(`/v3/universe/session/${sessionId}`, {
       body: {

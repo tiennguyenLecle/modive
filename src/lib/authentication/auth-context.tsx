@@ -103,6 +103,8 @@ export function AuthProvider({ children, role }: AuthProviderProps) {
   const signOut = async () => {
     await supabase.auth.signOut().then(() => {
       router.push(role === 'admin' ? ROUTES.CMS.LOGIN : ROUTES.HOME);
+      // Hard redirect to ensure router cache is cleared and server sees updated cookies
+      router.refresh();
     });
   };
 

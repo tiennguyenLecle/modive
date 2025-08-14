@@ -72,7 +72,9 @@ export function AuthProvider({ children, role }: AuthProviderProps) {
 
     const redirect =
       redirectTo ||
-      `${window.location.origin}/api/auth/${role}/callback?redirect=${encodeURIComponent(defaultRedirectPath)}`;
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/${role}/callback?redirect=${encodeURIComponent(defaultRedirectPath)}`;
+
+    console.log(`[LOGIN OAUTH] ${provider}, redirect: ${redirect}`);
 
     await supabase.auth.signInWithOAuth({
       provider: provider as any,

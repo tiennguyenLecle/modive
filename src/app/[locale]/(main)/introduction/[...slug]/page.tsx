@@ -1,11 +1,18 @@
-'use client';
-
 import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 
 import { Direction } from '@/assets/icons';
 import WeMarriedBanner from '@/assets/images/we-married-banner.png';
-import { ChatCard, MenuTab } from '@/components';
+
+import IntroductionClient from './Introduction.client';
+
+export const generateMetadata = async ({}: {}) => {
+  return {
+    title: 'TODO: work name',
+    description: 'TODO: work description',
+  };
+};
 
 const IntroductionDetailPage = () => {
   const t = useTranslations('introduction');
@@ -40,21 +47,7 @@ const IntroductionDetailPage = () => {
           <Direction color="white" className="h-16 w-16" />
         </button>
       </div>
-      <MenuTab
-        tabs={[
-          {
-            key: 'chat',
-            label: t('chat'),
-            children: <ChatCard.List />,
-          },
-          {
-            key: 'personalRelationship',
-            label: t('personal_relationship'),
-            children: <div className="p-16">Story content goes here.</div>,
-          },
-        ]}
-        defaultActiveKey="chat"
-      />
+      <IntroductionClient />
     </main>
   );
 };

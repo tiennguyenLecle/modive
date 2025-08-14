@@ -7,6 +7,7 @@ import Chevron from './chevron.svg';
 import Close from './close.svg';
 import Direction from './direction.svg';
 import Ellipsis from './ellipsis.svg';
+import Heart from './heart.svg';
 import Info from './info.svg';
 import Lock from './lock.svg';
 import LogoText from './logo-text.svg';
@@ -36,6 +37,7 @@ export {
   Close,
   Direction,
   Ellipsis,
+  Heart,
   Info,
   Lock,
   Logo,

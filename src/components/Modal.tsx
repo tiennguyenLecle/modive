@@ -87,42 +87,38 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
             >
               <div
                 className={cx(
-                  'w-full max-w-280 rounded-5 bg-white',
+                  'flex max-h-3/4 w-3/4 flex-col rounded-5 bg-white',
                   containerClassName
                 )}
                 style={{ boxShadow: '0px 4px 20px 0px #00000040' }}
                 onClick={e => e.stopPropagation()}
               >
                 {showHeader && (
-                  <div className="relative flex h-46 items-center justify-between px-16">
+                  <div className="flex items-center justify-between p-16">
                     {header ? (
                       <div className="w-full">{header}</div>
                     ) : (
-                      <>
-                        <div
-                          className={cx(
-                            'flex-1 text-14 font-semibold text-gray-00',
-                            titleAlign === 'center'
-                              ? 'text-center'
-                              : 'text-left'
-                          )}
-                        >
-                          {title}
-                        </div>
-                        {showCloseButton && (
-                          <button
-                            onClick={close}
-                            className="absolute right-16 top-16 flex size-24 items-center justify-center transition"
-                            aria-label="Close"
-                          >
-                            <Close className="size-11 text-gray-00" />
-                          </button>
+                      <div
+                        className={cx(
+                          'flex-1 text-14 font-semibold text-gray-00',
+                          titleAlign === 'center' ? 'text-center' : 'text-left'
                         )}
-                      </>
+                      >
+                        {title}
+                      </div>
+                    )}
+                    {showCloseButton && (
+                      <button
+                        onClick={close}
+                        className="flex size-24 items-center justify-center rounded-2 transition duration-300 hover:bg-gray-80"
+                        aria-label="Close"
+                      >
+                        <Close className="size-11 text-gray-00" />
+                      </button>
                     )}
                   </div>
                 )}
-                {children}
+                <div className="flex-1 overflow-y-auto">{children}</div>
                 {showFooter &&
                   (footer ? (
                     <div className="p-16">{footer}</div>

@@ -98,9 +98,29 @@
     "conversation": "Conversation"
   },
   "introduction": {
-    "chat": "Chat",
-    "personal_relationship": "Personal relationship",
-    "chapter_entrance": "Chapter entrance"
+    "tabs": {
+      "chat": "Chat",
+      "personal_relationship": "Personal relationship"
+    },
+    "chapter_entrance": "Chapter entrance",
+    "modal_character": {
+      "start_conversation": "1: 1 conversation"
+    },
+    "modal_guide_to_use": {
+      "title": "Guide to use rules",
+      "description_1": "Chat response and contents were created by AI and may include inaccurate information.",
+      "description_2": "This information is irrelevant to Modive's official position.This information is irrelevant to Modive's official position.",
+      "description_3": "All users must comply with the ethical standards, please refrain from conversations.",
+      "description_4": "You can get a painless sanctions or legal measures in case of violation of operating policy and exploitation of services.",
+      "agree_and_start": "To agree and start",
+      "do_not_see_again": "Do not see again"
+    },
+    "modal_existing_chat_room": {
+      "description_1": "There is an existing chat room.",
+      "description_2": "Would you like to go to the existing chat room?",
+      "existing_chat_room_movement": "Existing chat room movement",
+      "making_a_new_chat_room": "Making a new chat room"
+    }
   },
   "my_page": {
     "my_infomation": "My information",

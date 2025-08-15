@@ -19,6 +19,8 @@ export const generateMetadata = async ({
   };
 };
 
+export const revalidate = 0;
+
 export default async function Home({
   params: { locale },
 }: {
@@ -33,8 +35,11 @@ export default async function Home({
   const chatBotName = process.env.DIT_CHATBOT_NAME;
   // TODO: Remove this after testing
   const newChatSession =
-    chatSession?.data?.length < 3 ? await ChatApi.createSession(user.id) : null;
-  console.log(chatSession.data);
+    chatSession?.data?.data?.length < 4
+      ? await ChatApi.createSession(user.id)
+      : null;
+
+  console.log('chatSession?.data?.length', chatSession?.data?.data?.length);
 
   return (
     <>

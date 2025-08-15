@@ -1,0 +1,20 @@
+# Name of the workflow, will be displayed in the "Actions" tab of GitHub
+name: Trigger Vercel Deployment
+
+# Condition to run the workflow
+on:
+  # Run when pushing to the `canary` branch
+  push:
+    branches:
+      - canary
+
+# Jobs to be performed
+jobs:
+  deploy:
+    # Use the latest Ubuntu virtual environment to run
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Vercel Deploy Staging
+        # Use the `curl` command to send a POST request to the Deploy Hook URL
+        run: curl -X POST ${{ secrets.VERCEL_DEPLOY_STAGING }}

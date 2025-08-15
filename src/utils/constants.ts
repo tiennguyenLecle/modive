@@ -31,6 +31,11 @@ export const ROUTES = {
       CONTENT: '/cms/data-management/content',
       GOODS: '/cms/data-management/goods',
       NOTIFICATIONS: '/cms/data-management/notifications',
+      ANNOUNCEMENTS: {
+        INDEX: '/cms/data-management/announcements',
+        CREATE: '/cms/data-management/announcements/create',
+        EDIT: '/cms/data-management/announcements/edit',
+      },
       FAQ: '/cms/data-management/faq',
     },
     INTERFACE: '/cms/interface',

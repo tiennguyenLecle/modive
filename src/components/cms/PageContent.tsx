@@ -20,7 +20,7 @@ export default function PageContent({
   return (
     <main
       className={cx(
-        'flex min-h-screen flex-col p-16',
+        'flex h-full flex-col p-16',
         blank ? 'bg-transparent' : 'bg-gray-80',
         className
       )}

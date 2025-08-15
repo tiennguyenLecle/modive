@@ -34,11 +34,20 @@ export default function CmsSidebar() {
             <Link href={ROUTES.CMS.DATA_MANAGEMENT.GOODS}>{t('goods')}</Link>
           ),
         },
+        // This sidebar item is not used for now
+        // {
+        //   key: ROUTES.CMS.DATA_MANAGEMENT.NOTIFICATIONS,
+        //   label: (
+        //     <Link href={ROUTES.CMS.DATA_MANAGEMENT.NOTIFICATIONS}>
+        //       {t('notifications')}
+        //     </Link>
+        //   ),
+        // },
         {
-          key: ROUTES.CMS.DATA_MANAGEMENT.NOTIFICATIONS,
+          key: ROUTES.CMS.DATA_MANAGEMENT.ANNOUNCEMENTS.INDEX,
           label: (
-            <Link href={ROUTES.CMS.DATA_MANAGEMENT.NOTIFICATIONS}>
-              {t('notifications')}
+            <Link href={ROUTES.CMS.DATA_MANAGEMENT.ANNOUNCEMENTS.INDEX}>
+              {t('announcements')}
             </Link>
           ),
         },

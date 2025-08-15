@@ -100,7 +100,7 @@
 }
 
 .admin-layout {
-  @apply flex !min-h-screen;
+  @apply flex !h-screen w-full;
 }
 
 .admin-layout > .sidebar-wrapper {
@@ -115,5 +115,5 @@
 }
 
 .admin-layout > .page-wrapper {
-  @apply flex-1;
+  @apply min-w-0 flex-1;
 }

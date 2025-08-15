@@ -11,7 +11,7 @@
       "content": "Content",
       "goods": "Goods",
       "notifications": "Notifications",
-      "announcement": "Announcement",
+      "announcements": "Announcements",
       "faq": "FAQ",
       "interface": "Interface",
       "user_management": "User Management",
@@ -27,6 +27,42 @@
       "signin_google": "Sign in with Google",
       "signin_kakao": "Sign in with KakaoTalk",
       "error_generic": "Sign in failed"
+    },
+    "announcement": {
+      "table": {
+        "title": "Announcements",
+        "list_publish": "Publish",
+        "column_id": "ID",
+        "column_title": "Title",
+        "column_status": "Status",
+        "column_publication_date": "Publication Date",
+        "column_expire_date": "Expiration Date",
+        "column_content": "Content"
+      },
+      "form": {
+        "title_create": "Create Announcement",
+        "title_edit": "Edit Announcement",
+        "register": "Register New Announcement",
+        "publication_date": "Publication date",
+        "publication_date_required": "Please choose publication date",
+        "expiration_date": "Expiration date",
+        "days": "days",
+        "title": "Title",
+        "title_required": "Please input title",
+        "title_placeholder": "Announcement title",
+        "content": "Announcement body",
+        "content_placeholder": "Write announcement content",
+        "cancel": "Cancel",
+        "save_as_draft": "Save as Draft",
+        "publish": "Publish",
+        "save": "Save",
+        "select_publication_date_first": "Please select publication date first"
+      },
+      "message": {
+        "created_success": "Announcement created",
+        "updated_success": "Announcement updated",
+        "error_generic": "Something went wrong"
+      }
     }
   },
   "navigation": {

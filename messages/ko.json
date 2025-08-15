@@ -11,7 +11,7 @@
       "content": "콘텐츠",
       "goods": "굿즈",
       "notifications": "알림",
-      "announcement": "공지사항",
+      "announcements": "공지사항",
       "faq": "FAQ",
       "interface": "인터페이스",
       "user_management": "유저 관리",
@@ -27,6 +27,42 @@
       "signin_google": "Google로 로그인",
       "signin_kakao": "카카오톡으로 로그인",
       "error_generic": "로그인에 실패했습니다"
+    },
+    "announcement": {
+      "table": {
+        "title": "공지사항",
+        "list_publish": "발행",
+        "column_id": "ID",
+        "column_title": "제목",
+        "column_status": "상태",
+        "column_publication_date": "게시일",
+        "column_expire_date": "만료일",
+        "column_content": "내용"
+      },
+      "form": {
+        "title_create": "공지사항 생성",
+        "title_edit": "공지사항 수정",
+        "register": "새 공지사항 등록",
+        "publication_date": "게시일",
+        "publication_date_required": "게시일을 선택해주세요",
+        "expiration_date": "만료일",
+        "days": "일",
+        "title": "제목",
+        "title_required": "제목을 입력해주세요",
+        "title_placeholder": "공지사항 제목",
+        "content": "공지 내용",
+        "content_placeholder": "공지 내용을 입력하세요",
+        "cancel": "취소",
+        "save_as_draft": "임시저장",
+        "publish": "발행",
+        "save": "저장",
+        "select_publication_date_first": "먼저 게시일을 선택해주세요"
+      },
+      "message": {
+        "created_success": "공지사항이 생성되었습니다",
+        "updated_success": "공지사항이 업데이트되었습니다",
+        "error_generic": "오류가 발생했습니다"
+      }
     }
   },
   "navigation": {

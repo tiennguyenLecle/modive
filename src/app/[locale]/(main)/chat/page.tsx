@@ -31,6 +31,10 @@ export default async function Home({
   }
   const chatSession: any = await ChatApi.searchSessionsByUserId(user.id);
   const chatBotName = process.env.DIT_CHATBOT_NAME;
+  // TODO: Remove this after testing
+  const newChatSession =
+    chatSession?.data?.length < 3 ? await ChatApi.createSession(user.id) : null;
+  console.log(chatSession.data);
 
   return (
     <>

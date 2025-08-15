@@ -68,6 +68,69 @@
 }
 
 .dark {
+  --primary: #ff627b;
+  --secondary: #ffa7b5;
+  --tertiary: #ffdce1;
   --background: #0a0a0a;
   --foreground: #ededed;
+  --border: #f0eff1;
+  --placeholder-text: #9c9eb0;
+  --placeholder-bg: #f7f7f8;
+  --black: 0 0 0;
+  --text-primary: #250f09;
+  --text-secondary: #333333;
+
+  /* Avatar */
+  --avatar-border-radius: 50%;
+  --avatar-background-color: #f0eff1;
+  --avatar-image-border-radius: 50%;
+  --avatar-width-small: 40px;
+  --avatar-height-small: 40px;
+
+  /* Time Label */
+  --time-label-font-size: 12px;
+  --time-label-font-weight: 400;
+  --time-label-line-height: 100%;
+  --time-label-text-color: #250f09;
+  --time-label-error-color: #ff554a;
+
+  /* Message Text */
+  --message-padding: 12px;
+  --message-border-radius: 0;
+  --message-background-color: transparent;
+  --message-color: #250f09;
+  --message-box-shadow: 0;
+  --message-border-color: transparent;
+  --message-font-size: 14px;
+  --message-font-weight: 400;
+  --message-line-height: 100%;
+  --message-letter-spacing: 0;
+  --message-background-color-left: #f7f7f8;
+  --message-color-left: #250f09;
+  --message-border-radius-left: 6px 6px 6px 0px;
+  --message-background-color-right: #ff627b;
+  --message-color-right: #ffffff;
+  --message-border-radius-right: 6px 6px 0px 6px;
+
+  /* Message Image */
+  --message-image-width: 100px;
+  --message-image-height: 100px;
+  --message-image-border-radius: 16px;
+  --message-image-border-color: transparent;
+  --message-image-width-small: 100px;
+  --message-image-height-small: 100px;
+  --message-image-width-medium: 100px;
+  --message-image-height-medium: 100px;
+  --message-image-width-large: 100px;
+  --message-image-height-large: 100px;
+
+  /* Message Video */
+  --message-video-width: 100px;
+  --message-video-height: 100px;
+  --message-video-border-radius: 16px;
+  --message-video-border-color: transparent;
+  --message-video-blur: 3px;
+
+  /* Chatbox Layout */
+  --c-padding: 16px;
 }

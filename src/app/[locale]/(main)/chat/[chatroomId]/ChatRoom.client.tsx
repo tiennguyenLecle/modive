@@ -37,7 +37,7 @@ export default function ChatRoom({
         <h1 className="mb-4 text-16 font-semibold">{chatBotName}</h1>
       </div>
       <div className="container flex h-48 items-center border-b border-t border-gray-80">
-        <span>Favorability 1</span>
+        <span>Favorability</span>
         <ProgressBar percentage={10} />
       </div>
       <Chatbot

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { getMessages, getTranslations } from 'next-intl/server';
 
-import 'antd/dist/reset.css';
+import '@/lib/chatbot-modules/dist/styles.css';
+import '@/styles/variables.css';
 import '@/styles/globals.css';
 
 import { Providers } from '@/app/providers';

@@ -4,6 +4,8 @@ import { CmsSidebar } from '@/components/cms';
 import AntdRegistry from '@/lib/antd-registry';
 import { AuthProvider } from '@/lib/authentication/auth-context';
 
+import 'antd/dist/reset.css';
+
 type Props = {
   children: React.ReactNode;
 };

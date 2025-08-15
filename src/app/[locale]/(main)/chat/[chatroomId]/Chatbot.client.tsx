@@ -3,12 +3,9 @@
 import { ComponentProps, useEffect, useMemo, useRef } from 'react';
 import { useParams } from 'next/navigation';
 
+import { ThreeDotsLoading } from '@/components/Loading';
 import { Message } from '@/lib/api/types/chat.types';
 import { ChatboxLayout, MessageList } from '@/lib/chatbot-modules';
-
-import '@/lib/chatbot-modules/dist/styles.css';
-
-import { ThreeDotsLoading } from '@/components/Loading';
 
 import styles from './ChatRoom.module.scss';
 import Composer from './Composer.client';

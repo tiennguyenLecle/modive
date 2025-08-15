@@ -5,8 +5,6 @@ import { getServerAuth } from '@/lib/authentication/server-auth';
 
 import ChatRoom from './ChatRoom.client';
 
-import '@/styles/variables.css';
-
 export const revalidate = 0;
 
 export async function generateMetadata({

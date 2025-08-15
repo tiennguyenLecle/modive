@@ -18,7 +18,7 @@ export type MockMessage = {
 };
 
 // Constants
-const POLLING_INTERVAL = 2000;
+const POLLING_INTERVAL = 1000;
 const TIMEOUT_DURATION = 30000;
 const MESSAGE_LIMIT = 20;
 
@@ -34,6 +34,11 @@ export const useMessagePolling = (chatroomId: string) => {
       lastMessageId: string,
       onComplete: (newMessages: Message[]) => void
     ) => {
+      // Count the number of new messages which user sent
+      const countNewMessages = messagesRef?.current?.filter(msg =>
+        msg.id.startsWith('newMessageUserItemId')
+      ).length;
+
       const startTime = Date.now();
 
       const poll = async () => {
@@ -43,24 +48,28 @@ export const useMessagePolling = (chatroomId: string) => {
           );
           const newMessages = res?.data ?? [];
 
-          // Remove temporary messages
-          messagesRef.current = messagesRef.current.filter(
-            msg =>
-              msg.id !== 'temparareryChatbotItemId' &&
-              msg.id !== 'newMessageUserItemId'
-          );
-
-          if (newMessages.length >= 2) {
+          if (newMessages.length >= countNewMessages * 2) {
             // Got both user and chatbot messages
             messagesRef.current = [...messagesRef.current, ...newMessages];
+            messagesRef.current = messagesRef.current
+              .filter(msg => !msg.id.startsWith('newMessageUserItemId')) // xoá hết user msg
+              .filter(
+                (msg, idx, arr) =>
+                  !msg.id.startsWith('temparareryChatbotItemId') ||
+                  idx === arr.length - 1
+              );
+
             setMessages(messagesRef.current);
             onComplete(newMessages);
             return true; // Stop polling
           } else if (Date.now() - startTime >= TIMEOUT_DURATION) {
             // Timeout reached
-            if (newMessages.length === 1) {
+            if (newMessages.length === countNewMessages) {
               const erroredMessage = { ...newMessages[0], error: true };
               messagesRef.current = [...messagesRef.current, erroredMessage];
+              messagesRef.current = messagesRef.current.filter(
+                msg => !msg.id.startsWith('temparareryChatbotItemId')
+              );
               setMessages(messagesRef.current);
             }
             onComplete(newMessages);
@@ -107,8 +116,8 @@ export const useMessageComposition = (
   const [newMessage, setNewMessage] = useState('');
 
   const createMockUserMessage = useCallback(
-    (message: string): MockMessage => ({
-      id: 'newMessageUserItemId',
+    (message: string, index: number): MockMessage => ({
+      id: `newMessageUserItemId-${index}`,
       chatroom_id: chatroomId,
       speaker_type: 'user',
       speaker_id: user?.id,
@@ -119,8 +128,8 @@ export const useMessageComposition = (
   );
 
   const createMockChatbotMessage = useCallback(
-    (): MockMessage => ({
-      id: 'temparareryChatbotItemId',
+    (index: number): MockMessage => ({
+      id: `temparareryChatbotItemId-${index}`,
       chatroom_id: chatroomId,
       speaker_type: 'chatbot',
       speaker_id: chatbotName,

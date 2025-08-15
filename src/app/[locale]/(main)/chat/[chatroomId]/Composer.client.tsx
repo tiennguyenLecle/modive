@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useRef } from 'react';
 
 import AsteristkDisabledIcon from '@/assets/icons/asterisk-disabled.svg';
 import AsteristkIcon from '@/assets/icons/asterisk.svg';
@@ -40,18 +40,34 @@ const Composer = memo(
       isDisabled,
     } = useMessageComposition(chatroomId, chatbotName);
 
+    const mockMessageIndex = useRef(1);
+
     const handleSendMessage = useCallback(async () => {
       if (!newMessage.trim()) return;
       clearMessage();
 
       // Store current messages state
       messagesRef.current = [...messages];
-      const lastMessageId =
-        messagesRef.current[messagesRef.current.length - 1]?.id ?? '';
+      const realMessages = messages.filter(
+        item =>
+          !item.id.startsWith('newMessageUserItemId') &&
+          !item.id.startsWith('temparareryChatbotItemId')
+      );
+
+      const lastMessageId = realMessages[realMessages.length - 1]?.id ?? '';
+
+      messagesRef.current = messagesRef.current.filter(
+        msg => !msg.id.startsWith('temparareryChatbotItemId')
+      );
 
       // Add temporary messages
-      const mockUserMessage = createMockUserMessage(newMessage);
-      const mockChatbotMessage = createMockChatbotMessage();
+      const mockUserMessage = createMockUserMessage(
+        newMessage,
+        mockMessageIndex.current
+      );
+      const mockChatbotMessage = createMockChatbotMessage(
+        mockMessageIndex.current
+      );
 
       messagesRef.current = [
         ...messagesRef.current,
@@ -59,6 +75,7 @@ const Composer = memo(
         mockChatbotMessage,
       ];
       setMessages(messagesRef.current);
+      mockMessageIndex.current++;
 
       try {
         // Send the actual message
@@ -75,8 +92,8 @@ const Composer = memo(
         // Remove temporary messages on error
         messagesRef.current = messagesRef.current.filter(
           msg =>
-            msg.id !== 'temparareryChatbotItemId' &&
-            msg.id !== 'newMessageUserItemId'
+            !msg.id.startsWith('temparareryChatbotItemId') &&
+            !msg.id.startsWith('newMessageUserItemId')
         );
         setMessages(messagesRef.current);
       }

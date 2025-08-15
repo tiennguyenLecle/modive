@@ -39,10 +39,9 @@ export const transformMessageToInfoProps = (
     ? dayjs(msg.created_at).format('YYYY-MM-DD')
     : null,
   avatarUrl: DEFAULT_IMAGE_URL,
-  messageArray:
-    msg.id === 'temparareryChatbotItemId'
-      ? [{ type: 'loading', message: 'Loading...' }]
-      : handleMessageText(msg.message),
+  messageArray: msg.id.startsWith('temparareryChatbotItemId')
+    ? [{ type: 'loading', message: 'Loading...' }]
+    : handleMessageText(msg.message),
 });
 
 /**

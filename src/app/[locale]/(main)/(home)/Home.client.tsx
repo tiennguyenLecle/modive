@@ -1,19 +1,49 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import useSWR from 'swr';
 
-import Banner2 from '@/assets/images/banner2.svg';
-import { Header, Recommendation } from '@/components';
+import { Work } from '@/components';
+import { createBrowserSupabase } from '@/lib/supabase/factory';
+import { fetchInterface, INTERFACE_KEY } from '@/lib/supabase/swr/interface';
+import { InterfaceType } from '@/types/interface';
+import { getPublicUrl } from '@/utils/method';
 
-export default function HomeClient() {
-  const t = useTranslations();
+type HomeProps = {
+  fallbackData: InterfaceType;
+};
+
+export default function HomeClient({ fallbackData }: HomeProps) {
+  const supabase = createBrowserSupabase('user');
+
+  const { data: interfaceData } = useSWR(
+    INTERFACE_KEY,
+    () => fetchInterface(supabase),
+    {
+      fallbackData,
+      revalidateOnMount: false,
+    }
+  );
+
+  if (!interfaceData) return;
 
   return (
     <div>
-      <Banner2 className="aspect-[9/5] w-full" />
+      <div className="relative aspect-[9/5]">
+        <Image
+          src={getPublicUrl(interfaceData.data.banner_key)}
+          alt="Modive banner"
+          fill
+        />
+      </div>
       <div className="flex flex-col gap-12 bg-gray-100 py-16">
-        <Recommendation.Container />
-        <Recommendation.Container />
+        {interfaceData.data.blocks.map((block, index) => (
+          <Work.Group
+            key={`${block.title}-${index}`}
+            groupTitle={block.title}
+            blocks={block.sub_blocks.map(subBlock => subBlock.work)}
+          />
+        ))}
       </div>
     </div>
   );

@@ -11,6 +11,6 @@ export { default as Modal } from './Modal';
 export type { ModalHandle } from './Modal';
 export { default as Navigation } from './Navigation/Navigation';
 export { default as ProgressBar } from './ProgressBar';
-export { default as Recommendation } from './Recommendation';
+export { default as Work } from './Work';
 export { default as Spinner } from './Spinner';
 export { default as Story } from './Story';

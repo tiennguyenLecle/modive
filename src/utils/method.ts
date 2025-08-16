@@ -85,3 +85,8 @@ export const filterMessageConditions = (
   seenIds.add(id);
   return false;
 };
+
+export const getPublicUrl = (key?: string) => {
+  if (!key) return '';
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/medias/${key}`;
+};

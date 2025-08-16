@@ -9,7 +9,6 @@ import {
   ChatListItem,
   Modal,
   ModalHandle,
-  Recommendation,
   Story,
 } from '@/components';
 
@@ -45,8 +44,6 @@ export default function ComponentsPage() {
           { key: '2', title: 'Episode 2', url: '#' },
         ]}
       />
-      <h2>Recommendation</h2>
-      <Recommendation.Container />
       <h2>Modal</h2>
       <button onClick={() => modalRef.current?.open()}>open modal</button>
       <Modal

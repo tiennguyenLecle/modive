@@ -1,6 +1,7 @@
 'use client';
 
 import { ComponentProps } from 'react';
+import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
 import {
@@ -18,22 +19,41 @@ export default function LoginClient() {
 
   return (
     <>
-      <Logo />
-      <p className="mb-32 text-14">{t('description')}</p>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+      >
+        <Logo className="mb-24 mt-100 h-52 w-178" />
+      </motion.div>
 
-      <div className="flex flex-col gap-20">
+      <motion.p
+        className="mb-100 text-14 text-white"
+        style={{
+          textShadow: '0 0 16px #FF627B',
+        }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
+      >
+        {t('description')}
+      </motion.p>
+
+      <div className="flex flex-col gap-16">
         <LoginButton
-          className="bg-white text-black"
-          icon={<SocialGoogle className="size-20" />}
+          className="bg-black text-white"
+          icon={<SocialApple className="size-24" />}
+          animationDelay={0.6}
           onClick={async () => {
-            await signInWithProvider('google');
+            await signInWithProvider('apple');
           }}
         >
-          {t('login_with_google')}
+          {t('login_with_apple')}
         </LoginButton>
         <LoginButton
           className="bg-[#FEE500] text-black"
-          icon={<SocialKakaoTalk className="size-20" />}
+          icon={<SocialKakaoTalk className="size-24" />}
+          animationDelay={0.8}
           onClick={async () => {
             await signInWithProvider('kakao');
           }}
@@ -41,13 +61,14 @@ export default function LoginClient() {
           {t('login_with_kakao')}
         </LoginButton>
         <LoginButton
-          className="bg-black text-white"
-          icon={<SocialApple className="size-20" />}
+          className="border border-gray-70 bg-white text-black"
+          icon={<SocialGoogle className="size-24" />}
+          animationDelay={1.0}
           onClick={async () => {
-            await signInWithProvider('apple');
+            await signInWithProvider('google');
           }}
         >
-          {t('login_with_apple')}
+          {t('login_with_google')}
         </LoginButton>
       </div>
     </>
@@ -58,21 +79,29 @@ function LoginButton({
   children,
   icon,
   className,
+  animationDelay,
   ...props
 }: {
   children: React.ReactNode;
   icon: React.ReactNode;
+  animationDelay: number;
 } & ComponentProps<'button'>) {
   return (
-    <button
-      className={cx(
-        'flex items-center gap-12 rounded-4 px-20 py-8 shadow-md transition-shadow duration-300 hover:shadow-xl',
-        className
-      )}
-      {...props}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: animationDelay, ease: 'easeOut' }}
     >
-      {icon}
-      {children}
-    </button>
+      <button
+        className={cx(
+          'flex min-w-292 items-center gap-24 rounded-m px-xxl py-xl text-16 font-medium transition-shadow duration-300 hover:shadow-xl',
+          className
+        )}
+        {...props}
+      >
+        {icon}
+        {children}
+      </button>
+    </motion.div>
   );
 }

@@ -188,8 +188,8 @@
   "login_page": {
     "title": "모다이브",
     "description": "다양한 AI 캐릭터와 대화해 보세요!",
-    "login_with_google": "구글 로그인",
-    "login_with_kakao": "카카오 로그인",
-    "login_with_apple": "Apple로 로그인"
+    "login_with_google": "Google 계정으로 시작하기",
+    "login_with_kakao": "카카오로 시작하기",
+    "login_with_apple": "Apple로 시작하기"
   }
 }

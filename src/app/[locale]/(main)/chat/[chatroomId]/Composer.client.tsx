@@ -1,14 +1,19 @@
 'use client';
 
-import { memo, useCallback, useRef } from 'react';
+import { memo, useCallback } from 'react';
+import dayjs from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
 
-import AsteristkDisabledIcon from '@/assets/icons/asterisk-disabled.svg';
-import AsteristkIcon from '@/assets/icons/asterisk.svg';
-import DirectDisabledIcon from '@/assets/icons/direct-disabled.svg';
-import DirectIcon from '@/assets/icons/direct.svg';
-import TipDisabledIcon from '@/assets/icons/tip-disabled.svg';
-import TipIcon from '@/assets/icons/tip.svg';
+import {
+  AsteristkDisabledIcon,
+  AsteristkIcon,
+  DirectDisabledIcon,
+  DirectIcon,
+  TipDisabledIcon,
+  TipIcon,
+} from '@/assets/icons';
 import { ChatboxComposer } from '@/lib/chatbot-modules';
+import { formatDateOrTime } from '@/utils/formatTime';
 
 import styles from './ChatRoom.module.scss';
 import { useMessageComposition, useMessagePolling } from './hooks/useComposer';
@@ -34,58 +39,50 @@ const Composer = memo(
     const {
       newMessage,
       handleChange,
-      clearMessage,
       createMockUserMessage,
       createMockChatbotMessage,
       isDisabled,
     } = useMessageComposition(chatroomId, chatbotName);
 
-    const mockMessageIndex = useRef(1);
-
     const handleSendMessage = useCallback(async () => {
       if (!newMessage.trim()) return;
-      clearMessage();
 
       // Store current messages state
       messagesRef.current = [...messages];
-      const realMessages = messages.filter(
-        item =>
-          !item.id.startsWith('newMessageUserItemId') &&
-          !item.id.startsWith('temparareryChatbotItemId')
-      );
 
-      const lastMessageId = realMessages[realMessages.length - 1]?.id ?? '';
+      const id = uuidv4();
+      const create_at = dayjs().toISOString();
 
-      messagesRef.current = messagesRef.current.filter(
-        msg => !msg.id.startsWith('temparareryChatbotItemId')
+      // Remove temporary messages of chatbot - for the same time - keep only the last one
+      messagesRef.current = messagesRef?.current?.filter(
+        msg =>
+          !(
+            msg?.id?.startsWith('temparareryChatbotItemId') &&
+            formatDateOrTime(msg.created_at ?? '', 'time') ===
+              formatDateOrTime(create_at, 'time')
+          )
       );
 
       // Add temporary messages
-      const mockUserMessage = createMockUserMessage(
-        newMessage,
-        mockMessageIndex.current
-      );
-      const mockChatbotMessage = createMockChatbotMessage(
-        mockMessageIndex.current
-      );
+      const mockUserMessage = createMockUserMessage(newMessage, id);
+
+      const mockChatbotMessage = createMockChatbotMessage(id);
 
       messagesRef.current = [
         ...messagesRef.current,
         mockUserMessage,
         mockChatbotMessage,
       ];
+
       setMessages(messagesRef.current);
-      mockMessageIndex.current++;
 
       try {
         // Send the actual message
         await sendMessage(newMessage);
 
         // Start polling for new messages
-        await pollForNewMessages(lastMessageId, () => {
-          // Update messages state with the final result
+        await pollForNewMessages(() => {
           setMessages(messagesRef.current);
-          clearMessage();
         });
       } catch (error) {
         console.error('Error sending message:', error);
@@ -97,16 +94,7 @@ const Composer = memo(
         );
         setMessages(messagesRef.current);
       }
-    }, [
-      newMessage,
-      messages,
-      sendMessage,
-      createMockUserMessage,
-      createMockChatbotMessage,
-      pollForNewMessages,
-      setMessages,
-      clearMessage,
-    ]);
+    }, [newMessage, messages]);
 
     return (
       <div className={styles.composer}>

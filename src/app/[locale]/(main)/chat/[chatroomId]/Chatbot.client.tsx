@@ -70,6 +70,12 @@ export default function Chatbot({
     [handleLoadMore, isPreviousLoading, chatroomId, messages]
   );
 
+  useEffect(() => {
+    return () => {
+      setMessages([]);
+    };
+  }, [setMessages]);
+
   return (
     <ChatboxLayout
       className={styles.chatboxLayout}

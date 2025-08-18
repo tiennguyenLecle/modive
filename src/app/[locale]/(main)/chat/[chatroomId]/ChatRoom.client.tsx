@@ -1,9 +1,9 @@
 'use client';
 
-import { ComponentProps, useEffect } from 'react';
-import { useSetAtom } from 'jotai';
+import { ComponentProps } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { messagesAtom } from '@/atoms/messagesAtom';
+import { ArrowRight } from '@/assets/icons';
 import { ProgressBar } from '@/components';
 import { Message } from '@/lib/api/types/chat.types';
 import { cx } from '@/utils/method';
@@ -23,18 +23,20 @@ export default function ChatRoom({
   currentUserId,
   ...props
 }: ChatRoomProps) {
-  const setMessages = useSetAtom(messagesAtom);
-
-  useEffect(() => {
-    return () => {
-      setMessages([]);
-    };
-  }, []);
+  const router = useRouter();
 
   return (
     <div className={cx('flex h-full flex-col', className)} {...props}>
-      <div className="container flex h-56 items-center border-b border-t border-gray-80">
-        <h1 className="mb-4 text-16 font-semibold">{chatBotName}</h1>
+      <div className="container flex h-56 items-center gap-12 border-b border-t border-gray-80">
+        <button
+          className="rounded-full h-24 w-24 bg-gray-100"
+          onClick={() => {
+            router.back();
+          }}
+        >
+          <ArrowRight className="rotate-180" />
+        </button>
+        <h1 className="text-16 font-bold">{chatBotName}</h1>
       </div>
       <div className="container flex h-48 items-center border-b border-t border-gray-80">
         <span>Favorability</span>

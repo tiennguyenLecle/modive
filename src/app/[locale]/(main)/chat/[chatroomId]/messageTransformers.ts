@@ -55,7 +55,7 @@ export const mapMessagesToInfoProps = (
 
   // Filter and transform messages
   const base = messages
-    .filter(msg => !filterMessageConditions(msg.message, msg.id, seenIds))
+    .filter(msg => !filterMessageConditions(msg?.message, msg?.id, seenIds))
     .map(transformMessageToInfoProps);
 
   const result: MessageInfoProps[] = [];

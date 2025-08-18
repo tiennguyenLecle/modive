@@ -1,10 +1,14 @@
 import Alarm from './alarm.svg';
 import ArrowRight from './arrow-right.svg';
+import AsteristkDisabledIcon from './asterisk-disabled.svg';
+import AsteristkIcon from './asterisk.svg';
 import BaselineError from './baseline-error.svg';
 import Cash from './cash.svg';
 import Check from './check.svg';
 import Chevron from './chevron.svg';
 import Close from './close.svg';
+import DirectDisabledIcon from './direct-disabled.svg';
+import DirectIcon from './direct.svg';
 import Direction from './direction.svg';
 import Ellipsis from './ellipsis.svg';
 import Heart from './heart.svg';
@@ -25,17 +29,23 @@ import Search from './search.svg';
 import SocialApple from './social-apple.svg';
 import SocialGoogle from './social-google.svg';
 import SocialKakaoTalk from './social-kakao-talk.svg';
+import TipDisabledIcon from './tip-disabled.svg';
+import TipIcon from './tip.svg';
 import Trash from './trash.svg';
 
 export {
   Alarm,
   ArrowRight,
+  AsteristkDisabledIcon,
+  AsteristkIcon,
   BaselineError,
   Cash,
   Check,
   Chevron,
   Close,
   Direction,
+  DirectDisabledIcon,
+  DirectIcon,
   Ellipsis,
   Heart,
   Info,
@@ -56,4 +66,6 @@ export {
   SocialGoogle,
   SocialKakaoTalk,
   Trash,
+  TipDisabledIcon,
+  TipIcon,
 };

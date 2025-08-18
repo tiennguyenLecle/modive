@@ -42,6 +42,7 @@ const Composer = memo(
       createMockUserMessage,
       createMockChatbotMessage,
       isDisabled,
+      clearMessage,
     } = useMessageComposition(chatroomId, chatbotName);
 
     const handleSendMessage = useCallback(async () => {
@@ -75,6 +76,7 @@ const Composer = memo(
       ];
 
       setMessages(messagesRef.current);
+      clearMessage();
 
       try {
         // Send the actual message

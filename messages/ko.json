@@ -136,7 +136,8 @@
   "introduction": {
     "tabs": {
       "chat": "채팅하기",
-      "personal_relationship": "인물관계도"
+      "personal_relationship": "인물관계도",
+      "community": "커뮤니티"
     },
     "chapter_entrance": "챕터 입장",
     "modal_character": {
@@ -156,6 +157,11 @@
       "description_2": "기존 채팅방으로 이동하시겠습니까?",
       "existing_chat_room_movement": "기존 채팅방 이동",
       "making_a_new_chat_room": "새 채팅방 만들기"
+    },
+    "error": {
+      "title": "죄송합니다. 오류가 발생했습니다!",
+      "try_again": "다시 시도하십시오",
+      "go_home": "집으로 돌아갑니다"
     }
   },
   "my_page": {

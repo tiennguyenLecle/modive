@@ -136,7 +136,8 @@
   "introduction": {
     "tabs": {
       "chat": "Chat",
-      "personal_relationship": "Personal relationship"
+      "personal_relationship": "Personal relationship",
+      "community": "Community"
     },
     "chapter_entrance": "Chapter entrance",
     "modal_character": {
@@ -156,6 +157,11 @@
       "description_2": "Would you like to go to the existing chat room?",
       "existing_chat_room_movement": "Existing chat room movement",
       "making_a_new_chat_room": "Making a new chat room"
+    },
+    "error": {
+      "title": "Sorry, an error occurred!",
+      "try_again": "Try again",
+      "go_home": "Back to Home"
     }
   },
   "my_page": {

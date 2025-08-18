@@ -1,11 +1,6 @@
 'use client';
 
-import React, {
-  ComponentProps,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { ComponentProps, useCallback, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import { cx } from '@/utils/method';
@@ -18,70 +13,97 @@ type TabItem = ComponentProps<'div'> & {
 
 type MenuTabProps = ComponentProps<'div'> & {
   tabs: TabItem[];
-  defaultActiveKey?: string;
+  // Controlled mode: parent controls the state
+  activeTab?: string;
   onTabChange?: (tab: string) => void;
+  // Uncontrolled mode: component manages its own state
+  defaultActiveKey?: string;
 };
 
 const MenuTab: React.FC<MenuTabProps> = ({
   tabs,
+  activeTab: controlledActiveTab,
   defaultActiveKey,
   onTabChange,
   className,
   ...props
 }) => {
-  const [activeTab, setActiveTab] = useState(defaultActiveKey ?? tabs[0]);
-  const [indicatorStyle, setIndicatorStyle] = useState({ width: 0, left: 0 });
+  // Determine if component is controlled or uncontrolled
+  const isControlled = controlledActiveTab !== undefined;
 
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  // Validate defaultActiveKey exists in tabs
+  const validDefaultKey =
+    defaultActiveKey && tabs?.some(tab => tab.key === defaultActiveKey)
+      ? defaultActiveKey
+      : tabs?.[0]?.key;
 
-  const updateIndicator = () => {
-    const currentTab =
-      tabRefs.current[tabs.findIndex(tab => tab.key === activeTab)];
-    if (currentTab) {
-      setIndicatorStyle({
-        width: currentTab.clientWidth,
-        left: currentTab.offsetLeft,
-      });
-    }
-  };
+  const [internalActiveTab, setInternalActiveTab] = useState(validDefaultKey);
 
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-    onTabChange?.(tab);
-  };
+  // Use controlled or internal state
+  const activeTab = isControlled ? controlledActiveTab : internalActiveTab;
 
-  // Update on activeTab change and when refs are ready
-  useLayoutEffect(() => {
-    updateIndicator();
-  }, [activeTab, tabs]);
+  // Memoize active tab children
+  const activeTabChildren = useMemo(
+    () => tabs?.find(tab => tab.key === activeTab)?.children,
+    [tabs, activeTab]
+  );
+
+  const handleTabClick = useCallback(
+    (tab: string) => {
+      if (!isControlled) {
+        setInternalActiveTab(tab);
+      }
+      onTabChange?.(tab);
+    },
+    [isControlled, onTabChange]
+  );
+
+  // Validate tabs array after all hooks
+  if (!tabs || tabs.length === 0) {
+    console.warn('MenuTab: tabs array is empty or undefined');
+    return null;
+  }
 
   return (
     <div className={cx('w-full bg-white', className)} {...props}>
-      <div className="relative w-full">
-        <div className="flex items-center gap-12 border-b border-transparent">
-          {tabs.map((tab, index) => (
-            <button
-              key={tab.key}
-              ref={el => {
-                tabRefs.current[index] = el;
-              }}
-              onClick={() => handleTabClick(tab.key)}
-              className={cx(
-                'flex-1 cursor-pointer px-16 py-12 text-16 font-semibold transition-colors',
-                activeTab === tab.key ? 'text-primary' : 'text-gray-00'
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-        <motion.div
-          className="absolute bottom-0 h-2 bg-primary"
-          animate={indicatorStyle}
-          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-        />
+      <div
+        className="container relative flex h-48 items-center gap-12 border-b border-gray-90"
+        role="tablist"
+        aria-label="Menu tabs"
+      >
+        {tabs.map(tab => (
+          <button
+            key={tab.key}
+            role="tab"
+            aria-selected={activeTab === tab.key}
+            aria-controls={`panel-${tab.key}`}
+            id={`tab-${tab.key}`}
+            className={cx(
+              'relative line-clamp-1 flex-1 cursor-pointer text-ellipsis whitespace-nowrap px-16 py-12 text-16 font-semibold transition-colors',
+              activeTab === tab.key
+                ? 'text-primary'
+                : 'hover:text-gray-600 text-gray-00'
+            )}
+            onClick={() => handleTabClick(tab.key)}
+          >
+            {tab.label}
+            {activeTab === tab.key && (
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 h-2 bg-primary"
+                layoutId="indicator"
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              />
+            )}
+          </button>
+        ))}
       </div>
-      <div>{tabs.find(tab => tab.key === activeTab)?.children}</div>
+      <div
+        role="tabpanel"
+        id={`panel-${activeTab}`}
+        aria-labelledby={`tab-${activeTab}`}
+      >
+        {activeTabChildren}
+      </div>
     </div>
   );
 };

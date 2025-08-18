@@ -39,12 +39,12 @@ const Header = ({
       )}
       {...rest}
     >
-      <div className="absolute left-16 flex items-center gap-12">
+      <div className="absolute left-16 flex cursor-pointer items-center gap-12">
         {showBackButton && (
           <ArrowRight
             width={24}
             height={24}
-            className="rotate-180 text-gray-00"
+            className="rotate-180 text-gray-00 transition-colors hover:bg-gray-90"
             onClick={() => router.back()}
           />
         )}

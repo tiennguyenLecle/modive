@@ -1,0 +1,133 @@
+'use client';
+
+import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+
+import { Direction } from '@/assets/icons';
+import { CharacterCard, Header, MenuTab, ModalHandle } from '@/components';
+import { useWorkDetail } from '@/hooks/useWork';
+import { useRouter } from '@/lib/navigation';
+import { WorkType } from '@/types/work';
+import { cx, getPublicUrl } from '@/utils/method';
+
+import ModalCharacter from './_components/modals/ModalCharacter';
+import styles from './Introduction.module.scss';
+
+type IntroductionClientProps = {
+  fallbackData: WorkType;
+  workId: string;
+};
+
+export default function IntroductionClient({
+  fallbackData,
+  workId,
+}: IntroductionClientProps) {
+  const t = useTranslations('introduction');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: workDetail } = useWorkDetail(workId, fallbackData);
+
+  const modalCharacterRef = useRef<ModalHandle>(null);
+
+  if (!workDetail) {
+    return null;
+  }
+
+  return (
+    <div className={styles.introductionLayout}>
+      <Header pageTitle={workDetail.title} showBackButton />
+      <div
+        className={cx(
+          styles.introductionHeader,
+          searchParams.get('key') === 'community' &&
+            styles.collapsedIntroductionHeader
+        )}
+      >
+        <Image
+          src={getPublicUrl(workDetail.thumbnail_key)}
+          alt="We Married"
+          priority
+          width={360}
+          height={232}
+          className="aspect-[360/232] h-auto w-full object-cover"
+        />
+        <div className="flex flex-col gap-13 p-16">
+          <h2 className="text-22 font-semibold text-gray-20">
+            {workDetail.title}
+          </h2>
+          <div>
+            <p className="text-14 font-normal leading-1.66 tracking-0.5 text-gray-00">
+              {workDetail.description}
+            </p>
+            <p className="flex gap-8 text-14 font-normal leading-1.66 tracking-0.5 text-gray-00">
+              {workDetail.tags?.map(tag => (
+                <span key={tag}>#{tag}</span>
+              ))}
+            </p>
+          </div>
+          <button className="flex h-48 w-full items-center justify-center gap-8 rounded-4 bg-primary">
+            <p className="text-16 font-bold text-gray-100">
+              {t('chapter_entrance')}
+            </p>
+            <Direction color="white" className="h-16 w-16" />
+          </button>
+        </div>
+      </div>
+      <div className={styles.introductionTabs}>
+        <MenuTab
+          onTabChange={key => {
+            const params = new URLSearchParams(searchParams);
+            params.set('key', key);
+            if (key === 'community') {
+              router.push(`?${params.toString()}`);
+            } else {
+              router.replace(`?${params.toString()}`);
+            }
+          }}
+          tabs={[
+            {
+              key: 'character',
+              label: t('tabs.chat'),
+              children: (
+                <CharacterCard.List
+                  characters={workDetail.characters}
+                  itemProps={{
+                    onClick: () => {
+                      modalCharacterRef.current?.open();
+                    },
+                  }}
+                  className="container"
+                />
+              ),
+            },
+            {
+              key: 'relationship',
+              label: t('tabs.personal_relationship'),
+              children: (
+                <div className="container">
+                  <div className="relative aspect-square">
+                    <Image
+                      src={getPublicUrl(workDetail.characters_map_key)}
+                      alt={`${workDetail.title} characters map`}
+                      className="object-contain"
+                      fill
+                    />
+                  </div>
+                </div>
+              ),
+            },
+            {
+              key: 'community',
+              label: t('tabs.community'),
+              children: <div className="container">Community</div>,
+            },
+          ]}
+          activeTab={searchParams.get('key') || 'character'}
+        />
+        <ModalCharacter ref={modalCharacterRef} />
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,18 @@
+.introductionLayout {
+  display: grid;
+  grid-template-rows: auto 1fr 1fr;
+  height: 100%;
+
+  .collapsedIntroductionHeader {
+    overflow: hidden;
+  }
+
+  &:has(.collapsedIntroductionHeader) {
+    grid-template-rows: auto 0 1fr;
+
+    [role='tablist'] {
+      height: 0;
+      overflow: hidden;
+    }
+  }
+}

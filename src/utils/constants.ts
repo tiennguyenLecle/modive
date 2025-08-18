@@ -12,8 +12,9 @@ export const STORAGE = {
 };
 
 export const ROUTES = {
-  HOME: '/',
   LOGIN: '/login',
+  HOME: '/',
+  INTRODUCTION: '/introduction',
   CHAT: '/chat',
   GOODS: '/goods',
   MANAGEMENT: {

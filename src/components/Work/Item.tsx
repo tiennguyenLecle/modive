@@ -20,7 +20,10 @@ const WorkItem = ({
   const t = useTranslations('contentsCard');
 
   return (
-    <div className="p-4" {...rest}>
+    <div
+      className="transition-color cursor-pointer rounded-4 p-4 duration-200 hover:bg-gray-90"
+      {...rest}
+    >
       <div className="mb-12 h-80 w-140 overflow-hidden rounded-4 border border-gray-80 bg-gray-100">
         <Image
           src={bannerImg}

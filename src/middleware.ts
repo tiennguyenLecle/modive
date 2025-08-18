@@ -63,7 +63,7 @@ export default async function middleware(request: NextRequest) {
 
   // Refresh Supabase session cookies and read user
   // Preserve i18n headers by passing the intl middleware response forward
-  response = await updateSession(request, response);
+
   // Only refresh Admin session when accessing CMS-related routes
   const isCmsPath = localeFreePathname.startsWith('/cms');
   if (isCmsPath) {
@@ -80,7 +80,6 @@ export default async function middleware(request: NextRequest) {
     request.cookies.get(`${COOKIE_PREFIX_SB_ADMIN}.0`)?.value ||
       request.cookies.get(COOKIE_PREFIX_SB_ADMIN)?.value
   );
-
   // Determine if the current route is public
   // A route is public if:
   // 1. It's explicitly in the PUBLIC_ROUTES array, OR
@@ -100,6 +99,11 @@ export default async function middleware(request: NextRequest) {
   const isAdminAuthRoute = ADMIN_AUTH_ROUTES.some(route =>
     localeFreePathname.startsWith(route)
   );
+
+  // === USER PROTECTED ROUTE LOGIC ===
+  if (!isLoggedIn && !isPublicRoute) {
+    response = await updateSession(request, response);
+  }
 
   // === ADMIN AUTH ROUTE LOGIC ===
   if (isAdminAuthRoute) {

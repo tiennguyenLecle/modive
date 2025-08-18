@@ -1,11 +1,35 @@
-import { useTranslations } from 'next-intl';
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 
 import { Header, MenuTab } from '@/components';
 import { ChatApi } from '@/lib/api/server';
 import { getServerAuth } from '@/lib/authentication/server-auth';
 
+import Loading from '../../loading';
 import ChatView from './ChatView.client';
+
+// Async component for chat data
+async function ChatDataLoader() {
+  const user = await getServerAuth();
+  if (!user) {
+    return <div>No session</div>;
+  }
+
+  const [chatSession, chatBotName] = await Promise.all([
+    ChatApi.searchSessionsByUserId(user.id),
+    Promise.resolve(process.env.DIT_CHATBOT_NAME),
+  ]);
+
+  // TODO: Remove this after testing
+  const newChatSession =
+    (chatSession as any)?.data?.data?.length < 4
+      ? await ChatApi.createSession(user.id)
+      : null;
+
+  return (
+    <ChatView sessions={(chatSession as any).data} chatBotName={chatBotName!} />
+  );
+}
 
 export const generateMetadata = async ({
   params: { locale },
@@ -27,19 +51,6 @@ export default async function Home({
   params: { locale: string };
 }) {
   const t = await getTranslations({ namespace: 'chat_page', locale });
-  const user = await getServerAuth();
-  if (!user) {
-    return <div>No session</div>;
-  }
-  const chatSession: any = await ChatApi.searchSessionsByUserId(user.id);
-  const chatBotName = process.env.DIT_CHATBOT_NAME;
-  // TODO: Remove this after testing
-  const newChatSession =
-    chatSession?.data?.data?.length < 4
-      ? await ChatApi.createSession(user.id)
-      : null;
-
-  console.log('chatSession?.data?.length', chatSession?.data?.data?.length);
 
   return (
     <>
@@ -60,7 +71,9 @@ export default async function Home({
           ]}
           defaultActiveKey="general"
         />
-        <ChatView sessions={chatSession.data} chatBotName={chatBotName!} />
+        <Suspense fallback={<Loading />}>
+          <ChatDataLoader />
+        </Suspense>
       </main>
     </>
   );

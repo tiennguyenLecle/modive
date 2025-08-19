@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
+import { SuspenseComponent } from '@/components';
 import { ChatApi } from '@/lib/api/server';
-import { getServerAuth } from '@/lib/authentication/server-auth';
 
 import ChatRoom from './ChatRoom.client';
 
@@ -13,8 +13,8 @@ export async function generateMetadata({
   params: { chatroomId: string };
 }) {
   const t = await getTranslations('chat_page.room');
-  const { chatroomId } = params;
-  const res = await ChatApi.getMessages(chatroomId);
+  // const { chatroomId } = params;
+  // const res = await ChatApi.getMessages(chatroomId);
   return {
     title: 'Kang Lee -hyun', // TODO: Update it to character name
     description: t('metadata.description', { characterName: 'Kang Lee -hyun' }),
@@ -31,18 +31,11 @@ export default async function ChatRoomPage({
 
   const res = await ChatApi.getMessages(chatroomId, undefined, 20);
 
-  const user = await getServerAuth();
-  if (!user) {
-    return <div>No session</div>;
-  }
-
   return (
     <div data-no-navigation>
-      <ChatRoom
-        currentUserId={user.id}
-        messages={res.data ?? []}
-        chatBotName={chatBotName!}
-      />
+      <SuspenseComponent>
+        <ChatRoom messages={res.data ?? []} chatBotName={chatBotName!} />
+      </SuspenseComponent>
     </div>
   );
 }

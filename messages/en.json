@@ -97,7 +97,8 @@
       "metadata": {
         "description": "Chat with {characterName}"
       }
-    }
+    },
+    "no_rooms": "No chat rooms"
   },
   "goods_page": {
     "metadata": {

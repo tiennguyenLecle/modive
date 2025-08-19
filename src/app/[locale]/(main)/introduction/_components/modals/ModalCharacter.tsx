@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useImperativeHandle, useRef } from 'react';
+import React, { useImperativeHandle, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import { Heart } from '@/assets/icons';
-import { Button, Modal, ModalHandle } from '@/components';
+import { Button, Modal, ModalHandle, Spinner } from '@/components';
+import { NextApi } from '@/lib/api';
+import { useAuth } from '@/lib/authentication/auth-context';
+import { useRouter } from '@/lib/navigation';
 import { STORAGE } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
@@ -18,6 +21,9 @@ const ModalCharacter = React.forwardRef<ModalHandle>((_, ref) => {
   const internalModalRef = useRef<ModalHandle>(null);
   const modalGuideToUseRef = useRef<ModalHandle>(null);
   const modalExistChatRoomRef = useRef<ModalHandle>(null);
+  const { user } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   // Use useImperativeHandle to connect the ref passed from the outside
   // to the internal ref. Whenever the parent component uses ref, it will
@@ -29,11 +35,41 @@ const ModalCharacter = React.forwardRef<ModalHandle>((_, ref) => {
   };
 
   const handleConfirm = async () => {
-    if (!localStorage.getItem(STORAGE.HIDE_GUIDE_TO_USE)) {
-      modalGuideToUseRef.current?.open();
+    // if (!localStorage.getItem(STORAGE.HIDE_GUIDE_TO_USE)) {
+    //   modalGuideToUseRef.current?.open();
+    // }
+    // modalExistChatRoomRef.current?.open();
+
+    // TODO: Remove this after testing
+
+    setLoading(true);
+    if (!user?.id) {
+      return;
     }
 
-    // modalExistChatRoomRef.current?.open();
+    const newSession: any = await NextApi.post(`/api/session`, {
+      body: {
+        userId: user.id,
+      },
+    });
+
+    if (!newSession?.data?.sessionId) return;
+
+    const getSession: any = await NextApi.get(`/api/session`);
+
+    const chatroomId = getSession?.data?.data
+      ?.find((session: any) => session.id === newSession?.data?.sessionId)
+      .chatrooms.find(
+        (room: any) => room.room_name === 'kangYiHyunV4GeminiFlash'
+      ).id;
+
+    if (chatroomId && newSession?.data?.sessionId) {
+      router.push(
+        `/chat/${chatroomId}?sessionId=${newSession?.data?.sessionId}`
+      );
+    }
+
+    setLoading(false);
     handleClose();
   };
 
@@ -47,8 +83,9 @@ const ModalCharacter = React.forwardRef<ModalHandle>((_, ref) => {
               variant="primary"
               className="flex-1"
               onClick={handleConfirm}
+              disabled={loading}
             >
-              {t('start_conversation')}
+              {loading ? <Spinner /> : t('start_conversation')}
             </Button>
           </div>
         }

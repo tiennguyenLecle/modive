@@ -2,7 +2,7 @@ import React from 'react';
 
 import styles from './ThreeDotsLoading.module.scss';
 
-export const ThreeDotsLoading = () => {
+const ThreeDotsLoading = () => {
   return (
     <div className={styles.threeDotsLoading}>
       <span></span>
@@ -11,3 +11,5 @@ export const ThreeDotsLoading = () => {
     </div>
   );
 };
+
+export default ThreeDotsLoading;

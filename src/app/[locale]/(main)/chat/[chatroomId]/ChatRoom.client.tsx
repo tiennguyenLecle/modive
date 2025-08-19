@@ -13,14 +13,12 @@ import Chatbot from './Chatbot.client';
 type ChatRoomProps = ComponentProps<'div'> & {
   messages: Message[];
   chatBotName: string;
-  currentUserId: string;
 };
 
 export default function ChatRoom({
   messages,
   className,
   chatBotName,
-  currentUserId,
   ...props
 }: ChatRoomProps) {
   const router = useRouter();
@@ -42,11 +40,7 @@ export default function ChatRoom({
         <span>Favorability</span>
         <ProgressBar percentage={10} />
       </div>
-      <Chatbot
-        messages={messages}
-        chatbotName={chatBotName}
-        currentUserId={currentUserId}
-      />
+      <Chatbot messages={messages} chatbotName={chatBotName} />
     </div>
   );
 }

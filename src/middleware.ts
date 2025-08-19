@@ -100,11 +100,6 @@ export default async function middleware(request: NextRequest) {
     localeFreePathname.startsWith(route)
   );
 
-  // === USER PROTECTED ROUTE LOGIC ===
-  if (!isLoggedIn && !isPublicRoute) {
-    response = await updateSession(request, response);
-  }
-
   // === ADMIN AUTH ROUTE LOGIC ===
   if (isAdminAuthRoute) {
     if (isAdminLoggedIn) {
@@ -116,6 +111,7 @@ export default async function middleware(request: NextRequest) {
 
   // === AUTH ROUTE LOGIC ===
   // If user is on an auth route (login/register)
+
   if (isAuthRoute) {
     if (isLoggedIn) {
       // Logged-in users shouldn't see login/register pages

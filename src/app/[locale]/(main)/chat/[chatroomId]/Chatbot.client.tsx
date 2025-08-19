@@ -3,7 +3,7 @@
 import { ComponentProps, useEffect, useMemo, useRef } from 'react';
 import { useParams } from 'next/navigation';
 
-import { ThreeDotsLoading } from '@/components/Loading';
+import { ThreeDotsLoading } from '@/components';
 import { Message } from '@/lib/api/types/chat.types';
 import { ChatboxLayout, MessageList } from '@/lib/chatbot-modules';
 
@@ -20,7 +20,6 @@ import { mapMessagesToInfoProps } from './messageTransformers';
 type ChatbotProps = ComponentProps<'div'> & {
   messages: Message[];
   chatbotName: string;
-  currentUserId: string;
 };
 
 // Main component

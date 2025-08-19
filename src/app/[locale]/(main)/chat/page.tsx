@@ -1,12 +1,13 @@
-import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 
-import { Header, MenuTab } from '@/components';
+import { Header, MenuTab, SuspenseComponent } from '@/components';
 import { ChatApi } from '@/lib/api/server';
 import { getServerAuth } from '@/lib/authentication/server-auth';
 
-import Loading from '../../loading';
 import ChatView from './ChatView.client';
+
+// import { createServerSupabase } from '@/lib/supabase/factory.server';
+// import { fetchMyRooms } from '@/lib/supabase/swr/myrooms';
 
 // Async component for chat data
 async function ChatDataLoader() {
@@ -20,15 +21,19 @@ async function ChatDataLoader() {
     Promise.resolve(process.env.DIT_CHATBOT_NAME),
   ]);
 
-  // TODO: Remove this after testing
-  const newChatSession =
-    (chatSession as any)?.data?.data?.length < 4
-      ? await ChatApi.createSession(user.id)
-      : null;
+  const mySessions: any = (chatSession as any)?.data?.data ?? [];
 
-  return (
-    <ChatView sessions={(chatSession as any).data} chatBotName={chatBotName!} />
-  );
+  // TODO: Remove this after testing
+  // const serverSupabase = createServerSupabase('user');
+  // const { data: chatSessions } = await fetchMyRooms(serverSupabase, {
+  //   page: 1,
+  //   limit: 10,
+  //   sort: [],
+  //   work_ids: [],
+  //   character_ids: [],
+  // });
+
+  return <ChatView sessions={mySessions} chatBotName={chatBotName!} />;
 }
 
 export const generateMetadata = async ({
@@ -61,19 +66,17 @@ export default async function Home({
             {
               key: 'general',
               label: t('generalization'),
-              children: <div>Generalization</div>,
             },
             {
               key: 'chapter',
               label: t('chapter'),
-              children: <div>Chapter</div>,
             },
           ]}
           defaultActiveKey="general"
         />
-        <Suspense fallback={<Loading />}>
+        <SuspenseComponent>
           <ChatDataLoader />
-        </Suspense>
+        </SuspenseComponent>
       </main>
     </>
   );

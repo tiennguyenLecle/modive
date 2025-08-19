@@ -14,3 +14,5 @@ export { default as ProgressBar } from './ProgressBar';
 export { default as Work } from './Work';
 export { default as Spinner } from './Spinner';
 export { default as Story } from './Story';
+export { default as SuspenseComponent } from './SuspenseComponent';
+export { default as ThreeDotsLoading } from './Loading/ThreeDotsLoading';

@@ -1,8 +1,14 @@
 'use client';
 
+import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import VirtualList from 'rc-virtual-list';
 
-import { Link } from '@/lib/navigation';
+import { formatDateOrTime } from '@/utils/formatTime';
+
+import { DEFAULT_IMAGE_URL } from './[chatroomId]/utils';
+import RoomItem, { RoomItemProps } from './RoomItem.client';
 
 interface ChatViewProps {
   sessions: any;
@@ -14,39 +20,64 @@ export default function ChatView({
   chatBotName,
 }: ChatViewProps) {
   const router = useRouter();
+  const t = useTranslations('chat_page');
+
+  const myRooms = useMemo(() => {
+    return (
+      chatSessions?.map((session: any) => ({
+        session_id: session.id,
+        ...session.chatrooms.find(
+          (chatroom: any) => chatroom.room_name === chatBotName
+        ),
+      })) ?? []
+    );
+  }, [chatSessions]);
+
+  const mappedRooms = (items: any) => {
+    return items.map((room: any) => ({
+      id: room.id,
+      name: room.room_name,
+      avatar: DEFAULT_IMAGE_URL,
+      createdAt: formatDateOrTime(room.last_message_at, 'time'),
+      lastMessage: room.last_message,
+      unreadCount: 3,
+      sessionId: room.session_id,
+    }));
+  };
+
+  console.log('myRooms', myRooms);
+  const onScroll = (e: any) => {
+    console.log(e);
+  };
 
   return (
     <div className="container min-h-0 overflow-auto p-4">
-      <h2 className="text-22 font-semibold">User sessions</h2>
-
-      <div>
-        <div>{chatSessions.data.length}</div>
-        <Link href="/chat/24d4608f-39f8-4d6e-b4ee-6073d0c058c7?sessionId=ab584cb2-c149-488f-9468-e1af8f009248">
-          <button className="rounded-4 bg-primary p-8 text-left text-white">
-            Chat Room: 24d4608f-39f8-4d6e-b4ee-6073d0c058c7
-          </button>
-        </Link>
-        <ul className="flex flex-col gap-16">
-          {chatSessions.data.map((session: any) => (
-            <li key={session.id}>
-              <div>Session: {session.id}</div>
-              {session.chatrooms.map((chatroom: any) => {
-                if (chatroom.room_name !== chatBotName) return null;
-                return (
-                  <Link
-                    key={chatroom.id}
-                    href={`/chat/${chatroom.id}?sessionId=${session.id}`}
-                  >
-                    <button className="rounded-4 bg-primary p-8 text-left text-white">
-                      Chat Room: {chatroom.id}
-                    </button>
-                  </Link>
-                );
-              })}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {mappedRooms(myRooms).length > 0 ? (
+        <VirtualList
+          data={mappedRooms(myRooms)}
+          itemHeight={47}
+          onScroll={onScroll}
+          itemKey="id"
+        >
+          {(item: RoomItemProps) => (
+            <RoomItem
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              avatar={item.avatar}
+              createdAt={item.createdAt}
+              lastMessage={item.lastMessage}
+              unreadCount={item.unreadCount}
+              sessionId={item.sessionId}
+              onClick={() =>
+                router.push(`/chat/${item.id}?sessionId=${item.sessionId}`)
+              }
+            />
+          )}
+        </VirtualList>
+      ) : (
+        <div>{t('no_rooms')}</div>
+      )}
     </div>
   );
 }

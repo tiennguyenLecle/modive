@@ -142,7 +142,8 @@
     },
     "chapter_entrance": "Chapter entrance",
     "modal_character": {
-      "start_conversation": "1: 1 conversation"
+      "start_conversation": "1: 1 conversation",
+      "like": "Like"
     },
     "modal_guide_to_use": {
       "title": "Guide to use rules",

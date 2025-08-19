@@ -142,7 +142,8 @@
     },
     "chapter_entrance": "챕터 입장",
     "modal_character": {
-      "start_conversation": "1:1 대화하기"
+      "start_conversation": "1:1 대화하기",
+      "like": "좋아요"
     },
     "modal_guide_to_use": {
       "title": "이용 수칙 안내",

@@ -1,129 +1,127 @@
 'use client';
 
-import React, { useImperativeHandle, useRef, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Heart } from '@/assets/icons';
-import { Button, Modal, ModalHandle, Spinner } from '@/components';
-import { NextApi } from '@/lib/api';
-import { useAuth } from '@/lib/authentication/auth-context';
-import { useRouter } from '@/lib/navigation';
+import { Button, Modal, ModalHandle } from '@/components';
+import { useCharacterDetail } from '@/hooks/useCharacter';
 import { STORAGE } from '@/utils/constants';
-import { cx } from '@/utils/method';
+import { cx, getPublicUrl } from '@/utils/method';
 
-import ModalExistChatRoom from './ModalExistChatRoom';
-import ModalGuideToUse from './ModalGuideToUse';
+import ModalExistChatRoom, {
+  ModalExistChatRoomHandle,
+} from './ModalExistChatRoom';
+import ModalGuideToUse, { ModalGuideToUseHandle } from './ModalGuideToUse';
 
 const ModalCharacter = React.forwardRef<ModalHandle>((_, ref) => {
   const t = useTranslations('introduction.modal_character');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const characterId = searchParams.get('character');
+  const { characterDetail } = useCharacterDetail(characterId as string);
 
   const internalModalRef = useRef<ModalHandle>(null);
-  const modalGuideToUseRef = useRef<ModalHandle>(null);
-  const modalExistChatRoomRef = useRef<ModalHandle>(null);
-  const { user } = useAuth();
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const modalGuideToUseRef = useRef<ModalGuideToUseHandle>(null);
+  const modalExistChatRoomRef = useRef<ModalExistChatRoomHandle>(null);
+
+  const closeCallback = () => {
+    const params = new URLSearchParams(searchParams);
+    params.delete('character');
+    router.replace(`?${params.toString()}`);
+  };
 
   // Use useImperativeHandle to connect the ref passed from the outside
   // to the internal ref. Whenever the parent component uses ref, it will
   // actually interact with `internalModalRef`.
   useImperativeHandle(ref, () => internalModalRef.current!, []);
 
-  const handleClose = () => {
-    internalModalRef.current?.close();
-  };
-
   const handleConfirm = async () => {
-    // if (!localStorage.getItem(STORAGE.HIDE_GUIDE_TO_USE)) {
-    //   modalGuideToUseRef.current?.open();
-    // }
-    // modalExistChatRoomRef.current?.open();
+    internalModalRef.current?.close();
 
-    // TODO: Remove this after testing
+    try {
+      if (!localStorage.getItem(STORAGE.HIDE_GUIDE_TO_USE)) {
+        await modalGuideToUseRef.current?.open();
+      }
 
-    setLoading(true);
-    if (!user?.id) {
-      return;
+      if (
+        characterDetail?.chat_rooms &&
+        characterDetail.chat_rooms.length > 0
+      ) {
+        const decision = await modalExistChatRoomRef.current?.open();
+
+        if (decision === 'existing') {
+          // TODO: Redirect to the appropriate chat room
+          alert('TODO: Redirect to the appropriate chat room');
+        } else {
+          // TODO: Create a new chat room
+          alert('TODO: Create a new chat room');
+        }
+      } else {
+        // TODO: Create a new chat room
+        alert('TODO: Create a new chat room');
+      }
+    } catch (error) {
+      console.error('Modal flow cancelled or failed', error);
     }
-
-    const newSession: any = await NextApi.post(`/api/session`, {
-      body: {
-        userId: user.id,
-      },
-    });
-
-    if (!newSession?.data?.sessionId) return;
-
-    const getSession: any = await NextApi.get(`/api/session`);
-
-    const chatroomId = getSession?.data?.data
-      ?.find((session: any) => session.id === newSession?.data?.sessionId)
-      .chatrooms.find(
-        (room: any) => room.room_name === 'kangYiHyunV4GeminiFlash'
-      ).id;
-
-    if (chatroomId && newSession?.data?.sessionId) {
-      router.push(
-        `/chat/${chatroomId}?sessionId=${newSession?.data?.sessionId}`
-      );
-    }
-
-    setLoading(false);
-    handleClose();
   };
+
+  useEffect(() => {
+    if (characterId && characterDetail) {
+      internalModalRef.current?.open();
+    }
+  }, [characterId, characterDetail]);
 
   return (
     <>
-      <Modal
-        ref={internalModalRef}
-        footer={
-          <div className="flex w-full items-center gap-8">
-            <Button
-              variant="primary"
-              className="flex-1"
-              onClick={handleConfirm}
-              disabled={loading}
-            >
-              {loading ? <Spinner /> : t('start_conversation')}
-            </Button>
-          </div>
-        }
-      >
-        <div className="container flex flex-col gap-16">
-          <div className="relative aspect-square w-full">
-            <Image
-              src="https://picsum.photos/seed/1/280 "
-              alt="character"
-              fill
-              className="rounded-4"
-            />
-          </div>
-          <div className="flex items-start gap-8">
-            <p title="TODO: character name">
-              TODO: character name character name
-            </p>
-            <div className="ml-auto flex items-center gap-4">
-              <Heart
-                className={cx(
-                  'size-18 text-white'
-                  // 'stroke-primary text-primary'
-                )}
-              />
-              85
+      {characterId && characterDetail && (
+        <Modal
+          ref={internalModalRef}
+          closeCallback={closeCallback}
+          footer={
+            <div className="flex w-full items-center gap-8">
+              <Button
+                variant="primary"
+                className="flex-1"
+                onClick={handleConfirm}
+              >
+                {t('start_conversation')}
+              </Button>
             </div>
+          }
+        >
+          <div className="container flex flex-col gap-16">
+            <div className="relative aspect-square w-full">
+              <Image
+                src={getPublicUrl(characterDetail.avatar_key)}
+                alt="character"
+                fill
+                className="rounded-4"
+              />
+            </div>
+            <div className="flex items-start gap-8">
+              <p title={characterDetail.name}>{characterDetail.name}</p>
+              <div className="group ml-auto flex cursor-pointer items-center gap-4">
+                <Heart
+                  className={cx(
+                    'size-18 text-white transition-colors duration-200 group-hover:stroke-primary group-hover:text-primary',
+                    characterDetail.is_liked && 'stroke-primary text-primary'
+                  )}
+                />
+                {characterDetail.total_likes === 0
+                  ? t('like')
+                  : characterDetail.total_likes}
+              </div>
+            </div>
+            <p>{characterDetail.introduction}</p>
+            {characterDetail.quote && (
+              <q className="text-center">{characterDetail.quote}</q>
+            )}
           </div>
-          <p>
-            (TODO: character information) After finishing middle school in a
-            small city, she escapes to a remote mountain area with her father
-            who is buried in debt, and later comes to Seoul with her younger
-            sister, dedicating all her efforts to her sister Shin-ae.
-          </p>
-          <q className="text-center">
-            (TODO: character quote) I wish time would stop like this.
-          </q>
-        </div>
-      </Modal>
+        </Modal>
+      )}
 
       <ModalGuideToUse ref={modalGuideToUseRef} />
       <ModalExistChatRoom ref={modalExistChatRoomRef} />

@@ -6,28 +6,49 @@ import { useTranslations } from 'next-intl';
 import { Button, Modal, ModalHandle } from '@/components';
 import { STORAGE } from '@/utils/constants';
 
-const ModalGuideToUse = React.forwardRef<ModalHandle>((_, ref) => {
+export interface ModalGuideToUseHandle {
+  open: () => Promise<void>;
+  close: () => void;
+}
+
+const ModalGuideToUse = React.forwardRef<ModalGuideToUseHandle>((_, ref) => {
   const t = useTranslations('introduction.modal_guide_to_use');
 
   const internalModalRef = useRef<ModalHandle>(null);
+  const promiseActions = useRef<{
+    resolve: (value: void | PromiseLike<void>) => void;
+    reject: (reason?: any) => void;
+  } | null>(null);
 
-  // Use useImperativeHandle to connect the ref passed from the outside
-  // to the internal ref. Whenever the parent component uses ref, it will
-  // actually interact with `internalModalRef`.
-  useImperativeHandle(ref, () => internalModalRef.current!, []);
+  useImperativeHandle(
+    ref,
+    () => ({
+      open: () => {
+        internalModalRef.current?.open();
+        return new Promise<void>((resolve, reject) => {
+          promiseActions.current = { resolve, reject };
+        });
+      },
+      close: () => {
+        internalModalRef.current?.close();
+      },
+    }),
+    []
+  );
 
-  const handleClose = () => {
-    internalModalRef.current?.close();
+  const closeCallback = () => {
+    promiseActions.current?.reject('Modal closed by user');
   };
 
-  const handleConfirm = async () => {
-    alert('TODO: start a conversation');
-    handleClose();
+  const handleConfirm = () => {
+    promiseActions.current?.resolve();
+    internalModalRef.current?.close();
   };
 
   return (
     <Modal
       ref={internalModalRef}
+      closeCallback={closeCallback}
       header={<h3 className="text-center uppercase">{t('title')}</h3>}
       footer={
         <div className="">

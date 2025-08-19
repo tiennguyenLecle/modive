@@ -32,6 +32,7 @@ type ModalProps = {
   containerClassName?: string;
   onCancel?: () => void;
   onConfirm?: () => void;
+  closeCallback?: () => void;
 };
 
 const Modal = forwardRef<ModalHandle, ModalProps>(
@@ -50,13 +51,17 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
       containerClassName = '',
       onCancel,
       onConfirm,
+      closeCallback,
     },
     ref
   ) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const open = () => setIsOpen(true);
-    const close = () => setIsOpen(false);
+    const close = () => {
+      closeCallback?.();
+      setIsOpen(false);
+    };
 
     useImperativeHandle(ref, () => ({ open, close }), []);
 
@@ -127,7 +132,10 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
                       {cancelText && (
                         <button
                           className="flex h-40 w-full items-center justify-center gap-8 rounded-4 border border-gray-70 bg-gray-100 p-12 text-gray-00"
-                          onClick={onCancel}
+                          onClick={() => {
+                            onCancel?.();
+                            close();
+                          }}
                         >
                           {cancelText}
                         </button>
@@ -135,7 +143,10 @@ const Modal = forwardRef<ModalHandle, ModalProps>(
                       {confirmText && (
                         <button
                           className="flex h-40 w-full items-center justify-center gap-8 rounded-4 bg-primary p-12 text-gray-100"
-                          onClick={onConfirm}
+                          onClick={() => {
+                            onConfirm?.();
+                            close();
+                          }}
                         >
                           {confirmText}
                         </button>

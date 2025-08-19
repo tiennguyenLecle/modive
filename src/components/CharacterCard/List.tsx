@@ -6,7 +6,7 @@ import { cx } from '@/utils/method';
 import CharacterCardItem from './Item';
 
 type CharacterCardListProps = ComponentProps<'div'> & {
-  itemProps?: { onClick?: () => void };
+  itemProps?: { onClick?: (character: CharacterType) => void };
   characters: CharacterType[];
 };
 
@@ -17,12 +17,12 @@ const CharacterCardList = ({
   ...props
 }: CharacterCardListProps) => {
   return (
-    <div className={cx('flex flex-col bg-gray-100', className)} {...props}>
+    <div className={cx('flex flex-col bg-white', className)} {...props}>
       {characters.map((character, i) => (
         <CharacterCardItem
           key={character.id}
           character={character}
-          {...itemProps}
+          onClickItem={itemProps?.onClick}
         />
       ))}
     </div>

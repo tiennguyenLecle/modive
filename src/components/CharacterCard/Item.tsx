@@ -7,19 +7,23 @@ import { cx, getPublicUrl } from '@/utils/method';
 
 type CharacterCardItemProps = ComponentProps<'div'> & {
   character: CharacterType;
+  onClickItem?: (character: CharacterType) => void;
 };
 
 const CharacterCardItem = ({
   className,
+  character,
   character: { name, introduction, avatar_key },
+  onClickItem,
   ...props
 }: CharacterCardItemProps) => {
   return (
     <div
       className={cx(
-        'flex min-h-90 cursor-pointer gap-12 border-b border-gray bg-white py-8 transition-colors duration-300 hover:bg-gray-90',
+        'flex min-h-90 cursor-pointer gap-12 rounded-12 border-b border-gray bg-white px-8 py-8 transition-colors duration-300 hover:bg-gray-90',
         className
       )}
+      onClick={() => onClickItem?.(character)}
       {...props}
     >
       {/* Actor Image */}

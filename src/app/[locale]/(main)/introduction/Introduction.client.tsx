@@ -94,11 +94,13 @@ export default function IntroductionClient({
                 <CharacterCard.List
                   characters={workDetail.characters}
                   itemProps={{
-                    onClick: () => {
-                      modalCharacterRef.current?.open();
+                    onClick: character => {
+                      const params = new URLSearchParams(searchParams);
+                      params.set('character', character.id);
+                      router.replace(`?${params.toString()}`);
                     },
                   }}
-                  className="container"
+                  className="px-8"
                 />
               ),
             },

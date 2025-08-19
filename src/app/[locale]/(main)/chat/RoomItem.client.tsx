@@ -25,7 +25,7 @@ const RoomItem = forwardRef<HTMLDivElement, RoomItemProps>(
       >
         <div className="flex h-60 w-60 flex-col gap-8 rounded-[50%]">
           <Image
-            className="rounded-[50%]"
+            className="min-h-60 min-w-60 rounded-[50%]"
             src={avatar}
             alt={name}
             width={60}
@@ -46,7 +46,7 @@ const RoomItem = forwardRef<HTMLDivElement, RoomItemProps>(
               {lastMessage}
             </p>
             {unreadCount > 0 && (
-              <span className="rounded-[50%] bg-primary px-5 py-0 text-12 font-semibold text-gray-100">
+              <span className="min-w-20 rounded-[50%] bg-primary px-5 py-0 text-12 font-semibold text-gray-100">
                 {unreadCount}
               </span>
             )}

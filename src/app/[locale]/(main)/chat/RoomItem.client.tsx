@@ -45,9 +45,11 @@ const RoomItem = forwardRef<HTMLDivElement, RoomItemProps>(
             <p className="line-clamp-2 max-w-[70%] text-14 text-gray-50">
               {lastMessage}
             </p>
-            <span className="rounded-[50%] bg-primary px-5 py-0 text-12 font-semibold text-gray-100">
-              {unreadCount}
-            </span>
+            {unreadCount > 0 && (
+              <span className="rounded-[50%] bg-primary px-5 py-0 text-12 font-semibold text-gray-100">
+                {unreadCount}
+              </span>
+            )}
           </div>
         </div>
       </div>

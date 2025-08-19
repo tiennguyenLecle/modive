@@ -40,7 +40,7 @@ export default function ChatView({
       avatar: DEFAULT_IMAGE_URL,
       createdAt: formatDateOrTime(room.last_message_at, 'time'),
       lastMessage: room.last_message,
-      unreadCount: 3,
+      unreadCount: 0,
       sessionId: room.session_id,
     }));
   };

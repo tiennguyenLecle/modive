@@ -1,22 +1,20 @@
 import { getRequestConfig } from 'next-intl/server';
+import { cookies } from 'next/headers';
 
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from './lib/locale';
+const DEFAULT_LANGUAGE = 'ko';
 
-export default getRequestConfig(async ({ requestLocale }) => {
-  // `requestLocale` is a promise that resolves to the locale of the request.
-  // This is the recommended way to get the locale in `getRequestConfig`.
-  let locale = await requestLocale;
+export default getRequestConfig(async () => {
+  // Provide a static locale, fetch a user setting,
+  // read from `cookies()`, `headers()`, etc.
+  let locale = DEFAULT_LANGUAGE;
+  const getLocalFromCookie = cookies()?.get('NEXT_LOCALE')?.value;
 
-  // Ensure that the incoming locale is valid, falling back to the default
-  // if it's not. This is safer than calling notFound() directly,
-  // especially for cases like search engine bots or crawlers.
-  if (!locale || !SUPPORTED_LOCALES.includes(locale as Locale)) {
-    locale = DEFAULT_LOCALE;
-  }
+  locale = getLocalFromCookie || DEFAULT_LANGUAGE;
+
+  const messages = (await import(`../messages/${locale}.json`)).default;
 
   return {
     locale,
-    messages: (await import(`../messages/${locale}.json`)).default,
-    timeZone: 'UTC',
+    messages,
   };
 });

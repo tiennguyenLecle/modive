@@ -1,20 +1,9 @@
 'use client';
 
-import { useRef } from 'react';
-
 import { Alarm } from '@/assets/icons';
-import {
-  Badge,
-  Chapter,
-  ChatListItem,
-  Modal,
-  ModalHandle,
-  Story,
-} from '@/components';
+import { Badge, Chapter, ChatListItem, Story } from '@/components';
 
 export default function ComponentsPage() {
-  const modalRef = useRef<ModalHandle>(null);
-
   return (
     <main>
       <h1>Components</h1>
@@ -45,22 +34,6 @@ export default function ComponentsPage() {
         ]}
       />
       <h2>Modal</h2>
-      <button onClick={() => modalRef.current?.open()}>open modal</button>
-      <Modal
-        ref={modalRef}
-        title="Modal title"
-        titleAlign="left"
-        // footer={
-        //   <button className="rounded-5 w-full border text-gray-00">
-        //     다음 챕터로 넘어가기
-        //   </button>
-        // }
-        cancelText="Cancel"
-        confirmText="Confirm"
-      >
-        <p className="text-gray-00">Would you like to withdraw?</p>
-      </Modal>
-
       <h2>Chat list item</h2>
       <ChatListItem
         imageSrc="https://picsum.photos/seed/1/60"

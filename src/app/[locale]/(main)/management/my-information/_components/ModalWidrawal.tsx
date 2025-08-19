@@ -1,33 +1,41 @@
 'use client';
 
-import React, { useImperativeHandle, useRef } from 'react';
+import React, { useImperativeHandle, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { BaselineError } from '@/assets/icons';
-import { Button, Modal, ModalHandle } from '@/components';
+import { Button, Modal } from '@/components';
 
-const ModalWidrawal = React.forwardRef<ModalHandle>((_, ref) => {
+type ModalWidrawalRef = {
+  open: () => void;
+  close: () => void;
+};
+
+const ModalWidrawal = React.forwardRef<ModalWidrawalRef>((_, ref) => {
   const t = useTranslations('my_information');
 
-  const internalModalRef = useRef<ModalHandle>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Use useImperativeHandle to connect the ref passed from the outside
-  // to the internal ref. Whenever the parent component uses ref, it will
-  // actually interact with `internalModalRef`.
-  useImperativeHandle(ref, () => internalModalRef.current!, []);
-
-  const handleClose = () => {
-    internalModalRef.current?.close();
+  const closeHandler = () => {
+    setIsOpen(false);
   };
+
+  useImperativeHandle(ref, () => ({
+    open: () => {
+      setIsOpen(true);
+    },
+    close: closeHandler,
+  }));
 
   const handleConfirm = async () => {
     alert('This feature is coming soon');
-    handleClose();
+    closeHandler();
   };
 
   return (
     <Modal
-      ref={internalModalRef}
+      open={isOpen}
+      onCancel={closeHandler}
       showCloseButton={false}
       header={
         <div className="flex items-center gap-4">
@@ -39,7 +47,7 @@ const ModalWidrawal = React.forwardRef<ModalHandle>((_, ref) => {
       }
       footer={
         <div className="flex w-full items-center gap-8">
-          <Button variant="secondary" className="flex-1" onClick={handleClose}>
+          <Button variant="secondary" className="flex-1" onClick={closeHandler}>
             {t('cancel')}
           </Button>
           <Button variant="primary" className="flex-1" onClick={handleConfirm}>

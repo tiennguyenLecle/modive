@@ -3,11 +3,11 @@
 import React, { useImperativeHandle, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, Modal, ModalHandle, Spinner } from '@/components';
+import { Button, Modal, Spinner } from '@/components';
 
 export type ModalExistChatRoomDecision = 'existing' | 'new';
 
-export interface ModalExistChatRoomHandle {
+interface ModalExistChatRoomHandle {
   open: () => Promise<ModalExistChatRoomDecision>;
   close: () => void;
 }

@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Button, Modal, Spinner } from '@/components';
 import { STORAGE } from '@/utils/constants';
 
-export interface ModalGuideToUseHandle {
+interface ModalGuideToUseHandle {
   open: () => Promise<void>;
   close: () => void;
 }

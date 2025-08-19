@@ -1,35 +1,43 @@
-import React, { useImperativeHandle, useRef } from 'react';
+import React, { useImperativeHandle, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Info } from '@/assets/icons';
-import { Button, Modal, ModalHandle } from '@/components';
+import { Button, Modal } from '@/components';
 import { useAuth } from '@/lib/authentication/auth-context';
 
-const ModalLogout = React.forwardRef<ModalHandle>((_, ref) => {
+type ModalLogoutRef = {
+  open: () => void;
+  close: () => void;
+};
+
+const ModalLogout = React.forwardRef<ModalLogoutRef>((_, ref) => {
   const t = useTranslations('my_information');
   const { signOut } = useAuth();
 
-  const internalModalRef = useRef<ModalHandle>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Use useImperativeHandle to connect the ref passed from the outside
-  // to the internal ref. Whenever the parent component uses ref, it will
-  // actually interact with `internalModalRef`.
-  useImperativeHandle(ref, () => internalModalRef.current!, []);
-
-  const handleClose = () => {
-    internalModalRef.current?.close();
+  const closeHandler = () => {
+    setIsOpen(false);
   };
+
+  useImperativeHandle(ref, () => ({
+    open: () => {
+      setIsOpen(true);
+    },
+    close: closeHandler,
+  }));
 
   const handleConfirm = async () => {
     await signOut().then(() => {
-      handleClose();
+      closeHandler();
     });
   };
 
   return (
     <Modal
-      ref={internalModalRef}
+      open={isOpen}
       showCloseButton={false}
+      onCancel={closeHandler}
       header={
         <div className="flex items-center gap-4">
           <Info className="size-18 text-primary" />
@@ -40,7 +48,7 @@ const ModalLogout = React.forwardRef<ModalHandle>((_, ref) => {
       }
       footer={
         <div className="flex w-full items-center gap-8">
-          <Button variant="secondary" className="flex-1" onClick={handleClose}>
+          <Button variant="secondary" className="flex-1" onClick={closeHandler}>
             {t('cancel')}
           </Button>
           <Button variant="primary" className="flex-1" onClick={handleConfirm}>

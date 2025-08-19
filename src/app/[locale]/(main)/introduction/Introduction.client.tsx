@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
 import { Direction } from '@/assets/icons';
-import { CharacterCard, Header, MenuTab, ModalHandle } from '@/components';
+import { CharacterCard, Header, MenuTab } from '@/components';
 import { useWorkDetail } from '@/hooks/useWork';
 import { useRouter } from '@/lib/navigation';
 import { WorkType } from '@/types/work';
@@ -29,7 +29,8 @@ export default function IntroductionClient({
   const searchParams = useSearchParams();
   const { data: workDetail } = useWorkDetail(workId, fallbackData);
 
-  const modalCharacterRef = useRef<ModalHandle>(null);
+  const modalCharacterRef =
+    useRef<React.ElementRef<typeof ModalCharacter>>(null);
 
   if (!workDetail) {
     return null;

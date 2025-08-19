@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Pencil, SocialGoogle, SocialKakaoTalk } from '@/assets/icons';
-import { Header, ModalHandle } from '@/components';
+import { Header } from '@/components';
 import { useAuth } from '@/lib/authentication/auth-context';
 
 import ModalLogout from './_components/ModalLogout';
@@ -13,8 +13,10 @@ import ModalWidrawal from './_components/ModalWidrawal';
 export default function MyInformation() {
   const t = useTranslations('my_information');
   const { user } = useAuth();
-  const withdrawalModalRef = React.useRef<ModalHandle>(null);
-  const logOutModalRef = React.useRef<ModalHandle>(null);
+  const withdrawalModalRef =
+    React.useRef<React.ElementRef<typeof ModalWidrawal>>(null);
+  const logOutModalRef =
+    React.useRef<React.ElementRef<typeof ModalLogout>>(null);
 
   console.log(user);
 

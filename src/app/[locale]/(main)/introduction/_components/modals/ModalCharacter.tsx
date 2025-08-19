@@ -6,26 +6,31 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
 import { Heart } from '@/assets/icons';
-import { Button, Modal, ModalHandle } from '@/components';
+import { Button, Modal } from '@/components';
 import { useCharacterDetail } from '@/hooks/useCharacter';
 import { useCreateChat } from '@/hooks/useChat';
 import { useRouter } from '@/lib/navigation';
 import { STORAGE } from '@/utils/constants';
 import { cx, getPublicUrl } from '@/utils/method';
 
-import ModalExistChatRoom, {
-  ModalExistChatRoomHandle,
-} from './ModalExistChatRoom';
-import ModalGuideToUse, { ModalGuideToUseHandle } from './ModalGuideToUse';
+import ModalExistChatRoom from './ModalExistChatRoom';
+import ModalGuideToUse from './ModalGuideToUse';
 
-const ModalCharacter = React.forwardRef<ModalHandle>((_, ref) => {
+type ModalCharacterRef = {
+  open: () => void;
+  close: () => void;
+};
+
+const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
   const t = useTranslations('introduction.modal_character');
   const searchParams = useSearchParams();
   const router = useRouter();
   const characterId = searchParams.get('character');
 
-  const modalGuideToUseRef = useRef<ModalGuideToUseHandle>(null);
-  const modalExistChatRoomRef = useRef<ModalExistChatRoomHandle>(null);
+  const modalGuideToUseRef =
+    useRef<React.ElementRef<typeof ModalGuideToUse>>(null);
+  const modalExistChatRoomRef =
+    useRef<React.ElementRef<typeof ModalExistChatRoom>>(null);
 
   const [isOpen, setIsOpen] = useState(false);
 

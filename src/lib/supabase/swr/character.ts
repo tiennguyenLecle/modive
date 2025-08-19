@@ -9,7 +9,10 @@ export const CHARACTER_KEY = {
 };
 
 type ExtendedCharacterType = CharacterType & {
-  works: Pick<WorkType, 'id' | 'tags' | 'title' | 'thumbnail_key'>;
+  work: Pick<
+    WorkType,
+    'id' | 'tags' | 'title' | 'thumbnail_key' | 'bundle_id' | 'universe_id'
+  >;
   is_liked: boolean;
   chat_rooms: ChatRoomType[];
 };

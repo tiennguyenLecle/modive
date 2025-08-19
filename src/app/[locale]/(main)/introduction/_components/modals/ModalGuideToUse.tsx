@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useImperativeHandle, useRef } from 'react';
+import React, { useImperativeHandle, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, Modal, ModalHandle } from '@/components';
+import { Button, Modal, Spinner } from '@/components';
 import { STORAGE } from '@/utils/constants';
 
 export interface ModalGuideToUseHandle {
@@ -11,10 +11,17 @@ export interface ModalGuideToUseHandle {
   close: () => void;
 }
 
-const ModalGuideToUse = React.forwardRef<ModalGuideToUseHandle>((_, ref) => {
+interface ModalGuideToUseProps {
+  loading?: boolean;
+}
+
+const ModalGuideToUse = React.forwardRef<
+  ModalGuideToUseHandle,
+  ModalGuideToUseProps
+>(({ loading = false }, ref) => {
+  const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations('introduction.modal_guide_to_use');
 
-  const internalModalRef = useRef<ModalHandle>(null);
   const promiseActions = useRef<{
     resolve: (value: void | PromiseLike<void>) => void;
     reject: (reason?: any) => void;
@@ -24,35 +31,38 @@ const ModalGuideToUse = React.forwardRef<ModalGuideToUseHandle>((_, ref) => {
     ref,
     () => ({
       open: () => {
-        internalModalRef.current?.open();
+        setIsOpen(true);
         return new Promise<void>((resolve, reject) => {
           promiseActions.current = { resolve, reject };
         });
       },
       close: () => {
-        internalModalRef.current?.close();
+        console.log('modal guide to use closed');
+        setIsOpen(false);
       },
     }),
     []
   );
 
-  const closeCallback = () => {
-    promiseActions.current?.reject('Modal closed by user');
-  };
-
-  const handleConfirm = () => {
-    promiseActions.current?.resolve();
-    internalModalRef.current?.close();
-  };
-
   return (
     <Modal
-      ref={internalModalRef}
-      closeCallback={closeCallback}
+      open={isOpen}
+      onCancel={() => {
+        setIsOpen(false);
+        promiseActions.current?.reject();
+      }}
       header={<h3 className="text-center uppercase">{t('title')}</h3>}
       footer={
-        <div className="">
-          <Button variant="primary" className="mb-8" onClick={handleConfirm}>
+        <div>
+          <Button
+            variant="primary"
+            className="mb-8"
+            onClick={() => {
+              promiseActions.current?.resolve();
+            }}
+            disabled={loading}
+          >
+            {loading && <Spinner />}
             {t('agree_and_start')}
           </Button>
 
@@ -66,6 +76,7 @@ const ModalGuideToUse = React.forwardRef<ModalGuideToUseHandle>((_, ref) => {
                   localStorage.removeItem(STORAGE.HIDE_GUIDE_TO_USE);
                 }
               }}
+              disabled={loading}
             />
             <span>{t('do_not_see_again')}</span>
           </label>

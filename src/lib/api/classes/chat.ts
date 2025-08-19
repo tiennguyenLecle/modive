@@ -1,4 +1,8 @@
-import { GetMessagesResponse, LoginResponse } from '../types/chat.types';
+import {
+  CreateSessionResponse,
+  GetMessagesResponse,
+  LoginResponse,
+} from '../types/response';
 import { BaseApiClient } from './base';
 
 export class ChatApiClient extends BaseApiClient {
@@ -71,13 +75,16 @@ export class ChatApiClient extends BaseApiClient {
     return this.get(url);
   }
 
-  public createSession(userId: string) {
-    return this.post(`/v3/universe/${this.bundleId}`, {
-      body: {
-        endUserId: userId,
-        endUserMetadata: '',
-      },
-    });
+  public createSession(userId: string, bundleId?: string) {
+    return this.post<CreateSessionResponse>(
+      `/v3/universe/${bundleId || this.bundleId}`,
+      {
+        body: {
+          endUserId: userId,
+          endUserMetadata: '',
+        },
+      }
+    );
   }
 
   /**
@@ -127,7 +134,6 @@ export class ChatApiClient extends BaseApiClient {
     //     },
     //   },
     // });
-
 
     return this.post(`/v3/universe/session/${sessionId}`, {
       body: {

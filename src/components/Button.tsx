@@ -14,7 +14,7 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const baseStyle =
-    'flex h-40 w-full items-center justify-center gap-8 rounded-4 p-12 text-14 font-medium';
+    'flex h-40 w-full items-center justify-center gap-8 rounded-4 p-12 text-14 font-medium disabled:opacity-80 disabled:cursor-not-allowed';
 
   const variantStyle =
     variant === 'primary'

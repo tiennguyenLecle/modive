@@ -86,7 +86,15 @@ declare const ChatboxComposer: ({
   ...props
 }: ChatboxComposerProps) => react_jsx_runtime.JSX.Element;
 
-type MessageType = 'text' | 'image' | 'audio' | 'video' | 'file' | 'loading';
+type MessageType =
+  | 'text'
+  | 'image'
+  | 'audio'
+  | 'video'
+  | 'file'
+  | 'loading'
+  | 'markdown';
+
 type MessageSpeakerType = 'user' | 'chatbot' | 'system';
 type MessageCacheType = 'local' | 'indexed' | false;
 

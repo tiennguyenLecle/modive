@@ -23,7 +23,7 @@ export const DEFAULT_IMAGE_URL =
  * Message content type definitions
  */
 export type MessageContent = {
-  type: 'text' | 'image';
+  type: 'text' | 'image' | 'markdown';
   message: string;
   imageUrl?: string;
 };
@@ -39,38 +39,38 @@ export const handleMessageText = (text: string): MessageContent[] => {
     return [];
   }
 
-  // Handle text with line breaks
-  if (/\n+/.test(text)) {
-    const parts = text.split(/\n+/).filter(Boolean);
+  // // Handle text with line breaks
+  // if (/\n+/.test(text)) {
+  //   const parts = text.split(/\n+/).filter(Boolean);
 
-    if (parts.length === 0) return [];
+  //   if (parts.length === 0) return [];
 
-    return parts.map(part => {
-      const trimmedPart = part.trim();
+  //   return parts.map(part => {
+  //     const trimmedPart = part.trim();
 
-      // Check if it's an image reference
-      if (trimmedPart.startsWith('::image{id=')) {
-        const imageId = extractImageId(trimmedPart);
+  //     // Check if it's an image reference
+  //     if (trimmedPart.startsWith('::image{id=')) {
+  //       const imageId = extractImageId(trimmedPart);
 
-        return {
-          type: 'image' as const,
-          imageUrl: DEFAULT_IMAGE_URL,
-          message: '',
-        };
-      }
+  //       return {
+  //         type: 'image' as const,
+  //         imageUrl: DEFAULT_IMAGE_URL,
+  //         message: '',
+  //       };
+  //     }
 
-      return {
-        type: 'text' as const,
-        message: trimmedPart,
-      };
-    });
-  }
+  //     return {
+  //       type: 'text' as const,
+  //       message: trimmedPart,
+  //     };
+  //   });
+  // }
 
-  // Single line message
+  // Using markdown for now
   return [
     {
-      type: 'text' as const,
-      message: text.trim(),
+      type: 'markdown',
+      message: text,
     },
   ];
 };

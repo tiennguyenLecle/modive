@@ -1,3 +1,6 @@
+import { CharacterType } from './character';
+import { WorkType } from './work';
+
 export type ChatRoomType = {
   id: string;
   created_at: string;
@@ -21,4 +24,6 @@ export type ChatRoomType = {
   pinned_at?: string;
   room_id: string;
   metadata: Record<string, any>;
+  work: Pick<WorkType, 'bundle_id' | 'universe_id'>;
+  character: Pick<CharacterType, 'avatar_key' | 'bot_id' | 'id' | 'name'>;
 };

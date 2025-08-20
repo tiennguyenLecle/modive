@@ -1,7 +1,7 @@
 'use client';
 
 import { Alarm } from '@/assets/icons';
-import { Badge, Chapter, ChatListItem, Story } from '@/components';
+import { Badge, Chapter, Story } from '@/components';
 
 export default function ComponentsPage() {
   return (
@@ -35,14 +35,6 @@ export default function ComponentsPage() {
       />
       <h2>Modal</h2>
       <h2>Chat list item</h2>
-      <ChatListItem
-        imageSrc="https://picsum.photos/seed/1/60"
-        imageAlt="User Avatar"
-        title="First shooting day -CH1. Honeymoon"
-        description="It's awkward to be like you? lol"
-        time="09:32 pm"
-        count={100}
-      />
 
       <div className="p-2">
         <h2>Badge</h2>

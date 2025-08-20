@@ -64,7 +64,7 @@ const Modal = ({
             exit={{ opacity: 0 }}
           />
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 mx-auto flex max-w-768 items-center justify-center p-4"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}

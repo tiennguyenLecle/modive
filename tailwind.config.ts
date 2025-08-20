@@ -69,6 +69,7 @@ const config: Config = {
       280: '280rem',
       292: '292rem',
       360: '360rem',
+      768: '768rem',
       '3/4': '75%',
     },
     // Override Tailwind's default font sizes

@@ -1,6 +1,10 @@
+import { useMemo } from 'react';
+import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 
 import { NextApi } from '@/lib/api';
+import { createBrowserSupabase } from '@/lib/supabase/factory';
+import { ChatRoomsResponse, fetchChatRooms } from '@/lib/supabase/swr/chatroom';
 import { ChatRoomType } from '@/types/chatroom';
 
 export function useCreateChat() {
@@ -18,4 +22,60 @@ export function useCreateChat() {
       });
     }
   );
+}
+
+type UseMyRoomsOptions = {
+  pageSize?: number;
+  type?: 'general' | 'chapter';
+  workIds?: string[];
+};
+
+export function useMyRoomsInfinite(options: UseMyRoomsOptions = {}) {
+  const { pageSize, workIds, type } = options;
+
+  const supabase = useMemo(() => createBrowserSupabase('user'), []);
+
+  const getKey = (
+    pageIndex: number,
+    previousPageData: ChatRoomsResponse | null
+  ) => {
+    if (
+      previousPageData &&
+      previousPageData.metadata.currentPage >=
+        previousPageData.metadata.totalPages
+    )
+      return null;
+    const page = pageIndex + 1;
+    return ['my-rooms', page, pageSize, JSON.stringify(workIds), type] as const;
+  };
+
+  const { data, ...restInfiniteData } = useSWRInfinite(
+    getKey,
+    ([, page, limit]) =>
+      fetchChatRooms(supabase, {
+        page,
+        limit,
+        work_ids: workIds,
+        type,
+      }),
+    {
+      revalidateAll: true,
+    }
+  );
+
+  const rooms: ChatRoomType[] = data
+    ? ([] as ChatRoomType[]).concat(...data.map(item => item.data))
+    : [];
+
+  const isReachingEnd =
+    data &&
+    data[data.length - 1] &&
+    data[data.length - 1].metadata.currentPage >=
+      data[data.length - 1].metadata.totalPages;
+
+  return {
+    rooms,
+    isReachingEnd,
+    ...restInfiniteData,
+  };
 }

@@ -48,7 +48,7 @@ export default function IntroductionClient({
       >
         <Image
           src={getPublicUrl(workDetail.thumbnail_key)}
-          alt="We Married"
+          alt={workDetail.title}
           priority
           width={360}
           height={232}

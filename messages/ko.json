@@ -98,7 +98,11 @@
         "description": "{characterName}과 대화하기"
       }
     },
-    "no_rooms": "채팅방이 없습니다"
+    "no_rooms": "채팅방이 없습니다",
+    "modal_options": {
+      "top_fixing": "상단 고정",
+      "deletion": "삭제하기"
+    }
   },
   "goods_page": {
     "metadata": {
@@ -125,10 +129,6 @@
   "components": {
     "chapter": {
       "seeMore": "챕터 초기화"
-    },
-    "chat_list_item": {
-      "top_fixing": "Top fixing",
-      "deletion": "Deletion"
     }
   },
   "contentsCard": {

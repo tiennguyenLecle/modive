@@ -93,7 +93,7 @@
     "chapter": "챕터대화",
     "generalization": "일반대화",
     "room": {
-      "favorability": "증진",
+      "intimacy": "호감도",
       "metadata": {
         "description": "{characterName}과 대화하기"
       }

@@ -1,0 +1,31 @@
+/* Custom styles for ProgressBar component */
+.customProgress {
+  position: relative;
+
+  :global(.ant-progress-inner) {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--progress-unfilled-color) !important;
+  }
+
+  :global(.ant-progress-bg) {
+    position: relative;
+    background: linear-gradient(
+      to right,
+      var(--progress-gradient-from) 0%,
+      var(--progress-gradient-to) 100%
+    ) !important;
+    background-size: calc(100% * 100 / max(var(--progress-percentage, 1), 1))
+      100% !important;
+    background-position: 0 0 !important;
+    background-repeat: no-repeat !important;
+  }
+}
+
+.customProgressValue:global(.custom-progress-value) {
+  position: absolute;
+  top: 50%;
+  transform: translate(0%, -50%);
+  font-size: 12px;
+  font-weight: 600;
+}

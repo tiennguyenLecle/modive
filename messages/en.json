@@ -93,7 +93,7 @@
     "chapter": "Chapter",
     "generalization": "Generalization",
     "room": {
-      "favorability": "Favorability",
+      "intimacy": "Intimacy",
       "metadata": {
         "description": "Chat with {characterName}"
       }

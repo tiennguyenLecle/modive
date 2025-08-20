@@ -9,7 +9,7 @@ export { default as Header } from './Header';
 export { default as MenuTab } from './MenuTab';
 export { default as Modal } from './Modal';
 export { default as Navigation } from './Navigation/Navigation';
-export { default as ProgressBar } from './ProgressBar';
+export { default as ProgressBar } from './ProgressBar/ProgressBar';
 export { default as Work } from './Work';
 export { default as Spinner } from './Spinner';
 export { default as Story } from './Story';

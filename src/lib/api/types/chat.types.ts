@@ -18,7 +18,7 @@ export type Message = {
     };
     message: {
       role: SpeakerType;
-      content: [
+      parts: [
         {
           text: string;
           type: string;

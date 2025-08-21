@@ -106,7 +106,7 @@ export default function CmsSidebar() {
   return (
     <Layout.Sider className="!bg-white">
       <div className="flex h-56 items-center justify-center">
-        <Logo />
+        <Logo className="w-90" />
       </div>
       <Menu
         mode="inline"

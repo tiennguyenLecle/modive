@@ -63,6 +63,20 @@
         "updated_success": "공지사항이 업데이트되었습니다",
         "error_generic": "오류가 발생했습니다"
       }
+    },
+    "user_management": {
+      "table": {
+        "title": "유저 관리",
+        "column_id": "ID",
+        "column_name": "이름",
+        "column_signup_date": "가입일",
+        "column_membership": "멤버십",
+        "column_balance": "잔액",
+        "detail_button": "상세 보기"
+      },
+      "detail": {
+        "title": "사용자 세부 정보"
+      }
     }
   },
   "navigation": {

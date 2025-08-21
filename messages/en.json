@@ -63,6 +63,20 @@
         "updated_success": "Announcement updated",
         "error_generic": "Something went wrong"
       }
+    },
+    "user_management": {
+      "table": {
+        "title": "User Management",
+        "column_id": "ID",
+        "column_name": "Name",
+        "column_signup_date": "Sign up Date",
+        "column_membership": "Membership",
+        "column_balance": "Balance Money",
+        "detail_button": "View details"
+      },
+      "detail": {
+        "title": "User Detail"
+      }
     }
   },
   "navigation": {

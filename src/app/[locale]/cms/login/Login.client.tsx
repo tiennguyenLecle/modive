@@ -35,7 +35,7 @@ export default function CmsLoginClient() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-16">
-      <Logo />
+      <Logo className="w-80" />
       <h1 className="text-20 font-semibold">{t('title')}</h1>
       <div className="w-full max-w-360">
         <Form

@@ -1,9 +1,24 @@
-import { PageContent } from '@/components/cms';
+import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
-export default function Page() {
+import { PageContent } from '@/components/cms';
+import { createServerSupabase } from '@/lib/supabase/factory.server';
+import { fetchUsers } from '@/lib/supabase/swr/users';
+
+import UsersManagementTableClient from './UsersManagementTable.client';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('cms.user_management.table');
+  return { title: t('title') };
+}
+
+export default async function Page() {
+  const serverSupabase = createServerSupabase('admin');
+  const users = await fetchUsers(serverSupabase);
+
   return (
     <PageContent>
-      <h1 className="text-xl font-semibold">User Management</h1>
+      <UsersManagementTableClient fallbackData={users} />
     </PageContent>
   );
 }

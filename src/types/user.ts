@@ -1,0 +1,23 @@
+export type UserType = {
+  id: string;
+  avatar_id?: string;
+  avatar_url?: string;
+  email: string;
+  phone?: string;
+  name?: string;
+  nickname?: string;
+  gender?: string;
+  date_of_birth?: string;
+  metadata?: Record<string, any>;
+  role?: string;
+  notification_enabled?: boolean;
+  last_login_provider?: string;
+  last_login_at?: string;
+  coins?: number;
+  avatar_key?: string;
+  balance?: number;
+  language_code?: string;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+};

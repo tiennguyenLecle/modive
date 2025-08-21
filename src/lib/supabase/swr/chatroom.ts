@@ -58,8 +58,9 @@ export async function fetchChatRooms(
     queryBuilder = queryBuilder.eq('type', type);
   }
 
-  // Sort by pinned_at (pinned rooms lên đầu), then by created_at (latest first)
+  // Sort by pinned_at (pinned rooms first), then by created_at (latest first)
   queryBuilder = queryBuilder
+    .order('is_pinned', { ascending: false })
     .order('pinned_at', { ascending: false })
     .order('created_at', { ascending: false });
 

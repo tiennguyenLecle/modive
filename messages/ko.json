@@ -116,7 +116,10 @@
     "loading": "로딩중...",
     "modal_options": {
       "top_fixing": "상단 고정",
-      "deletion": "삭제하기"
+      "un_top_fixing": "상단 고정 해제",
+      "deletion": "삭제하기",
+      "confirm_deletion_title": "채팅방 삭제",
+      "confirm_deletion_description": "정말 이 채팅방을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
     },
     "view_by_work": "작품별 보기"
   },
@@ -215,5 +218,9 @@
     "login_with_google": "Google 계정으로 시작하기",
     "login_with_kakao": "카카오로 시작하기",
     "login_with_apple": "Apple로 시작하기"
+  },
+  "general": {
+    "cancel": "취소",
+    "confirm": "확인하다"
   }
 }

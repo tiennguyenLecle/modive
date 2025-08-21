@@ -7,20 +7,19 @@ import { useSearchParams } from 'next/navigation';
 import VirtualList from 'rc-virtual-list';
 
 import { Pin } from '@/assets/icons';
-import { Badge, Spinner, Toggle } from '@/components';
+import { Badge, Spinner } from '@/components';
 import { useMyRoomsInfinite } from '@/hooks/useChat';
 import { useRouter } from '@/lib/navigation';
 import { ChatRoomType } from '@/types/chatroom';
 import { cx, getPublicUrl } from '@/utils/method';
 
 import styles from './ChatRoomList.module.scss';
-import ModalOptions from './ModalOptions.client';
+import ModalOptions from './modals/ModalOptions.client';
 import WorkFilter from './WorkFilter.client';
 
 export default function ChatRoomList() {
   const t = useTranslations('chat_page');
   const modalRef = React.useRef<React.ElementRef<typeof ModalOptions>>(null);
-  const format = useFormatter();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedWorkIds, setSelectedWorkIds] = useState<string[]>([]);
@@ -30,6 +29,7 @@ export default function ChatRoomList() {
     setSize,
     isValidating,
     isReachingEnd,
+    mutate,
   } = useMyRoomsInfinite({
     pageSize: 10,
     type: searchParams.get('key') === 'chapter' ? 'chapter' : 'general',
@@ -75,11 +75,7 @@ export default function ChatRoomList() {
               id={item.id}
               name={item.character.name}
               avatar={getPublicUrl(item.character.avatar_key)}
-              time={format.dateTime(new Date(item.created_at), {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true,
-              })}
+              time={new Date(item.created_at)}
               lastMessage={item.last_message}
               unreadCount={0}
               isPinned={item.is_pinned}
@@ -90,11 +86,17 @@ export default function ChatRoomList() {
               }
               onContextMenu={e => {
                 e.preventDefault();
-                modalRef.current?.open(item.id);
+                modalRef.current?.open({
+                  id: item.id,
+                  is_pinned: item.is_pinned,
+                });
               }}
               onTouchStart={() => {
                 longPressTimer.current = setTimeout(() => {
-                  modalRef.current?.open(item.id);
+                  modalRef.current?.open({
+                    id: item.id,
+                    is_pinned: item.is_pinned,
+                  });
                 }, 500);
               }}
               onTouchEnd={() => {
@@ -113,7 +115,12 @@ export default function ChatRoomList() {
           <Spinner className="mx-auto" />
         </div>
       )}
-      <ModalOptions ref={modalRef} />
+      <ModalOptions
+        actionCallback={() => {
+          mutate();
+        }}
+        ref={modalRef}
+      />
     </div>
   );
 }
@@ -122,7 +129,7 @@ type ChatListItemProps = ComponentProps<'div'> & {
   id: string;
   name: string;
   avatar: string;
-  time: string;
+  time: Date;
   lastMessage: string;
   unreadCount: number;
   isPinned: boolean;
@@ -133,6 +140,8 @@ const ChatListItem = React.forwardRef<HTMLDivElement, ChatListItemProps>(
     { name, avatar, time, lastMessage, unreadCount, isPinned, ...rest },
     ref
   ) => {
+    const format = useFormatter();
+
     return (
       <div
         className="container flex w-full cursor-pointer gap-16 rounded-8 border-b border-gray-90 bg-gray-100 py-16 transition-colors duration-300 hover:bg-gray-90"
@@ -159,7 +168,19 @@ const ChatListItem = React.forwardRef<HTMLDivElement, ChatListItemProps>(
         )}
 
         <div className="flex w-60 flex-col items-end gap-8 py-4">
-          <p className="text-12 font-semibold text-gray-50">{time}</p>
+          <time
+            className="text-12 font-semibold text-gray-50"
+            title={format.dateTime(time, {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+            })}
+          >
+            {format.dateTime(time, {
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true,
+            })}
+          </time>
           <Badge.CountNode count={unreadCount} />
         </div>
       </div>

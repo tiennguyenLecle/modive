@@ -3,14 +3,18 @@ import React, { ButtonHTMLAttributes } from 'react';
 
 import { cx } from '@/utils/method';
 
+import Spinner from './Spinner';
+
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary';
+  loading?: boolean;
 };
 
 const Button = ({
   variant = 'primary',
   className = '',
   children,
+  loading,
   ...props
 }: ButtonProps) => {
   const baseStyle =
@@ -24,6 +28,7 @@ const Button = ({
   return (
     <button className={cx(baseStyle, variantStyle, className)} {...props}>
       {children}
+      {loading && <Spinner />}
     </button>
   );
 };

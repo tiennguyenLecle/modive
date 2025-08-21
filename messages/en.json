@@ -116,7 +116,10 @@
     "loading": "Loading...",
     "modal_options": {
       "top_fixing": "Top fixing",
-      "deletion": "Deletion"
+      "un_top_fixing": "Unpin",
+      "deletion": "Deletion",
+      "confirm_deletion_title": "Delete chat room",
+      "confirm_deletion_description": "Are you sure you want to delete this chat room? This action cannot be undone."
     },
     "view_by_work": "View by work"
   },
@@ -215,5 +218,9 @@
     "login_with_google": "Login with Google",
     "login_with_kakao": "Login with Kakao",
     "login_with_apple": "Login with Apple"
+  },
+  "general": {
+    "cancel": "cancellation",
+    "confirm": "confirm"
   }
 }

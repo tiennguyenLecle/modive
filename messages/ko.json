@@ -113,6 +113,7 @@
       }
     },
     "no_rooms": "채팅방이 없습니다",
+    "loading": "로딩중...",
     "modal_options": {
       "top_fixing": "상단 고정",
       "deletion": "삭제하기"

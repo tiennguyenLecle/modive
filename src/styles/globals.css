@@ -117,3 +117,25 @@
 .admin-layout > .page-wrapper {
   @apply min-w-0 flex-1;
 }
+
+/* --- Start: Image preview --- Ant design image preview --- */
+.ant-image-preview-root .ant-image-preview-mask {
+  background: var(--color-gray-gray10, #2c262f);
+}
+
+.ant-image-preview-operations-wrapper .ant-image-preview-footer {
+  top: 44px;
+  left: 16px;
+  right: auto;
+  bottom: auto;
+  transform: translate(0);
+  max-width: calc(100% - 80px);
+}
+
+.ant-image-preview-operations-wrapper .ant-image-preview-close {
+  right: 16px;
+  top: 44px;
+  background: none;
+  padding: 0;
+}
+/* --- End: Image preview --- Ant design image preview --- */

@@ -14,6 +14,7 @@ import React__default, {
   version,
 } from 'react';
 import ReactDOM from 'react-dom';
+import { Image } from 'antd';
 
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default')
@@ -5513,18 +5514,21 @@ const ImageMessage = ({
   className = '',
   imageUrl,
   children,
-  size = 'small',
-  onClick,
+  alt,
+  width,
+  height,
+  dataTestId,
   ...props
 }) => {
-  return jsxRuntimeExports.jsxs('div', {
-    className: `${styles$2.messageImage} c-message-image-${size} ${className}`,
-    onClick: onClick,
+  return jsxRuntimeExports.jsx(Image, {
     ...props,
-    children: [
-      jsxRuntimeExports.jsx('img', { src: imageUrl, alt: 'message' }),
-      children,
-    ],
+    className: `${styles$2.messageImage} ${className}`,
+    src: imageUrl,
+    alt: alt ?? 'image',
+    width: width,
+    height: height,
+    'data-testid': dataTestId,
+    children: children,
   });
 };
 
@@ -5606,8 +5610,15 @@ const ChatboxComposer = ({
 }) => {
   const textareaRef = useRef(null);
   return jsxRuntimeExports.jsxs('div', {
-    className: `${styles$1.chatboxComposer} ${className}`,
     ...props,
+    className: `${styles$1.chatboxComposer} ${className}`,
+    onKeyDown: e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendButtonComponent?.onClick?.();
+        textareaRef.current?.focus();
+      }
+    },
     children: [
       beforeComposerOutside,
       jsxRuntimeExports.jsx(Textarea, {
@@ -37691,12 +37702,21 @@ const MessageComponent = memo(
       messageArray, // render message array (include texts, images, videos for each message item)
       align = 'center',
     } = item;
-    const handleRenderContentByType = item => {
-      if (!item)
+    const handleRenderContentByType = itemByType => {
+      // get message field from item
+      if (!itemByType)
         return jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, {
           children: message,
         });
-      const { type, message: messageContent, imageUrl } = item;
+      // handle render content by type
+      const {
+        type,
+        message: messageContent,
+        imageUrl,
+        alt,
+        imageWidth,
+        imageHeight,
+      } = itemByType;
       switch (type) {
         case 'text':
           return jsxRuntimeExports.jsx('div', {
@@ -37714,9 +37734,13 @@ const MessageComponent = memo(
           return (
             imageMessageOverride ||
             jsxRuntimeExports.jsx(ImageMessage, {
+              width: imageWidth,
+              height: imageHeight,
+              alt: alt ?? 'image',
               className: 'c-msg-image',
-              ...imageMessageProps,
               imageUrl: imageUrl ?? '',
+              ...imageMessageProps,
+              onClick: () => imageMessageProps?.onClick?.(itemByType),
             })
           );
         case 'video':
@@ -37740,7 +37764,7 @@ const MessageComponent = memo(
               className: 'c-msg-text-line',
               message: jsxRuntimeExports.jsx(Markdown, {
                 remarkPlugins: [remarkGfm, remarkBreaks],
-                children: message,
+                children: messageContent,
               }),
             }),
           });
@@ -37771,30 +37795,41 @@ const MessageComponent = memo(
                 }),
                 messageArray && messageArray?.length > 0
                   ? messageArray?.map((item1, index1) => {
-                      return jsxRuntimeExports.jsx(
+                      return jsxRuntimeExports.jsxs(
                         'div',
                         {
                           className: 'c-msg-line',
-                          children: handleRenderContentByType(item1),
+                          children: [
+                            handleRenderContentByType(item1),
+                            index1 === messageArray?.length - 1 &&
+                              createdAt &&
+                              jsxRuntimeExports.jsx(TimeLabel, {
+                                ...timeLabelProps,
+                                className: 'c-msg-timestamp',
+                                time: createdAt,
+                              }),
+                          ],
                         },
                         index1
                       );
                     })
-                  : jsxRuntimeExports.jsx('div', {
+                  : jsxRuntimeExports.jsxs('div', {
                       className: 'c-msg-line',
-                      children: handleRenderContentByType({
-                        type: 'text',
-                        message,
-                      }),
+                      children: [
+                        handleRenderContentByType({
+                          type: 'text',
+                          message,
+                        }),
+                        createdAt &&
+                          jsxRuntimeExports.jsx(TimeLabel, {
+                            ...timeLabelProps,
+                            className: 'c-msg-timestamp',
+                            time: createdAt,
+                          }),
+                      ],
                     }),
               ],
             }),
-            createdAt &&
-              jsxRuntimeExports.jsx(TimeLabel, {
-                ...timeLabelProps,
-                className: 'c-msg-timestamp',
-                time: createdAt,
-              }),
           ],
         }),
     });
@@ -37819,10 +37854,17 @@ const sampleMessages = [
     speakerType: 'user',
     speakerId: 'c7a2d99e-985d-4c3c-8c0c-8d36cb1c6001',
     name: 'Bubu Chacha',
-    message:
-      '::image{id=f8u85GSs5A}Just took this while reading my favorite book! Maybe we could find something we both enjoy talking about? 😊',
+    message: '',
     createdAt: '09:32 pm',
     avatarUrl: 'https://cdn3.emoji.gg/emojis/10098-pervy-look.png',
+    messageArray: [
+      {
+        type: 'image',
+        message: '',
+        imageUrl: 'https://cdn3.emoji.gg/emojis/10098-pervy-look.png',
+        alt: 'image',
+      },
+    ],
   },
   {
     id: 'c7908ad7-aba6-4377-a55d-600bf1d1bd22',

@@ -102,6 +102,9 @@ type MessageArrayItem = {
   type: MessageType;
   message: ReactNode | string;
   imageUrl?: string;
+  alt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 };
 
 type MessageInfoProps = {

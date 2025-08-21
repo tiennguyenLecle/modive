@@ -113,6 +113,7 @@
       }
     },
     "no_rooms": "No chat rooms",
+    "loading": "Loading...",
     "modal_options": {
       "top_fixing": "Top fixing",
       "deletion": "Deletion"

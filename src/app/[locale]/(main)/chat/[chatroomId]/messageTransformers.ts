@@ -33,7 +33,7 @@ export const transformMessageToInfoProps = (
   align: handleAlign(msg.speaker_type ?? 'user'),
   speakerId: msg.speaker_id,
   name: msg.speaker_id,
-  message: msg.message,
+  message: '',
   createdAt: formatDateOrTime(msg.created_at ?? '', 'time'),
   createdDate: msg.created_at
     ? dayjs(msg.created_at).format('YYYY-MM-DD')
@@ -78,6 +78,8 @@ export const mapMessagesToInfoProps = (
     result.push(current);
   }
 
-  // Remove temporary createdDate field
-  return result.map(({ createdDate, ...rest }) => rest as MessageInfoProps);
+  return result.map(({ createdDate, ...rest }) => ({
+    ...rest,
+    createdDate: dayjs(createdDate).format('YYYY.MM.DD'),
+  }));
 };

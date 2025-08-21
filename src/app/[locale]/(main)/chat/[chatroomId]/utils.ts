@@ -28,6 +28,44 @@ export type MessageContent = {
   imageUrl?: string;
 };
 
+function parseMessage(str: string) {
+  // bắt cả alt text và url
+  const regex = /!\[(.*?)\]\((https?:\/\/.*?)\)/g;
+
+  let result: any[] = [];
+  let lastIndex = 0;
+
+  for (const match of str.matchAll(regex)) {
+    const matchText = match[0];
+    const alt = match[1]; // alt text nằm trong []
+    const url = match[2]; // url trong ()
+    const index = match.index ?? 0;
+
+    // text trước image
+    if (lastIndex < index) {
+      const textPart = str.slice(lastIndex, index).trim();
+      if (textPart) {
+        result.push({ type: 'markdown', message: textPart });
+      }
+    }
+
+    // push image kèm alt
+    result.push({ type: 'image', imageUrl: url, alt });
+
+    lastIndex = index + matchText.length;
+  }
+
+  // text còn lại sau image
+  if (lastIndex < str.length) {
+    const textPart = str.slice(lastIndex).trim();
+    if (textPart) {
+      result.push({ type: 'markdown', message: textPart });
+    }
+  }
+
+  return result;
+}
+
 /**
  * Handle message text parsing and conversion
  * @param text - The text of message to split and convert to array of message content
@@ -39,40 +77,7 @@ export const handleMessageText = (text: string): MessageContent[] => {
     return [];
   }
 
-  // // Handle text with line breaks
-  // if (/\n+/.test(text)) {
-  //   const parts = text.split(/\n+/).filter(Boolean);
-
-  //   if (parts.length === 0) return [];
-
-  //   return parts.map(part => {
-  //     const trimmedPart = part.trim();
-
-  //     // Check if it's an image reference
-  //     if (trimmedPart.startsWith('::image{id=')) {
-  //       const imageId = extractImageId(trimmedPart);
-
-  //       return {
-  //         type: 'image' as const,
-  //         imageUrl: DEFAULT_IMAGE_URL,
-  //         message: '',
-  //       };
-  //     }
-
-  //     return {
-  //       type: 'text' as const,
-  //       message: trimmedPart,
-  //     };
-  //   });
-  // }
-
-  // Using markdown for now
-  return [
-    {
-      type: 'markdown',
-      message: text,
-    },
-  ];
+  return parseMessage(text);
 };
 
 /**
@@ -80,7 +85,7 @@ export const handleMessageText = (text: string): MessageContent[] => {
  * @param imageRef - Image reference string (e.g., "::image{id=123}")
  * @returns Extracted image ID or empty string if invalid
  */
-const extractImageId = (imageRef: string): string => {
+export const extractImageId = (imageRef: string): string => {
   try {
     const match = imageRef.match(/::image\{id=([^}]+)\}/);
     return match?.[1] || '';

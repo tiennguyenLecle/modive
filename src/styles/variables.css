@@ -1,5 +1,6 @@
 /* Define colors for light and dark mode */
 :root {
+  --font-family: var(--font-pretendard), 'Pretendard', sans-serif;
   --primary: #ff627b;
   --secondary: #ffa7b5;
   --tertiary: #ffdce1;
@@ -49,12 +50,6 @@
   --message-image-height: 100px;
   --message-image-border-radius: 16px;
   --message-image-border-color: transparent;
-  --message-image-width-small: 100px;
-  --message-image-height-small: 100px;
-  --message-image-width-medium: 100px;
-  --message-image-height-medium: 100px;
-  --message-image-width-large: 100px;
-  --message-image-height-large: 100px;
 
   /* Message Video */
   --message-video-width: 100px;

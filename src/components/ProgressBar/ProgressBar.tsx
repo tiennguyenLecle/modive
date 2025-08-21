@@ -23,7 +23,7 @@ export default function ProgressBar({
   return (
     <>
       <span
-        className={`flex-shrink-0 whitespace-nowrap ${
+        className={`flex-shrink-0 whitespace-nowrap text-14 font-semibold ${
           labelColor ? `text-[${labelColor}]` : 'text-primary'
         }`}
       >

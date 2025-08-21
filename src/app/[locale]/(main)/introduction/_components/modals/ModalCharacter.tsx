@@ -7,12 +7,12 @@ import { useSearchParams } from 'next/navigation';
 
 import { Heart } from '@/assets/icons';
 import { Button, Modal } from '@/components';
-import { useCharacterDetail } from '@/hooks/useCharacter';
 import { useCreateChat } from '@/hooks/useChat';
 import { useRouter } from '@/lib/navigation';
 import { STORAGE } from '@/utils/constants';
 import { cx, getPublicUrl } from '@/utils/method';
 
+import { useCharacter } from '../../_hooks/useCharacter';
 import ModalExistChatRoom from './ModalExistChatRoom';
 import ModalGuideToUse from './ModalGuideToUse';
 
@@ -34,6 +34,10 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const { characterDetail, toggleLike } = useCharacter(characterId);
+  const character = characterDetail.data;
+  const createChat = useCreateChat();
+
   const closeHandler = () => {
     setIsOpen(false);
   };
@@ -44,10 +48,6 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
     },
     close: closeHandler,
   }));
-
-  const { characterDetail, isLoading: isLoadingCharacterDetail } =
-    useCharacterDetail(characterId as string);
-  const createChat = useCreateChat();
 
   const removeCharacterId = () => {
     const params = new URLSearchParams(searchParams);
@@ -62,7 +62,7 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
   const createChatHandler = () =>
     createChat
       .trigger({
-        bundleId: characterDetail!.work.bundle_id!,
+        bundleId: character?.work.bundle_id!,
         characterId: characterId as string,
       })
       .then(res => {
@@ -76,15 +76,13 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
         await modalGuideToUseRef.current?.open();
       }
 
-      if (
-        characterDetail?.chat_rooms &&
-        characterDetail.chat_rooms.length > 0
-      ) {
+      if (character?.chat_rooms && character.chat_rooms.length > 0) {
+        const { chat_rooms } = character;
         modalGuideToUseRef.current?.close();
         const decision = await modalExistChatRoomRef.current?.open();
 
         if (decision === 'existing') {
-          const { room_id, session_id } = characterDetail.chat_rooms[0];
+          const { room_id, session_id } = chat_rooms[0];
           redirectToChatRoom(room_id, session_id);
         } else {
           await createChatHandler();
@@ -100,6 +98,11 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
     }
   };
 
+  const handleLike = async () => {
+    if (!character) return;
+    await toggleLike.trigger();
+  };
+
   useEffect(() => {
     if (characterId) {
       setIsOpen(true);
@@ -110,13 +113,13 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
     <>
       <Modal
         open={isOpen}
-        loading={isLoadingCharacterDetail}
+        loading={characterDetail.isLoading}
         onCancel={() => {
           closeHandler();
           removeCharacterId();
         }}
         footer={
-          characterDetail ? (
+          character ? (
             <div className="flex w-full items-center gap-8">
               <Button
                 variant="primary"
@@ -132,29 +135,34 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
         <div className="container flex flex-col gap-16">
           <div className="relative aspect-square w-full">
             <Image
-              src={getPublicUrl(characterDetail?.avatar_key)}
-              alt="character"
+              src={getPublicUrl(character?.avatar_key)}
+              alt={character?.name || 'User avatar'}
               fill
               className="rounded-4"
             />
           </div>
           <div className="flex items-start gap-8">
-            <p title={characterDetail?.name}>{characterDetail?.name}</p>
-            <div className="group ml-auto flex cursor-pointer items-center gap-4">
+            <p title={character?.name}>{character?.name}</p>
+            <div
+              onClick={handleLike}
+              className="group ml-auto flex cursor-pointer items-center gap-4"
+            >
               <Heart
                 className={cx(
-                  'size-18 text-white transition-colors duration-200 group-hover:stroke-primary group-hover:text-primary',
-                  characterDetail?.is_liked && 'stroke-primary text-primary'
+                  'size-18 transition-colors duration-200 group-hover:stroke-primary group-hover:text-primary',
+                  character?.is_liked
+                    ? 'stroke-primary text-primary'
+                    : 'text-white'
                 )}
               />
-              {characterDetail?.total_likes === 0
+              {character?.total_likes === 0
                 ? t('like')
-                : characterDetail?.total_likes}
+                : character?.total_likes}
             </div>
           </div>
-          <p>{characterDetail?.introduction}</p>
-          {characterDetail?.quote && (
-            <q className="text-center">{characterDetail?.quote}</q>
+          <p>{character?.introduction}</p>
+          {character?.quote && (
+            <q className="text-center">{character?.quote}</q>
           )}
         </div>
       </Modal>

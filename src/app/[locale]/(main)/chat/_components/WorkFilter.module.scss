@@ -1,0 +1,37 @@
+.workFilterContainer {
+  position: relative;
+  width: 100%;
+}
+
+.scrollContainer {
+  @apply flex gap-8 overflow-x-auto bg-gray-90 px-16 py-12;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+  }
+
+  &::before {
+    left: 0;
+  }
+
+  &::after {
+    right: 0;
+  }
+
+  &.scrolled::before {
+    width: 60rem;
+    background: linear-gradient(to left, transparent 0%, white 100%);
+  }
+
+  &.hasMore::after {
+    width: 60rem;
+    background: linear-gradient(to right, transparent, #fff 100%);
+  }
+}

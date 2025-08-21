@@ -28,3 +28,15 @@ export const fetchWorkCharacters = async (
   if (error) throw error;
   return data as CharacterType[];
 };
+
+export const fetchAllWorks = async (
+  supabase: SupabaseClient,
+  fields?: string[]
+) => {
+  const { data, error } = await supabase
+    .from('works')
+    .select(fields?.join(',') ?? '*');
+
+  if (error) throw error;
+  return data as unknown as WorkType[];
+};

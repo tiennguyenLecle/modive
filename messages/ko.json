@@ -102,7 +102,8 @@
     "modal_options": {
       "top_fixing": "상단 고정",
       "deletion": "삭제하기"
-    }
+    },
+    "view_by_work": "작품별 보기"
   },
   "goods_page": {
     "metadata": {

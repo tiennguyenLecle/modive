@@ -102,7 +102,8 @@
     "modal_options": {
       "top_fixing": "Top fixing",
       "deletion": "Deletion"
-    }
+    },
+    "view_by_work": "View by work"
   },
   "goods_page": {
     "metadata": {

@@ -1,13 +1,13 @@
 'use client';
 
-import React, { ComponentProps, useRef } from 'react';
+import React, { ComponentProps, useRef, useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import VirtualList from 'rc-virtual-list';
 
 import { Pin } from '@/assets/icons';
-import { Badge, Spinner } from '@/components';
+import { Badge, Spinner, Toggle } from '@/components';
 import { useMyRoomsInfinite } from '@/hooks/useChat';
 import { useRouter } from '@/lib/navigation';
 import { ChatRoomType } from '@/types/chatroom';
@@ -15,6 +15,7 @@ import { cx, getPublicUrl } from '@/utils/method';
 
 import styles from './ChatRoomList.module.scss';
 import ModalOptions from './ModalOptions.client';
+import WorkFilter from './WorkFilter.client';
 
 export default function ChatRoomList() {
   const t = useTranslations('chat_page');
@@ -22,6 +23,8 @@ export default function ChatRoomList() {
   const format = useFormatter();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [selectedWorkIds, setSelectedWorkIds] = useState<string[]>([]);
+
   const {
     rooms: chatrooms,
     setSize,
@@ -30,6 +33,7 @@ export default function ChatRoomList() {
   } = useMyRoomsInfinite({
     pageSize: 10,
     type: searchParams.get('key') === 'chapter' ? 'chapter' : 'general',
+    workIds: selectedWorkIds,
   });
 
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
@@ -47,6 +51,16 @@ export default function ChatRoomList() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      <WorkFilter
+        selectedWorkIds={selectedWorkIds}
+        onToggleWork={value => {
+          if (selectedWorkIds.includes(value)) {
+            setSelectedWorkIds(selectedWorkIds.filter(id => id !== value));
+          } else {
+            setSelectedWorkIds([...selectedWorkIds, value]);
+          }
+        }}
+      />
       {chatrooms.length > 0 && (
         <VirtualList<ChatRoomType>
           data={chatrooms}

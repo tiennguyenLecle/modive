@@ -37740,7 +37740,7 @@ const MessageComponent = memo(
               className: 'c-msg-image',
               imageUrl: imageUrl ?? '',
               ...imageMessageProps,
-              onClick: () => imageMessageProps?.onClick?.(itemByType),
+              onClick: () => imageMessageProps?.onClick?.(item),
             })
           );
         case 'video':

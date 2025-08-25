@@ -17,14 +17,14 @@ import {
 // Define different types of routes for authentication logic
 
 // Public routes - accessible to everyone, regardless of authentication status
-const PUBLIC_ROUTES = [ROUTES.HOME, ROUTES.LOGIN, ROUTES.CMS.LOGIN];
+const PUBLIC_ROUTES = [ROUTES.LOGIN, ROUTES.CMS.LOGIN];
 
 // Auth routes - only for unauthenticated users (redirected if already logged in)
 const AUTH_ROUTES = [ROUTES.LOGIN, ROUTES.CMS.LOGIN];
 // const ADMIN_AUTH_ROUTES = [ROUTES.CMS.LOGIN];
 
 // Protected routes - require authentication (redirected to login if not authenticated)
-const PROTECTED_ROUTES = [ROUTES.CHAT, ROUTES.MANAGEMENT.INDEX];
+// const PROTECTED_ROUTES = [ROUTES.CHAT, ROUTES.MANAGEMENT.INDEX];
 // const ADMIN_PROTECTED_ROUTES = [ROUTES.CMS.INDEX];
 
 // === INTERNATIONALIZATION SETUP ===
@@ -87,14 +87,12 @@ export default async function middleware(request: NextRequest) {
   // A route is public if:
   // 1. It's explicitly in the PUBLIC_ROUTES array, OR
   // 2. It's not a protected route (fallback for undefined routes)
-  const isPublicRoute =
-    PUBLIC_ROUTES.some(
-      route =>
-        route === '/'
-          ? localeFreePathname === route // Exact match for root route
-          : localeFreePathname.startsWith(route) // Prefix match for other routes
-    ) || !PROTECTED_ROUTES.some(route => localeFreePathname.startsWith(route));
-
+  const isPublicRoute = PUBLIC_ROUTES.some(
+    route =>
+      route === '/'
+        ? localeFreePathname === route // Exact match for root route
+        : localeFreePathname.startsWith(route) // Prefix match for other routes
+  );
   // Check if this is an authentication-only route (login/register)
   const isAuthRoute = AUTH_ROUTES.some(route =>
     localeFreePathname.startsWith(route)

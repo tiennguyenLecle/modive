@@ -14,7 +14,7 @@ type AuthContextValue = {
   user: User | null;
   signInWithProvider: (
     provider: 'google' | string,
-    redirectTo?: string
+    redirectTo: string | null
   ) => Promise<void>;
   signInWithCredential: (
     email: string,
@@ -22,6 +22,7 @@ type AuthContextValue = {
     redirectTo?: string
   ) => Promise<void>;
   signOut: () => Promise<void>;
+  signInWithKakao: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -65,23 +66,25 @@ export function AuthProvider({ children, role }: AuthProviderProps) {
 
   const signInWithProvider = async (
     provider: 'google' | string,
-    redirectTo?: string
+    redirectTo?: string | null
   ) => {
     const defaultRedirectPath =
       role === 'admin' ? ROUTES.CMS.DATA_MANAGEMENT.CONTENT : ROUTES.HOME;
 
-    const redirect =
-      redirectTo ||
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/${role}/callback?redirect=${encodeURIComponent(defaultRedirectPath)}`;
-
-    console.log(`[LOGIN OAUTH] ${provider}, redirect: ${redirect}`);
+    const redirect = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/${role}/callback?redirect=${encodeURIComponent(redirectTo || defaultRedirectPath)}`;
 
     await supabase.auth.signInWithOAuth({
       provider: provider as any,
-      // Redirect to the Next auth callback route to sync the session with the server
-      // Then back to the defaultRedirectPath for the browser
       options: { redirectTo: redirect },
     });
+  };
+
+  const signInWithKakao = async () => {
+    const redirect = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/${role}/kakao-callback`;
+    const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${redirect}&response_type=code`;
+
+    window.location.href = kakaoAuthUrl;
   };
 
   const signInWithCredential = async (
@@ -113,6 +116,7 @@ export function AuthProvider({ children, role }: AuthProviderProps) {
     signInWithProvider,
     signInWithCredential,
     signOut,
+    signInWithKakao,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

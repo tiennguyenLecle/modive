@@ -28,6 +28,7 @@ import Reload from './reload.svg';
 import Search from './search.svg';
 import SocialApple from './social-apple.svg';
 import SocialGoogle from './social-google.svg';
+import SocialKakaoTalk2 from './social-kakao-talk-2.svg';
 import SocialKakaoTalk from './social-kakao-talk.svg';
 import TipDisabledIcon from './tip-disabled.svg';
 import TipIcon from './tip.svg';
@@ -65,6 +66,7 @@ export {
   SocialApple,
   SocialGoogle,
   SocialKakaoTalk,
+  SocialKakaoTalk2,
   Trash,
   TipDisabledIcon,
   TipIcon,

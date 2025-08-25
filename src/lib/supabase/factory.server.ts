@@ -12,7 +12,8 @@ export type NextCookiesAdapter = {
 
 export function createServerSupabase(
   role: Role,
-  cookiesAdapter?: NextCookiesAdapter
+  cookiesAdapter?: NextCookiesAdapter,
+  key: 'anon' | 'service' = 'anon'
 ): SupabaseClient {
   const cookieName =
     role === 'admin' ? COOKIE_PREFIX_SB_ADMIN : COOKIE_PREFIX_SB;
@@ -37,7 +38,9 @@ export function createServerSupabase(
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    key === 'anon'
+      ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      : process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       cookieOptions: { name: cookieName },
       cookies: {

@@ -1,8 +1,9 @@
 'use client';
 
-import { ComponentProps } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 
 import {
   Logo,
@@ -15,7 +16,18 @@ import { cx } from '@/utils/method';
 
 export default function LoginClient() {
   const t = useTranslations('login_page');
-  const { signInWithProvider } = useAuth();
+  const { signInWithProvider, signInWithKakao } = useAuth();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const error =
+      searchParams.get('error_description') || searchParams.get('error');
+    if (error) {
+      setErrorMessage(decodeURIComponent(error.replace(/\+/g, ' ')));
+    }
+  }, [searchParams]);
 
   return (
     <>
@@ -39,13 +51,23 @@ export default function LoginClient() {
         {t('description')}
       </motion.p>
 
+      {errorMessage && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-md bg-red-100 text-sm text-red-700 mb-16 p-4 text-center"
+        >
+          {errorMessage}
+        </motion.div>
+      )}
+
       <div className="flex flex-col gap-16">
         <LoginButton
           className="bg-black text-white"
           icon={<SocialApple className="size-24" />}
           animationDelay={0.6}
           onClick={async () => {
-            await signInWithProvider('apple');
+            await signInWithProvider('apple', callbackUrl);
           }}
         >
           {t('login_with_apple')}
@@ -55,7 +77,7 @@ export default function LoginClient() {
           icon={<SocialKakaoTalk className="size-24" />}
           animationDelay={0.8}
           onClick={async () => {
-            await signInWithProvider('kakao');
+            await signInWithKakao();
           }}
         >
           {t('login_with_kakao')}
@@ -65,7 +87,7 @@ export default function LoginClient() {
           icon={<SocialGoogle className="size-24" />}
           animationDelay={1.0}
           onClick={async () => {
-            await signInWithProvider('google');
+            await signInWithProvider('google', callbackUrl);
           }}
         >
           {t('login_with_google')}

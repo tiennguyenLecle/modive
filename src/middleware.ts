@@ -2,11 +2,14 @@ import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/lib/locale';
-import { updateAdminSession, updateSession } from '@/lib/supabase/middleware';
+import {
+  //  updateAdminSession,
+  updateSession,
+} from '@/lib/supabase/middleware';
 
 import {
   COOKIE_PREFIX_SB,
-  COOKIE_PREFIX_SB_ADMIN,
+  // COOKIE_PREFIX_SB_ADMIN,
   ROUTES,
 } from './utils/constants';
 
@@ -18,11 +21,11 @@ const PUBLIC_ROUTES = [ROUTES.HOME, ROUTES.LOGIN, ROUTES.CMS.LOGIN];
 
 // Auth routes - only for unauthenticated users (redirected if already logged in)
 const AUTH_ROUTES = [ROUTES.LOGIN, ROUTES.CMS.LOGIN];
-const ADMIN_AUTH_ROUTES = [ROUTES.CMS.LOGIN];
+// const ADMIN_AUTH_ROUTES = [ROUTES.CMS.LOGIN];
 
 // Protected routes - require authentication (redirected to login if not authenticated)
 const PROTECTED_ROUTES = [ROUTES.CHAT, ROUTES.MANAGEMENT.INDEX];
-const ADMIN_PROTECTED_ROUTES = [ROUTES.CMS.INDEX];
+// const ADMIN_PROTECTED_ROUTES = [ROUTES.CMS.INDEX];
 
 // === INTERNATIONALIZATION SETUP ===
 // Create the next-intl middleware with our locale configuration
@@ -65,10 +68,10 @@ export default async function middleware(request: NextRequest) {
   // Preserve i18n headers by passing the intl middleware response forward
 
   // Only refresh Admin session when accessing CMS-related routes
-  const isCmsPath = localeFreePathname.startsWith('/cms');
-  if (isCmsPath) {
-    response = await updateAdminSession(request, response);
-  }
+  // const isCmsPath = localeFreePathname.startsWith('/cms');
+  // if (isCmsPath) {
+  //   response = await updateAdminSession(request, response);
+  // }
   // Supabase @supabase/ssr set cookie auth in chunked format with custom prefix.
   // With current configuration (cookieOptions.name = 'modive.sb-auth_token.'), the cookie name will be 'modive.sb-auth_token.0', 'modive.sb-auth_token.1'.
 
@@ -76,10 +79,10 @@ export default async function middleware(request: NextRequest) {
     request.cookies.get(`${COOKIE_PREFIX_SB}.0`)?.value ||
       request.cookies.get(COOKIE_PREFIX_SB)?.value
   );
-  const isAdminLoggedIn = Boolean(
-    request.cookies.get(`${COOKIE_PREFIX_SB_ADMIN}.0`)?.value ||
-      request.cookies.get(COOKIE_PREFIX_SB_ADMIN)?.value
-  );
+  // const isAdminLoggedIn = Boolean(
+  //   request.cookies.get(`${COOKIE_PREFIX_SB_ADMIN}.0`)?.value ||
+  //     request.cookies.get(COOKIE_PREFIX_SB_ADMIN)?.value
+  // );
   // Determine if the current route is public
   // A route is public if:
   // 1. It's explicitly in the PUBLIC_ROUTES array, OR
@@ -96,18 +99,23 @@ export default async function middleware(request: NextRequest) {
   const isAuthRoute = AUTH_ROUTES.some(route =>
     localeFreePathname.startsWith(route)
   );
-  const isAdminAuthRoute = ADMIN_AUTH_ROUTES.some(route =>
-    localeFreePathname.startsWith(route)
-  );
+  // const isAdminAuthRoute = ADMIN_AUTH_ROUTES.some(route =>
+  //   localeFreePathname.startsWith(route)
+  // );
+
+  // === USER PROTECTED ROUTE LOGIC ===
+  if (!isLoggedIn && !isPublicRoute) {
+    response = await updateSession(request, response);
+  }
 
   // === ADMIN AUTH ROUTE LOGIC ===
-  if (isAdminAuthRoute) {
-    if (isAdminLoggedIn) {
-      const locale = request.nextUrl.locale;
-      return NextResponse.redirect(new URL(`/${locale}/cms`, request.url));
-    }
-    return response;
-  }
+  // if (isAdminAuthRoute) {
+  //   if (isAdminLoggedIn) {
+  //     const locale = request.nextUrl.locale;
+  //     return NextResponse.redirect(new URL(`/${locale}/cms`, request.url));
+  //   }
+  //   return response;
+  // }
 
   // === AUTH ROUTE LOGIC ===
   // If user is on an auth route (login/register)
@@ -126,17 +134,17 @@ export default async function middleware(request: NextRequest) {
   // === PROTECTED ROUTE LOGIC ===
   // If user is not logged in and trying to access a protected route
   // === ADMIN PROTECTED ROUTE LOGIC ===
-  const isOnCms = ADMIN_PROTECTED_ROUTES.some(route =>
-    localeFreePathname.startsWith(route)
-  );
-  if (isOnCms && !isAdminLoggedIn) {
-    const { search } = request.nextUrl;
-    let callbackUrl = localeFreePathname;
-    if (search) callbackUrl += search;
-    const loginUrl = new URL('/cms/login', request.url);
-    loginUrl.searchParams.set('callbackUrl', callbackUrl);
-    return NextResponse.redirect(loginUrl);
-  }
+  // const isOnCms = ADMIN_PROTECTED_ROUTES.some(route =>
+  //   localeFreePathname.startsWith(route)
+  // );
+  // if (isOnCms && !isAdminLoggedIn) {
+  //   const { search } = request.nextUrl;
+  //   let callbackUrl = localeFreePathname;
+  //   if (search) callbackUrl += search;
+  //   const loginUrl = new URL('/cms/login', request.url);
+  //   loginUrl.searchParams.set('callbackUrl', callbackUrl);
+  //   return NextResponse.redirect(loginUrl);
+  // }
 
   // === USER PROTECTED ROUTE LOGIC ===
   if (!isLoggedIn && !isPublicRoute) {

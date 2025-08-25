@@ -183,6 +183,19 @@
       "title": "죄송합니다. 오류가 발생했습니다!",
       "try_again": "다시 시도하십시오",
       "go_home": "집으로 돌아갑니다"
+    },
+    "community": {
+      "save": "저장",
+      "cancel": "취소",
+      "edit": "수정",
+      "delete": "삭제",
+      "placeholder": "200자 내외로 작성해주세요",
+      "send": "작성 완료",
+      "latest": "최신순",
+      "like": "좋아요",
+      "oldest": "가장 오래된",
+      "delete_comment": "이 댓글을 삭제하시겠습니까?",
+      "delete_comment_title": "댓글 삭제"
     }
   },
   "my_page": {

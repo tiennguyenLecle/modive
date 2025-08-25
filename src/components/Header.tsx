@@ -44,7 +44,7 @@ const Header = ({
           <ArrowRight
             width={24}
             height={24}
-            className="rotate-180 text-gray-00 transition-colors hover:bg-gray-90"
+            className="rotate-180 cursor-pointer text-gray-00 transition-colors hover:bg-gray-90"
             onClick={() => router.back()}
           />
         )}

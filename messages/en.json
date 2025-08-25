@@ -179,6 +179,19 @@
       "existing_chat_room_movement": "Existing chat room movement",
       "making_a_new_chat_room": "Making a new chat room"
     },
+    "community": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "placeholder": "Please write within 200 characters.",
+      "send": "Completed",
+      "latest": "Latest",
+      "like": "Like",
+      "oldest": "Oldest",
+      "delete_comment": "Are you sure to delete this comment?",
+      "delete_comment_title": "Delete Comment"
+    },
     "error": {
       "title": "Sorry, an error occurred!",
       "try_again": "Try again",

@@ -24,6 +24,7 @@ import NavPerson from './nav-person.svg';
 import NavVase from './nav-vase.svg';
 import Pencil from './pencil.svg';
 import Pin from './pin.svg';
+import Plus from './plus.svg';
 import Reload from './reload.svg';
 import Search from './search.svg';
 import SocialApple from './social-apple.svg';
@@ -44,9 +45,9 @@ export {
   Check,
   Chevron,
   Close,
-  Direction,
   DirectDisabledIcon,
   DirectIcon,
+  Direction,
   Ellipsis,
   Heart,
   Info,
@@ -61,13 +62,14 @@ export {
   NavVase,
   Pencil,
   Pin,
+  Plus,
   Reload,
   Search,
   SocialApple,
   SocialGoogle,
   SocialKakaoTalk,
   SocialKakaoTalk2,
-  Trash,
   TipDisabledIcon,
   TipIcon,
+  Trash,
 };

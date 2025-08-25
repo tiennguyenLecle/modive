@@ -1,4 +1,14 @@
 .introductionLayout {
+  @apply flex h-full flex-col;
+
+  .introductionTabs {
+    @apply relative min-h-0 flex-1;
+
+    [role='tabpanel'] {
+      @apply min-h-0 flex-1;
+    }
+  }
+
   .collapsedIntroductionHeader {
     overflow: hidden;
   }
@@ -8,9 +18,9 @@
       height: 0;
     }
 
-    [role='tablist'] {
-      height: 0;
-      overflow: hidden;
-    }
+    // [role='tablist'] {
+    //   height: 0;
+    //   overflow: hidden;
+    // }
   }
 }

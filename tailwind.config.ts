@@ -81,6 +81,7 @@ const config: Config = {
       16: '16rem',
       20: '20rem',
       22: '22rem',
+      24: '24rem',
     },
     lineHeight: {
       1: '1',
@@ -161,6 +162,9 @@ const config: Config = {
     },
     backgroundImage: {
       'modive-background': 'url(/images/background.png)',
+    },
+    boxShadow: {
+      'custom-1': '4px 4px 12px 0 rgba(255, 98, 123, 0.15)',
     },
     extend: {},
   },

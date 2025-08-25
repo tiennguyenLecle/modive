@@ -13,6 +13,7 @@ import { WorkType } from '@/types/work';
 import { cx, getPublicUrl } from '@/utils/method';
 
 import ModalCharacter from './_components/modals/ModalCharacter';
+import TabCommunity from './_components/tabs/TabCommunity.client';
 import styles from './Introduction.module.scss';
 
 type IntroductionClientProps = {
@@ -38,7 +39,11 @@ export default function IntroductionClient({
 
   return (
     <div className={styles.introductionLayout}>
-      <Header pageTitle={workDetail.title} showBackButton />
+      <Header
+        pageTitle={workDetail.title}
+        showBackButton
+        className="border-b border-gray-80"
+      />
       <div
         className={cx(
           styles.introductionHeader,
@@ -78,6 +83,7 @@ export default function IntroductionClient({
       </div>
       <div className={styles.introductionTabs}>
         <MenuTab
+          className="flex h-full flex-col"
           onTabChange={key => {
             const params = new URLSearchParams(searchParams);
             params.set('key', key);
@@ -124,7 +130,7 @@ export default function IntroductionClient({
             {
               key: 'community',
               label: t('tabs.community'),
-              children: <div className="container">Community</div>,
+              children: <TabCommunity />,
             },
           ]}
           activeTab={searchParams.get('key') || 'character'}

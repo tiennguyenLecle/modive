@@ -33,7 +33,7 @@ export const useLoadMoreMessages = (
   const prevLoadMoreRef = useRef<boolean>(false);
   const noDataRef = useRef(false);
 
-  const handleLoadMore = useCallback(async () => {
+  const handleLoadMore = async () => {
     if (prevLoadMoreRef.current || noDataRef.current) return;
 
     prevLoadMoreRef.current = true;
@@ -47,24 +47,28 @@ export const useLoadMoreMessages = (
       );
 
       if (res?.data?.length > 0) {
+        // Update messages - Virtuoso will automatically maintain scroll position
         updatedMessagesRef.current = [
           ...res.data.reverse(),
           ...updatedMessagesRef.current,
         ];
-        prevLoadMoreRef.current = false;
 
+        prevLoadMoreRef.current = false;
         setIsPreviousLoading(false);
+        return true;
       } else {
         prevLoadMoreRef.current = true;
         noDataRef.current = true;
         setIsPreviousLoading(false);
+        return false;
       }
     } catch (error) {
       console.error('Error loading more messages:', error);
       setIsPreviousLoading(false);
       prevLoadMoreRef.current = false;
+      return false;
     }
-  }, [chatroomId, updatedMessagesRef, messageListRef]);
+  };
 
   return { isPreviousLoading, handleLoadMore };
 };

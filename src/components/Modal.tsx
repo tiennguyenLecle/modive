@@ -22,6 +22,7 @@ type ModalProps = {
   showFooter?: boolean;
   showCloseButton?: boolean;
   containerClassName?: string;
+  modalParentClassName?: string;
   onCancel?: () => void;
   onConfirm?: () => void;
 };
@@ -40,6 +41,7 @@ const Modal = ({
   showFooter = true,
   showCloseButton = true,
   containerClassName = '',
+  modalParentClassName = '',
   onCancel,
   onConfirm,
 }: ModalProps) => {
@@ -64,7 +66,10 @@ const Modal = ({
             exit={{ opacity: 0 }}
           />
           <motion.div
-            className="fixed inset-0 z-50 mx-auto flex max-w-768 items-center justify-center p-4"
+            className={cx(
+              'fixed inset-0 z-50 mx-auto flex max-w-768 items-center justify-center p-4',
+              modalParentClassName
+            )}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}

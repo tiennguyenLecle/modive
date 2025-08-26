@@ -5628,16 +5628,16 @@ const ChatboxComposer = ({
   ...props
 }) => {
   const textareaRef = React.useRef(null);
+  const [isComposing, setIsComposing] = React.useState(false);
+  const handleSend = () => {
+    if (!isComposing) {
+      sendButtonComponent?.onClick?.();
+      textareaRef.current?.focus();
+    }
+  };
   return jsxRuntimeExports.jsxs('div', {
     ...props,
     className: `${styles$1.chatboxComposer} ${className}`,
-    onKeyDown: e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendButtonComponent?.onClick?.();
-        textareaRef.current?.focus();
-      }
-    },
     children: [
       beforeComposerOutside,
       jsxRuntimeExports.jsx(Textarea, {
@@ -5646,6 +5646,14 @@ const ChatboxComposer = ({
         endIcon: afterComposerInside,
         ref: textareaRef,
         className: 'c-chatbox-composer-textarea',
+        onKeyDown: e => {
+          if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+            e.preventDefault();
+            handleSend();
+          }
+        },
+        onCompositionStart: () => setIsComposing(true),
+        onCompositionEnd: () => setIsComposing(false),
       }),
       afterComposerOutside,
       jsxRuntimeExports.jsx(Button, {
@@ -37685,6 +37693,7 @@ function remarkGfm(options) {
 var styles = {
   msgComponent: 'MessageList-module__msgComponent___buiq1',
   messageListContainer: 'MessageList-module__messageListContainer___-6o9-',
+  messageListSimple: 'MessageList-module__messageListSimple___DWPx4',
 };
 
 // Create a override component OR customize props to render message
@@ -37727,6 +37736,7 @@ const MessageComponent = React.memo(
         alt,
         imageWidth,
         imageHeight,
+        isHorizontal = false,
       } = itemByType;
       switch (type) {
         case 'text':
@@ -37748,10 +37758,14 @@ const MessageComponent = React.memo(
               width: imageWidth,
               height: imageHeight,
               alt: alt ?? 'image',
-              className: 'c-msg-image',
+              className: `c-msg-image ${isHorizontal ? 'c-msg-image-horizontal' : 'c-msg-image-vertical'}`,
               imageUrl: imageUrl ?? '',
               ...imageMessageProps,
-              onClick: () => imageMessageProps?.onClick?.(item),
+              onClick: () =>
+                imageMessageProps?.onClick?.({
+                  ...item,
+                  imageUrl: imageUrl ?? '',
+                }),
             })
           );
         case 'video':
@@ -38094,7 +38108,7 @@ const MessageListComponent = React.forwardRef(
           ref.current = virtuosoRef.current;
         }
       }
-    }, [ref, virtuosoRef.current]);
+    }, [ref]);
     const Row = ({ index }) => {
       if (!msgs[index]) {
         return null;
@@ -38201,6 +38215,401 @@ const MessageListComponent = React.forwardRef(
 MessageListComponent.displayName = 'MessageList';
 const MessageList = React.memo(MessageListComponent);
 
+const useAutoScroll = ({ isLoadingMore }) => {
+  const resizeObserverRef = React.useRef(null);
+  const lastScrollHeight = React.useRef(0);
+  const shouldScrollToEnd = React.useRef(false);
+  const scrollToEnd = React.useCallback(
+    listRef => {
+      // Comprehensive blocking: don't scroll if loading more messages
+      if (isLoadingMore) {
+        return;
+      }
+      if (listRef.current && !isLoadingMore) {
+        shouldScrollToEnd.current = true;
+        // Also try immediate scroll in case ResizeObserver doesn't trigger
+        listRef.current.scrollTop = listRef.current.scrollHeight;
+      }
+    },
+    [isLoadingMore]
+  );
+  // Setup ResizeObserver to auto-scroll when height changes
+  const setupResizeObserver = React.useCallback(
+    listRef => {
+      if (listRef.current) {
+        // Create ResizeObserver to watch for height changes
+        resizeObserverRef.current = new ResizeObserver(entries => {
+          for (const entry of entries) {
+            const { scrollHeight } = entry.target;
+            // Check if height increased (new content added)
+            if (scrollHeight > lastScrollHeight.current) {
+              // Auto-scroll to end when height increases, but only if not loading more
+              if (shouldScrollToEnd.current && !isLoadingMore) {
+                entry.target.scrollTop = scrollHeight;
+                shouldScrollToEnd.current = false;
+              }
+            }
+            // Update last known height
+            lastScrollHeight.current = scrollHeight;
+          }
+        });
+        // Start observing the list element
+        resizeObserverRef.current.observe(listRef.current);
+        // Store initial height
+        lastScrollHeight.current = listRef.current.scrollHeight;
+      }
+    },
+    [isLoadingMore]
+  );
+  // Cleanup ResizeObserver
+  React.useEffect(() => {
+    return () => {
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+        resizeObserverRef.current = null;
+      }
+    };
+  }, []);
+  return {
+    scrollToEnd,
+    setupResizeObserver,
+    shouldScrollToEnd,
+  };
+};
+
+const useLoadMore = ({
+  onLoadMorePreviousData,
+  isLoadingMore,
+  loadMoreTriggered,
+  setIsLoadingMore,
+  listRef,
+}) => {
+  const mutationObserverRef = React.useRef(null);
+  const handleLoadMore = React.useCallback(async () => {
+    if (!onLoadMorePreviousData || isLoadingMore || loadMoreTriggered.current)
+      return;
+    const listElement = listRef.current;
+    if (!listElement) return;
+    const lengthBeforeLoad =
+      listElement.querySelectorAll('.c-message-item').length || 0;
+    loadMoreTriggered.current = true;
+    setIsLoadingMore(true);
+    try {
+      await onLoadMorePreviousData();
+      // Use MutationObserver to detect when DOM actually changes
+      if (listElement && !mutationObserverRef.current) {
+        mutationObserverRef.current = new MutationObserver(() => {
+          // Check if new message elements were added
+          const messageElements =
+            listElement.querySelectorAll('.c-message-item');
+          if (messageElements && messageElements.length > lengthBeforeLoad) {
+            // Disconnect observer after first detection
+            mutationObserverRef.current?.disconnect();
+            mutationObserverRef.current = null;
+            // Calculate target position and scroll - using the working logic from your previous code
+            const newMessageCount = messageElements.length - lengthBeforeLoad;
+            const targetIndex = newMessageCount;
+            if (messageElements[targetIndex]) {
+              messageElements[
+                targetIndex > 0 ? targetIndex - 1 : 0
+              ].scrollIntoView({
+                behavior: 'instant',
+                block: 'start',
+              });
+            }
+          }
+        });
+        // Start observing DOM changes
+        mutationObserverRef.current.observe(listElement, {
+          childList: true,
+          subtree: true,
+        });
+      }
+      // Fallback: also use a timeout in case MutationObserver doesn't work
+      setTimeout(() => {
+        if (mutationObserverRef.current) {
+          mutationObserverRef.current.disconnect();
+          mutationObserverRef.current = null;
+        }
+      }, 2000);
+    } finally {
+      setIsLoadingMore(false);
+      // Reset the trigger after a delay to allow for new scroll events
+      setTimeout(() => {
+        loadMoreTriggered.current = false;
+      }, 100);
+    }
+  }, [
+    onLoadMorePreviousData,
+    isLoadingMore,
+    loadMoreTriggered,
+    setIsLoadingMore,
+    listRef,
+  ]);
+  // Cleanup MutationObserver
+  const cleanup = React.useCallback(() => {
+    if (mutationObserverRef.current) {
+      mutationObserverRef.current.disconnect();
+      mutationObserverRef.current = null;
+    }
+  }, []);
+  return {
+    handleLoadMore,
+    cleanup,
+  };
+};
+
+const useScrollManagement = ({
+  isLoadingMore,
+  loadMoreTriggered,
+  handleLoadMore,
+}) => {
+  const [hasShowScrollToEndButton, setHasShowScrollToEndButton] =
+    React.useState(false);
+  const scrollTimeoutRef = React.useRef(null);
+  const handleScroll = React.useCallback(
+    (scrollTop, scrollHeight, clientHeight) => {
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+      setHasShowScrollToEndButton(!isAtBottom);
+      // Clear any existing timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      // Handle load more when scrolling to top (only once)
+      if (
+        scrollTop === 0 && // Must be exactly at the top
+        !isLoadingMore &&
+        !loadMoreTriggered.current
+      ) {
+        // Debounce the load more call to prevent multiple rapid triggers
+        scrollTimeoutRef.current = setTimeout(() => {
+          // Trigger when user is at the top
+          if (scrollTop === 0 && !isLoadingMore && !loadMoreTriggered.current) {
+            handleLoadMore();
+          }
+        }, 50); // 50ms delay
+      }
+    },
+    [isLoadingMore, loadMoreTriggered, handleLoadMore]
+  );
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
+  return {
+    hasShowScrollToEndButton,
+    handleScroll,
+  };
+};
+
+const MessageListModuleComponent = React.forwardRef(
+  (
+    {
+      messages = [],
+      conversationId = '',
+      className = '',
+      onLoadMorePreviousData,
+      cache = false,
+      showScrollToEndButton = true,
+      emptyDataComponent,
+      isPrevLoading = false,
+      prevLoadingComponent,
+      customMessageComponentProps,
+      scrollToEndButtonProps,
+      responseLoadingComponent,
+    },
+    ref
+  ) => {
+    const [msgs, setMsgs] = useMessageCache(
+      conversationId || '',
+      messages || [],
+      cache
+    );
+    // Store the messages in a ref to avoid re-rendering the component when the messages prop changes
+    const messagesRef = React.useRef(messages);
+    const listRef = React.useRef(null);
+    const [isLoadingMore, setIsLoadingMore] = React.useState(false);
+    const loadMoreTriggered = React.useRef(false);
+    // Custom hooks for different concerns
+    const { scrollToEnd, setupResizeObserver, shouldScrollToEnd } =
+      useAutoScroll({
+        isLoadingMore,
+      });
+    const { handleLoadMore, cleanup } = useLoadMore({
+      onLoadMorePreviousData,
+      isLoadingMore,
+      loadMoreTriggered,
+      setIsLoadingMore,
+      listRef,
+    });
+    const { hasShowScrollToEndButton, handleScroll } = useScrollManagement({
+      isLoadingMore,
+      loadMoreTriggered,
+      handleLoadMore,
+    });
+    // Forward the ref to the parent component
+    React.useEffect(() => {
+      if (ref) {
+        if (typeof ref === 'function') {
+          ref(listRef.current);
+        } else {
+          ref.current = listRef.current;
+        }
+      }
+    }, [ref]);
+    // Update messages when messages props change
+    React.useEffect(() => {
+      setMsgs(messages || []);
+      messagesRef.current = messages;
+    }, [messages, setMsgs]);
+    // Setup ResizeObserver for auto-scrolling
+    React.useEffect(() => {
+      if (listRef.current) {
+        setupResizeObserver(listRef);
+      }
+    }, [setupResizeObserver]);
+    // Effect to handle scroll to end after DOM updates
+    React.useEffect(() => {
+      // Don't scroll to end if we're loading more messages
+      if (isLoadingMore || loadMoreTriggered.current) {
+        return;
+      }
+      if (shouldScrollToEnd.current && listRef.current && !isLoadingMore) {
+        // Wait for next render cycle
+        const timeoutId = setTimeout(() => {
+          if (listRef.current && shouldScrollToEnd.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+            shouldScrollToEnd.current = false;
+          }
+        }, 0);
+        return () => clearTimeout(timeoutId);
+      }
+    }, [msgs, isLoadingMore, shouldScrollToEnd, loadMoreTriggered]);
+    // Auto-scroll to end for new messages with loading state
+    React.useEffect(() => {
+      if (msgs?.length === 0 || !msgs) return;
+      const theLastMessage = msgs[msgs?.length - 1];
+      const isLoading = theLastMessage?.messageArray?.[0]?.type === 'loading';
+      // Check if this is a genuinely new message (not loaded previous messages)
+      const isNewMessage = msgs.length > (messagesRef.current?.length || 0);
+      const isRecentMessage =
+        theLastMessage?.createdAt &&
+        new Date(theLastMessage.createdAt).getTime() > Date.now() - 60000; // Within last minute
+      // Don't auto-scroll if we're loading more messages from the top
+      if (isLoadingMore) {
+        return;
+      }
+      // Don't auto-scroll if we're in the process of loading more previous messages
+      if (loadMoreTriggered.current) {
+        return;
+      }
+      // Don't auto-scroll if user is near the top (reading older messages)
+      if (listRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+        const scrollPercentage = scrollTop / (scrollHeight - clientHeight);
+        // If user is within 20% of the top, don't auto-scroll
+        if (scrollPercentage <= 0.2) {
+          return;
+        }
+      }
+      // Additional check: if messages increased but it's likely from loading previous data
+      // (when the increase is significant, it's usually from loading previous messages)
+      if (isNewMessage && msgs.length > 0 && messagesRef.current.length > 0) {
+        const messageIncrease = msgs.length - messagesRef.current.length;
+        // If we added more than 5 messages at once, it's likely loading previous data
+        if (messageIncrease > 5) {
+          return;
+        }
+      }
+      // Scroll to end when:
+      // 1. Last message is loading (showing loading state)
+      // 2. New message added at the end (not loaded previous messages)
+      if (isLoading || (isNewMessage && isRecentMessage)) {
+        // Wait for DOM to update before scrolling
+        setTimeout(() => scrollToEnd(listRef), 50);
+      }
+    }, [msgs, isLoadingMore]); // Removed scrollToEnd from dependencies to prevent recreation
+    // Scroll to end on first render only
+    React.useEffect(() => {
+      // Don't scroll to end if we're loading more messages
+      if (isLoadingMore || loadMoreTriggered.current) {
+        return;
+      }
+      setTimeout(() => {
+        scrollToEnd(listRef);
+      }, 500);
+    }, [scrollToEnd, isLoadingMore, loadMoreTriggered]); // Added dependencies
+    // Cleanup on unmount
+    React.useEffect(() => {
+      return () => {
+        cleanup();
+      };
+    }, [cleanup]);
+    // Handle scroll events
+    const onScroll = () => {
+      if (!listRef.current) return;
+      const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+      handleScroll(scrollTop, scrollHeight, clientHeight);
+    };
+    return jsxRuntimeExports.jsxs('div', {
+      className: `${styles.messageListContainer} ${className} ${styles.messageListSimple}`,
+      onScroll: onScroll,
+      ref: listRef,
+      children: [
+        isPrevLoading &&
+          (prevLoadingComponent ||
+            jsxRuntimeExports.jsx('div', {
+              className: 'c-message-list-loading',
+              children: 'Loading...',
+            })),
+        msgs?.length > 0
+          ? jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
+              children: [
+                msgs.map((item, index) =>
+                  jsxRuntimeExports.jsx(
+                    MessageComponent,
+                    {
+                      ...customMessageComponentProps,
+                      className: 'c-message-item',
+                      item: item,
+                      responseLoadingComponent: responseLoadingComponent,
+                    },
+                    `${item.id}-${index}`
+                  )
+                ),
+                showScrollToEndButton &&
+                  hasShowScrollToEndButton &&
+                  jsxRuntimeExports.jsx(Button, {
+                    className: `c-chatbox-scroll-to-end-button`,
+                    icon: '↓',
+                    onClick: () => {
+                      // Don't scroll to end if loading more messages
+                      if (!isLoadingMore && !loadMoreTriggered.current) {
+                        scrollToEnd(listRef);
+                        scrollToEndButtonProps?.onClick?.();
+                      } else {
+                        console.log(
+                          'Scroll-to-end button blocked: loading more messages'
+                        );
+                      }
+                    },
+                    ...scrollToEndButtonProps,
+                  }),
+              ],
+            })
+          : jsxRuntimeExports.jsx('div', {
+              className: `c-message-list-empty`,
+              children: emptyDataComponent || 'No messages',
+            }),
+      ],
+    });
+  }
+);
+
 exports.ChatboxComposer = ChatboxComposer;
 exports.ChatboxLayout = ChatboxLayout;
 exports.DEFAULT_AVATAR_IMAGE_URL = DEFAULT_AVATAR_IMAGE_URL;
@@ -38208,6 +38617,7 @@ exports.MESSAGE_CACHE_TYPE = MESSAGE_CACHE_TYPE;
 exports.MESSAGE_SPEAKER_TYPE = MESSAGE_SPEAKER_TYPE;
 exports.MESSAGE_TYPE = MESSAGE_TYPE;
 exports.MessageList = MessageList;
+exports.MessageListModule = MessageListModuleComponent;
 exports.TopInfo = TopInfo;
 exports.cn = cn;
 exports.getDB = getDB;

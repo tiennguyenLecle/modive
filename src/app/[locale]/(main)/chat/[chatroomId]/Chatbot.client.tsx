@@ -16,9 +16,10 @@ import { Message } from '@/lib/api/types/chat.types';
 import {
   ChatboxLayout,
   MessageInfoProps,
-  MessageList,
+  MessageListModule,
 } from '@/lib/chatbot-modules';
 
+import PreviewImageModal from './_components/modals/PreviewImageModal';
 import styles from './ChatRoom.module.scss';
 import Composer from './Composer.client';
 import {
@@ -42,7 +43,8 @@ const Chatbot = memo(
     // ref to message list
     const messageListRef = useRef<any>(null);
 
-    const selectedImageItem = useRef<MessageInfoProps | null>(null);
+    const [selectedImageItem, setSelectedImageItem] =
+      useState<MessageInfoProps | null>(null);
 
     const { messages, setMessages, updatedMessagesRef } =
       useMessageManagement(initialMessages);
@@ -68,32 +70,41 @@ const Chatbot = memo(
       }
     }, [updatedMessagesRef?.current, setMessages]);
 
+    const [transformedMessages, setTransformedMessages] = useState<
+      MessageInfoProps[]
+    >([]);
+
+    // Transform messages to MessageInfoProps
+    useEffect(() => {
+      const transformMessages = async () => {
+        if (messages.length === 0) {
+          setTransformedMessages([]);
+          return;
+        }
+
+        try {
+          const transformed = await mapMessagesToInfoProps(messages);
+          setTransformedMessages(transformed);
+        } catch (error) {
+          setTransformedMessages([]);
+        }
+      };
+
+      transformMessages();
+    }, [messages]);
+
     const messageComponent = useMemo(
       () => (
-        <MessageList
+        <MessageListModule
           customMessageComponentProps={{
             imageMessageProps: {
               onClick: (imgItem: MessageInfoProps) => {
-                selectedImageItem.current = imgItem;
+                setSelectedImageItem(imgItem);
               },
-              preview: {
-                toolbarRender: () => {
-                  return (
-                    <div className="flex w-full items-center justify-between gap-12">
-                      <span className="truncate text-16 font-bold">
-                        {chatbotName}
-                      </span>
-                      <span className="min-w-140 truncate text-12 font-normal">
-                        {selectedImageItem.current?.createdDate}{' '}
-                        {selectedImageItem.current?.createdAt}
-                      </span>
-                    </div>
-                  );
-                },
-              },
+              preview: false,
             },
           }}
-          messages={mapMessagesToInfoProps(messages)}
+          messages={transformedMessages}
           conversationId={chatroomId as string}
           cache="indexed"
           onLoadMorePreviousData={handleLoadMore}
@@ -105,7 +116,7 @@ const Chatbot = memo(
           prevLoadingComponent={prevLoadingComponent}
         />
       ),
-      [handleLoadMore, isPreviousLoading, chatroomId, messages]
+      [handleLoadMore, isPreviousLoading, chatroomId, transformedMessages]
     );
 
     useEffect(() => {
@@ -115,20 +126,27 @@ const Chatbot = memo(
     }, [setMessages]);
 
     return (
-      <ChatboxLayout
-        className={styles.chatboxLayout}
-        backgroundColor="var(--color-background)"
-        layoutHeight="calc(100dvh - 56px - 48px)" // 56px + 48px: header height + 10px: padding top of composer
-        messageComponent={messageComponent}
-        composerComponent={
-          <Composer
-            chatroomId={chatroomId as string}
-            chatbotName={chatbotName}
-            sendMessage={sendMessage}
-            isChapterMode={false}
-          />
-        }
-      />
+      <>
+        <ChatboxLayout
+          className={styles.chatboxLayout}
+          backgroundColor="var(--color-background)"
+          layoutHeight="calc(100dvh - 56px - 48px)" // 56px + 48px: header height + 10px: padding top of composer
+          messageComponent={messageComponent}
+          composerComponent={
+            <Composer
+              chatroomId={chatroomId as string}
+              chatbotName={chatbotName}
+              sendMessage={sendMessage}
+              isChapterMode={false}
+            />
+          }
+        />
+        <PreviewImageModal
+          item={selectedImageItem}
+          close={() => setSelectedImageItem(null)}
+          characterName={chatbotName}
+        />
+      </>
     );
   }
 );

@@ -21,6 +21,67 @@ export const createDateHeader = (date: string): MessageInfoProps => ({
   createdDate: date,
 });
 
+// preload image and return object with image info
+const preloadImageInfo = (item: any): Promise<any> => {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const isHorizontal = img.width > img.height;
+      resolve({
+        ...item,
+        isHorizontal,
+        imageHeight: isHorizontal ? 120 : 160,
+      });
+    };
+    img.onerror = () => {
+      resolve({
+        ...item,
+        isHorizontal: false,
+        imageHeight: 160,
+      });
+    };
+    img.src = item.imageUrl;
+  });
+};
+
+// Preload images for all image items in messageArray
+const preloadMessageImages = async (message: any): Promise<any> => {
+  if (!message.messageArray || message.messageArray.length === 0) {
+    return message;
+  }
+
+  try {
+    // Process each item in messageArray
+    const updatedMessageArray = await Promise.all(
+      message.messageArray.map(async (item: any) => {
+        if (item.type === 'image' && item.imageUrl) {
+          try {
+            // Preload this specific image item
+            const preloadedItem = await preloadImageInfo(item);
+            return preloadedItem;
+          } catch (error) {
+            console.error('Error preloading image:', item.imageUrl, error);
+            // Return original item if preloading fails
+            return item;
+          }
+        }
+        // Return non-image items as-is
+        return item;
+      })
+    );
+
+    // Return message with updated messageArray
+    return {
+      ...message,
+      messageArray: updatedMessageArray,
+    };
+  } catch (error) {
+    console.error('Error in preloadMessageImages:', error);
+    // Return original message if processing fails
+    return message;
+  }
+};
+
 /**
  * Transform a Message to MessageInfoProps
  */
@@ -47,10 +108,10 @@ export const transformMessageToInfoProps = (
 /**
  * Map messages to MessageInfoProps with date headers
  */
-export const mapMessagesToInfoProps = (
+export const mapMessagesToInfoProps = async (
   messages: Message[],
   hasMorePrevious = false
-): MessageInfoProps[] => {
+) => {
   const seenIds = new Set<string>();
 
   // Filter and transform messages
@@ -78,8 +139,27 @@ export const mapMessagesToInfoProps = (
     result.push(current);
   }
 
-  return result.map(({ createdDate, ...rest }) => ({
+  const withImages = await Promise.all(
+    result.map(async message => {
+      // Check if messageArray contains any image items
+      const hasImages = message.messageArray?.some(
+        (itemByType: any) => itemByType.type === 'image' && itemByType.imageUrl
+      );
+
+      if (hasImages) {
+        // Preload images and update messageArray
+        const updatedMessage = await preloadMessageImages(message);
+        return updatedMessage;
+      }
+
+      return message;
+    })
+  );
+
+  return withImages.map(({ createdDate, ...rest }: any) => ({
     ...rest,
-    createdDate: dayjs(createdDate).format('YYYY.MM.DD'),
+    createdDate: createdDate
+      ? dayjs(createdDate).format('YYYY.MM.DD')
+      : undefined,
   }));
 };

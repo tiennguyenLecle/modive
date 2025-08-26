@@ -105,6 +105,7 @@ type MessageArrayItem = {
   alt?: string;
   imageWidth?: number;
   imageHeight?: number;
+  isHorizontal?: boolean;
 };
 
 type MessageInfoProps = {
@@ -154,6 +155,10 @@ type MessageComponentProps = {
 
 declare const MessageList: react.MemoExoticComponent<
   react.ForwardRefExoticComponent<MessageListProps & react.RefAttributes<any>>
+>;
+
+declare const MessageListModuleComponent: react.ForwardRefExoticComponent<
+  MessageListProps & react.RefAttributes<HTMLDivElement>
 >;
 
 /**
@@ -206,6 +211,7 @@ export {
   MESSAGE_SPEAKER_TYPE,
   MESSAGE_TYPE,
   MessageList,
+  MessageListModuleComponent as MessageListModule,
   TopInfo,
   cn,
   getDB,

@@ -5,8 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
 import { Toggle } from '@/components';
-import { useWorks } from '@/hooks/useWorks';
-import { WorkType } from '@/types/work';
+import { useChatRoomWorks } from '@/hooks/useChat';
 import { cx } from '@/utils/method';
 
 import styles from './WorkFilter.module.scss';
@@ -22,7 +21,7 @@ const WorkFilter = ({ selectedWorkIds, onToggleWork }: WorkFilterProps) => {
   const [isViewByWork, setIsViewByWork] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasMore, setHasMore] = useState(false);
-  const { data: works } = useWorks({ shouldFetch: isViewByWork });
+  const { data: works } = useChatRoomWorks();
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
@@ -70,7 +69,7 @@ const WorkFilter = ({ selectedWorkIds, onToggleWork }: WorkFilterProps) => {
                 )}
                 ref={scrollContainerRef}
               >
-                {works?.map((work: WorkType) => (
+                {works?.map(work => (
                   <Toggle.Tab
                     key={work.id}
                     onToggle={() => onToggleWork(work.id)}

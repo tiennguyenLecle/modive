@@ -1,10 +1,16 @@
 import { useMemo } from 'react';
+import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 
 import { NextApi } from '@/lib/api';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
-import { ChatRoomsResponse, fetchChatRooms } from '@/lib/supabase/swr/chatroom';
+import {
+  ChatRoomsResponse,
+  fetchChatRooms,
+  fetchUserWorks,
+} from '@/lib/supabase/swr/chatroom';
 import { ChatRoomType } from '@/types/chatroom';
 
 export function useCreateChat() {
@@ -78,4 +84,13 @@ export function useMyRoomsInfinite(options: UseMyRoomsOptions = {}) {
     isReachingEnd,
     ...restInfiniteData,
   };
+}
+
+export function useChatRoomWorks() {
+  const supabase = useMemo(() => createBrowserSupabase('user'), []);
+  const { user } = useAuth();
+
+  return useSWR(user?.id ? ['chat-room-works', user.id] : null, () =>
+    fetchUserWorks(supabase, user!.id)
+  );
 }

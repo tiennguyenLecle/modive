@@ -51,63 +51,65 @@ export default function ChatRoomList() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <WorkFilter
-        selectedWorkIds={selectedWorkIds}
-        onToggleWork={value => {
-          if (selectedWorkIds.includes(value)) {
-            setSelectedWorkIds(selectedWorkIds.filter(id => id !== value));
-          } else {
-            setSelectedWorkIds([...selectedWorkIds, value]);
-          }
-        }}
-      />
       {chatrooms.length > 0 && (
-        <VirtualList<ChatRoomType>
-          data={chatrooms}
-          itemHeight={92}
-          itemKey="id"
-          onScroll={onScroll}
-          className={cx('min-h-0 flex-1', styles.virtualList)}
-        >
-          {item => (
-            <ChatListItem
-              key={item.id}
-              id={item.id}
-              name={item.character.name}
-              avatar={getPublicUrl(item.character.avatar_key)}
-              time={new Date(item.created_at)}
-              lastMessage={item.last_message}
-              unreadCount={0}
-              isPinned={item.is_pinned}
-              onClick={() =>
-                router.push(
-                  `/chat/${item.room_id}?sessionId=${item.session_id}`
-                )
+        <>
+          <WorkFilter
+            selectedWorkIds={selectedWorkIds}
+            onToggleWork={value => {
+              if (selectedWorkIds.includes(value)) {
+                setSelectedWorkIds(selectedWorkIds.filter(id => id !== value));
+              } else {
+                setSelectedWorkIds([...selectedWorkIds, value]);
               }
-              onContextMenu={e => {
-                e.preventDefault();
-                modalRef.current?.open({
-                  id: item.id,
-                  is_pinned: item.is_pinned,
-                });
-              }}
-              onTouchStart={() => {
-                longPressTimer.current = setTimeout(() => {
+            }}
+          />
+          <VirtualList<ChatRoomType>
+            data={chatrooms}
+            itemHeight={92}
+            itemKey="id"
+            onScroll={onScroll}
+            className={cx('min-h-0 flex-1', styles.virtualList)}
+          >
+            {item => (
+              <ChatListItem
+                key={item.id}
+                id={item.id}
+                name={item.character.name}
+                avatar={getPublicUrl(item.character.avatar_key)}
+                time={new Date(item.created_at)}
+                lastMessage={item.last_message}
+                unreadCount={0}
+                isPinned={item.is_pinned}
+                onClick={() =>
+                  router.push(
+                    `/chat/${item.room_id}?sessionId=${item.session_id}`
+                  )
+                }
+                onContextMenu={e => {
+                  e.preventDefault();
                   modalRef.current?.open({
                     id: item.id,
                     is_pinned: item.is_pinned,
                   });
-                }, 500);
-              }}
-              onTouchEnd={() => {
-                if (longPressTimer.current) {
-                  clearTimeout(longPressTimer.current);
-                  longPressTimer.current = null;
-                }
-              }}
-            />
-          )}
-        </VirtualList>
+                }}
+                onTouchStart={() => {
+                  longPressTimer.current = setTimeout(() => {
+                    modalRef.current?.open({
+                      id: item.id,
+                      is_pinned: item.is_pinned,
+                    });
+                  }, 500);
+                }}
+                onTouchEnd={() => {
+                  if (longPressTimer.current) {
+                    clearTimeout(longPressTimer.current);
+                    longPressTimer.current = null;
+                  }
+                }}
+              />
+            )}
+          </VirtualList>
+        </>
       )}
       {!isValidating && chatrooms.length === 0 && <div>{t('no_rooms')}</div>}
       {isValidating && (

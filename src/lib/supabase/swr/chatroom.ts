@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
 import { ChatRoomType } from '@/types/chatroom';
+import { WorkType } from '@/types/work';
 
 export type ChatRoomsResponse = {
   data: ChatRoomType[];
@@ -27,47 +28,73 @@ export async function fetchChatRooms(
 
   const offset = (page - 1) * limit;
 
-  let queryBuilder = supabase.from('chat_rooms').select(
-    `
-      *,
-      work:works!chat_rooms_work_id_works_id_fk (
-        bundle_id,
-        universe_id
-      ),
-      character:characters!chat_rooms_character_id_characters_id_fk (
-        avatar_key,
-        bot_id,
-        id,
-        name
-      )
-    `,
-    { count: 'exact' }
-  );
+  // Step 1: Query to filter and count chat rooms
+  let filterQueryBuilder = supabase
+    .from('chat_rooms')
+    .select('id', { count: 'exact' });
 
   if (user_id) {
-    queryBuilder = queryBuilder.eq('user_id', user_id);
+    filterQueryBuilder = filterQueryBuilder.eq('user_id', user_id);
   }
 
-  // Filter by work_ids (array)
   if (work_ids && work_ids.length > 0) {
-    queryBuilder = queryBuilder.in('work_id', work_ids);
+    filterQueryBuilder = filterQueryBuilder.in('work_id', work_ids);
   }
 
-  // Filter by type
   if (type) {
-    queryBuilder = queryBuilder.eq('type', type);
+    filterQueryBuilder = filterQueryBuilder.eq('type', type);
   }
 
-  // Sort by pinned_at (pinned rooms first), then by created_at (latest first)
-  queryBuilder = queryBuilder
+  // Sort to get the correct order
+  filterQueryBuilder = filterQueryBuilder
+    .order('is_pinned', { ascending: false })
+    .order('pinned_at', { ascending: false })
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  const {
+    data: filteredIds,
+    error: filterError,
+    count,
+  } = await filterQueryBuilder;
+
+  if (filterError) throw filterError;
+
+  if (!filteredIds || filteredIds.length === 0) {
+    return {
+      data: [],
+      metadata: {
+        total: count || 0,
+        totalPages: 0,
+        currentPage: page,
+      },
+    } as ChatRoomsResponse;
+  }
+
+  // Step 2: Query details for filtered IDs
+  const chatRoomIds = filteredIds.map(room => room.id);
+
+  const { data, error } = await supabase
+    .from('chat_rooms')
+    .select(
+      `
+        *,
+        work:works!chat_rooms_work_id_works_id_fk (
+          bundle_id,
+          universe_id
+        ),
+        character:characters!chat_rooms_character_id_characters_id_fk (
+          avatar_key,
+          bot_id,
+          id,
+          name
+        )
+      `
+    )
+    .in('id', chatRoomIds)
     .order('is_pinned', { ascending: false })
     .order('pinned_at', { ascending: false })
     .order('created_at', { ascending: false });
-
-  // Pagination
-  queryBuilder = queryBuilder.range(offset, offset + limit - 1);
-
-  const { data, error, count } = await queryBuilder;
 
   if (error) throw error;
 
@@ -83,4 +110,45 @@ export async function fetchChatRooms(
       currentPage,
     },
   } as ChatRoomsResponse;
+}
+
+/**
+ * Get list of works related to user through chatrooms
+ * Optimize: Filter work_ids first, unique, then select details
+ */
+
+type UserWorksResponse = Pick<WorkType, 'id' | 'title'>[];
+
+export async function fetchUserWorks(
+  supabase: SupabaseClient,
+  user_id: string
+): Promise<UserWorksResponse> {
+  // Step 1: Filter work_ids related to user
+  const { data: chatRoomsData, error: chatRoomsError } = await supabase
+    .from('chat_rooms')
+    .select('work_id')
+    .eq('user_id', user_id)
+    .not('work_id', 'is', null);
+
+  if (chatRoomsError) throw chatRoomsError;
+
+  if (!chatRoomsData || chatRoomsData.length === 0) return [];
+
+  // Step 2: Filter unique work_ids
+  const workIds = Array.from(
+    new Set(chatRoomsData.map(room => room.work_id).filter(Boolean))
+  );
+
+  if (workIds.length === 0) return [];
+
+  // Step 3: Select details only for unique work_ids
+  const { data: worksData, error: worksError } = await supabase
+    .from('works')
+    .select('id, title')
+    .in('id', workIds)
+    .order('title');
+
+  if (worksError) throw worksError;
+
+  return worksData as unknown as UserWorksResponse;
 }

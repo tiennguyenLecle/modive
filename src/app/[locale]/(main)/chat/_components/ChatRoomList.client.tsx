@@ -9,6 +9,7 @@ import VirtualList from 'rc-virtual-list';
 import { Pin } from '@/assets/icons';
 import { Badge, Spinner } from '@/components';
 import { useMyRoomsInfinite } from '@/hooks/useChat';
+import { useDynamicPageSize } from '@/hooks/useDynamicPageSize';
 import { useRouter } from '@/lib/navigation';
 import { ChatRoomType } from '@/types/chatroom';
 import { cx, getPublicUrl } from '@/utils/method';
@@ -24,6 +25,18 @@ export default function ChatRoomList() {
   const searchParams = useSearchParams();
   const [selectedWorkIds, setSelectedWorkIds] = useState<string[]>([]);
 
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const virtualListRef = useRef<any>(null);
+
+  // Calculate dynamic page size based on container height
+  const { recommendedPageSize } = useDynamicPageSize({
+    containerRef: virtualListRef,
+    estimatedItemHeight: 92, // Match VirtualList itemHeight
+    minPageSize: 5,
+    maxPageSize: 30,
+    bufferMultiplier: 1.2, // Smaller buffer for more precise loading
+  });
+
   const {
     rooms: chatrooms,
     setSize,
@@ -31,22 +44,26 @@ export default function ChatRoomList() {
     isReachingEnd,
     mutate,
   } = useMyRoomsInfinite({
-    pageSize: 10,
+    pageSize: recommendedPageSize,
     type: searchParams.get('key') === 'chapter' ? 'chapter' : 'general',
     workIds: selectedWorkIds,
   });
 
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  // Simple scroll handler for load more
+  const handleScroll = (e: any) => {
+    if (isReachingEnd || isValidating) return;
 
-  const onScroll = (e: any) => {
-    if (isReachingEnd) return;
     const target = e?.currentTarget as HTMLElement | undefined;
     if (!target) return;
+
     const threshold = 50; // px from bottom to trigger load more
     const remaining =
       target.scrollHeight - target.scrollTop - target.clientHeight;
     const isNearBottom = remaining < threshold;
-    if (isNearBottom && !isValidating) setSize(prev => prev + 1);
+
+    if (isNearBottom) {
+      setSize(prev => prev + 1);
+    }
   };
 
   return (
@@ -64,10 +81,11 @@ export default function ChatRoomList() {
             }}
           />
           <VirtualList<ChatRoomType>
+            ref={virtualListRef}
             data={chatrooms}
             itemHeight={92}
             itemKey="id"
-            onScroll={onScroll}
+            onScroll={handleScroll}
             className={cx('min-h-0 flex-1', styles.virtualList)}
           >
             {item => (

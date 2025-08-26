@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { DirectIcon, Plus } from '@/assets/icons';
+import { useDynamicPageSize } from '@/hooks/useDynamicPageSize';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
@@ -22,10 +23,17 @@ export default function TabCommunity() {
   const router = useRouter();
 
   const commentFormRef = useRef<React.ElementRef<typeof CommentForm>>(null);
+  const commentListRef = useRef<HTMLDivElement>(null);
   const modalDeleteCommentRef =
     useRef<React.ElementRef<typeof ModalDeleteComment>>(null);
 
-  console.log('workId', workId);
+  const { recommendedPageSize } = useDynamicPageSize({
+    containerRef: commentListRef,
+    estimatedItemHeight: 80,
+    minPageSize: 10,
+    maxPageSize: 50,
+  });
+
   const {
     comments,
     isValidating,
@@ -36,7 +44,7 @@ export default function TabCommunity() {
     createComment,
     updateComment,
     deleteComment,
-  } = useComments(workId, sortAscending);
+  } = useComments(workId, sortAscending, recommendedPageSize);
 
   const handleLike = (commentId: string, currentLike: boolean) => {
     if (!user?.id) {
@@ -84,6 +92,7 @@ export default function TabCommunity() {
           </div>
         </div>
         <CommentList
+          ref={commentListRef}
           comments={comments || []}
           onLoadMore={loadMore}
           itemProps={{

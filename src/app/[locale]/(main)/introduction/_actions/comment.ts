@@ -98,6 +98,7 @@ type FetchCommentsQuery = {
   workId: string;
   sortAscending: boolean;
   page?: number;
+  limit?: number;
 };
 
 export const fetchComments = async ({
@@ -105,6 +106,7 @@ export const fetchComments = async ({
   workId,
   page,
   sortAscending,
+  limit = 10,
 }: FetchCommentsQuery) => {
   const supabase = createServerSupabase('user');
 
@@ -112,7 +114,7 @@ export const fetchComments = async ({
     body: {
       is_liked_user_id: userId, // id of user to check `is_liked`
       page,
-      limit: 10,
+      limit,
       sort: [{ field: 'created_at', ascending: sortAscending }],
       work_id: workId,
     },

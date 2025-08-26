@@ -13,7 +13,11 @@ import {
   updateCommentAction,
 } from '../_actions/comment';
 
-export function useComments(workId: string, sortAscending: boolean = true) {
+export function useComments(
+  workId: string,
+  sortAscending: boolean = true,
+  pageSize: number = 10
+) {
   const { user } = useAuth();
 
   const getKey = (
@@ -28,16 +32,24 @@ export function useComments(workId: string, sortAscending: boolean = true) {
     )
       return null;
     const page = pageIndex + 1;
-    return ['comments', page, workId, sortAscending, user?.id] as const;
+    return [
+      'comments',
+      page,
+      workId,
+      sortAscending,
+      pageSize,
+      user?.id,
+    ] as const;
   };
 
   const infiniteComments = useSWRInfinite(
     getKey,
-    ([, page, workId, sortAscending]) =>
+    ([, page, workId, sortAscending, limit]) =>
       fetchComments({
         workId,
         page,
         sortAscending,
+        limit,
         userId: user?.id,
       }),
     {

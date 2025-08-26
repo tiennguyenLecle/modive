@@ -37,7 +37,7 @@ type UseMyRoomsOptions = {
 };
 
 export function useMyRoomsInfinite(options: UseMyRoomsOptions = {}) {
-  const { pageSize, workIds, type } = options;
+  const { pageSize = 10, workIds, type } = options;
 
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { ComponentProps } from 'react';
+import React, { ComponentProps, forwardRef } from 'react';
 import VirtualList from 'rc-virtual-list';
 
 import { CommentType } from '@/types/comment';
@@ -19,45 +19,56 @@ type CommentListProps = ComponentProps<'div'> & {
   };
 };
 
-export default function CommentList({
-  comments,
-  onLoadMore,
-  itemProps: { onLike, onEdit, onDelete },
-  className,
-  ...props
-}: CommentListProps) {
-  const onScroll = (e: any) => {
-    const target = e?.currentTarget as HTMLElement | undefined;
-    if (!target) return;
-    const threshold = 50; // px from bottom to trigger load more
-    const remaining =
-      target.scrollHeight - target.scrollTop - target.clientHeight;
-    const isNearBottom = remaining < threshold;
-    if (isNearBottom) onLoadMore();
-  };
+const CommentList = forwardRef<HTMLDivElement, CommentListProps>(
+  function CommentList(
+    {
+      comments,
+      onLoadMore,
+      itemProps: { onLike, onEdit, onDelete },
+      className,
+      ...props
+    },
+    ref
+  ) {
+    const onScroll = (e: any) => {
+      const target = e?.currentTarget as HTMLElement | undefined;
+      if (!target) return;
+      const threshold = 50; // px from bottom to trigger load more
+      const remaining =
+        target.scrollHeight - target.scrollTop - target.clientHeight;
+      const isNearBottom = remaining < threshold;
+      if (isNearBottom) onLoadMore();
+    };
 
-  return (
-    <div className={cx('flex flex-col gap-16', className)} {...props}>
-      {comments?.length > 0 && (
-        <VirtualList<CommentType>
-          data={comments}
-          itemKey="id"
-          fullHeight={true}
-          itemHeight={135}
-          onScroll={onScroll}
-          className={cx('min-h-0 flex-1', styles.virtualList)}
-        >
-          {comment => (
-            <CommentItem
-              key={comment.id}
-              comment={comment}
-              onLike={onLike}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
-          )}
-        </VirtualList>
-      )}
-    </div>
-  );
-}
+    return (
+      <div
+        ref={ref}
+        className={cx('flex flex-col gap-16', className)}
+        {...props}
+      >
+        {comments?.length > 0 && (
+          <VirtualList<CommentType>
+            data={comments}
+            itemKey="id"
+            fullHeight={true}
+            itemHeight={135}
+            onScroll={onScroll}
+            className={cx('min-h-0 flex-1', styles.virtualList)}
+          >
+            {comment => (
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                onLike={onLike}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
+            )}
+          </VirtualList>
+        )}
+      </div>
+    );
+  }
+);
+
+export default CommentList;

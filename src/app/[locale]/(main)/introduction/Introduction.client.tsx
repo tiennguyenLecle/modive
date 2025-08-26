@@ -44,98 +44,100 @@ export default function IntroductionClient({
         showBackButton
         className="border-b border-gray-80"
       />
-      <div
-        className={cx(
-          styles.introductionHeader,
-          searchParams.get('key') === 'community' &&
-            styles.collapsedIntroductionHeader
-        )}
-      >
-        <Image
-          src={getPublicUrl(workDetail.thumbnail_key)}
-          alt={workDetail.title}
-          priority
-          width={360}
-          height={232}
-          className="aspect-[360/232] h-auto w-full object-cover"
-        />
-        <div className="flex flex-col gap-13 p-16">
-          <h2 className="text-22 font-semibold text-gray-20">
-            {workDetail.title}
-          </h2>
-          <div>
-            <p className="text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
-              {workDetail.description}
-            </p>
-            <p className="flex gap-8 text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
-              {workDetail.tags?.map(tag => (
-                <span key={tag}>#{tag}</span>
-              ))}
-            </p>
+      <div className="flex min-h-0 flex-1 flex-col overflow-auto">
+        <div
+          className={cx(
+            styles.introductionHeader,
+            searchParams.get('key') === 'community' &&
+              styles.collapsedIntroductionHeader
+          )}
+        >
+          <Image
+            src={getPublicUrl(workDetail.thumbnail_key)}
+            alt={workDetail.title}
+            priority
+            width={360}
+            height={232}
+            className="aspect-[360/232] h-auto w-full object-cover"
+          />
+          <div className="flex flex-col gap-13 p-16">
+            <h2 className="text-22 font-semibold text-gray-20">
+              {workDetail.title}
+            </h2>
+            <div>
+              <p className="text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
+                {workDetail.description}
+              </p>
+              <p className="flex gap-8 text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
+                {workDetail.tags?.map(tag => (
+                  <span key={tag}>#{tag}</span>
+                ))}
+              </p>
+            </div>
+            <button className="flex h-48 w-full items-center justify-center gap-8 rounded-4 bg-primary">
+              <p className="text-16 font-bold text-gray-100">
+                {t('chapter_entrance')}
+              </p>
+              <Direction color="white" className="h-16 w-16" />
+            </button>
           </div>
-          <button className="flex h-48 w-full items-center justify-center gap-8 rounded-4 bg-primary">
-            <p className="text-16 font-bold text-gray-100">
-              {t('chapter_entrance')}
-            </p>
-            <Direction color="white" className="h-16 w-16" />
-          </button>
         </div>
-      </div>
-      <div className={styles.introductionTabs}>
-        <MenuTab
-          className="flex h-full flex-col"
-          onTabChange={key => {
-            const params = new URLSearchParams(searchParams);
-            params.set('key', key);
-            if (key === 'community') {
-              router.push(`?${params.toString()}`);
-            } else {
-              router.replace(`?${params.toString()}`);
-            }
-          }}
-          tabs={[
-            {
-              key: 'character',
-              label: t('tabs.chat'),
-              children: (
-                <CharacterCard.List
-                  characters={workDetail.characters}
-                  itemProps={{
-                    onClick: character => {
-                      const params = new URLSearchParams(searchParams);
-                      params.set('character', character.id);
-                      router.replace(`?${params.toString()}`);
-                    },
-                  }}
-                  className="px-8"
-                />
-              ),
-            },
-            {
-              key: 'relationship',
-              label: t('tabs.personal_relationship'),
-              children: (
-                <div className="container">
-                  <div className="relative aspect-square">
-                    <Image
-                      src={getPublicUrl(workDetail.characters_map_key)}
-                      alt={`${workDetail.title} characters map`}
-                      className="object-contain"
-                      fill
-                    />
+        <div className={styles.introductionTabs}>
+          <MenuTab
+            className="flex h-full flex-col"
+            onTabChange={key => {
+              const params = new URLSearchParams(searchParams);
+              params.set('key', key);
+              if (key === 'community') {
+                router.push(`?${params.toString()}`);
+              } else {
+                router.replace(`?${params.toString()}`);
+              }
+            }}
+            tabs={[
+              {
+                key: 'character',
+                label: t('tabs.chat'),
+                children: (
+                  <CharacterCard.List
+                    characters={workDetail.characters}
+                    itemProps={{
+                      onClick: character => {
+                        const params = new URLSearchParams(searchParams);
+                        params.set('character', character.id);
+                        router.replace(`?${params.toString()}`);
+                      },
+                    }}
+                    className="px-8"
+                  />
+                ),
+              },
+              {
+                key: 'relationship',
+                label: t('tabs.personal_relationship'),
+                children: (
+                  <div className="container">
+                    <div className="relative aspect-square">
+                      <Image
+                        src={getPublicUrl(workDetail.characters_map_key)}
+                        alt={`${workDetail.title} characters map`}
+                        className="object-contain"
+                        fill
+                      />
+                    </div>
                   </div>
-                </div>
-              ),
-            },
-            {
-              key: 'community',
-              label: t('tabs.community'),
-              children: <TabCommunity />,
-            },
-          ]}
-          activeTab={searchParams.get('key') || 'character'}
-        />
-        <ModalCharacter ref={modalCharacterRef} />
+                ),
+              },
+              {
+                key: 'community',
+                label: t('tabs.community'),
+                children: <TabCommunity />,
+              },
+            ]}
+            activeTab={searchParams.get('key') || 'character'}
+          />
+          <ModalCharacter ref={modalCharacterRef} />
+        </div>
       </div>
     </div>
   );

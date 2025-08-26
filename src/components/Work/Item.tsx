@@ -21,7 +21,7 @@ const WorkItem = ({
 
   return (
     <div
-      className="transition-color cursor-pointer rounded-4 p-4 duration-200 hover:bg-gray-90"
+      className="transition-color box-content max-w-140 cursor-pointer rounded-4 p-4 duration-200 hover:bg-gray-90"
       {...rest}
     >
       <div className="mb-12 h-80 w-140 overflow-hidden rounded-4 border border-gray-80 bg-gray-100">
@@ -34,10 +34,17 @@ const WorkItem = ({
           loading="lazy"
         />
       </div>
-      <h2 className="mb-8 text-16 font-semibold text-gray-00">{title}</h2>
-      <p className="mb-4 text-12 font-semibold text-gray-40">
-        {t('conversation')}
-      </p>
+      <h2
+        title={title}
+        className="mb-8 line-clamp-1 text-ellipsis whitespace-nowrap text-16 font-semibold text-gray-00"
+      >
+        {title}
+      </h2>
+      {characters && characters.length > 0 && (
+        <p className="mb-4 text-12 font-semibold text-gray-40">
+          {t('conversation')}
+        </p>
+      )}
       <div className="avatar-list flex items-center">
         {characters?.map((character, index) => (
           <div
@@ -49,6 +56,7 @@ const WorkItem = ({
             style={{
               boxShadow: '0 2rem 3rem 0 rgba(0, 0, 0, 0.25)',
             }}
+            title={character.name}
           >
             <Image
               src={getPublicUrl(character.avatar_key)}

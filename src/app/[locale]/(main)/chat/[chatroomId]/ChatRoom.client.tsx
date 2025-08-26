@@ -3,12 +3,12 @@
 import { ComponentProps } from 'react';
 import { useAtomValue } from 'jotai';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 
 import { ArrowRight } from '@/assets/icons';
 import { messagesAtom } from '@/atoms/messagesAtom';
 import { ProgressBar } from '@/components';
 import { Message } from '@/lib/api/types/chat.types';
+import { useRouter } from '@/lib/navigation';
 import { cx } from '@/utils/method';
 
 import Chatbot from './Chatbot.client';
@@ -36,7 +36,7 @@ export default function ChatRoom({
         <button
           className="rounded-full h-24 w-24 bg-gray-100"
           onClick={() => {
-            router.back();
+            router.push('/chat');
           }}
         >
           <ArrowRight className="rotate-180" />

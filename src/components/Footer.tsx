@@ -1,8 +1,13 @@
+import { ComponentProps } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Logo } from '@/assets/icons';
+import { cx } from '@/utils/method';
 
-export default function Footer() {
+export default function Footer({
+  className,
+  ...props
+}: ComponentProps<'footer'>) {
   const t = useTranslations('footer');
   const locale = useLocale();
 
@@ -12,38 +17,41 @@ export default function Footer() {
       : '267 (03925) Seongam-ro, Mapo-gu, Seoul';
 
   return (
-    <footer>
-      <div className="flex w-full flex-col gap-16 bg-white px-16 py-28">
-        <div className="flex flex-wrap items-center justify-between">
-          <p className="text-12 font-semibold text-gray-30">{t('terms')}</p>
-          <div className="h-8 w-1 bg-gray-80"></div>
-          <p className="text-12 font-semibold text-gray-30">
-            {t('privacy_policy')}
-          </p>
-          <div className="h-8 w-1 bg-gray-80"></div>
-          <p className="text-12 font-semibold text-gray-30">
-            {t('customer_service')}
-          </p>
-          <div className="h-8 w-1 bg-gray-80"></div>
-          <p className="text-12 font-semibold text-gray-30">
-            {t('copyright_policy')}
-          </p>
-        </div>
-
-        <Logo />
-        <address className="text-12 font-normal leading-1.66 tracking-0.4 text-gray-30">
-          {t('info_name')}
-          <br />
-          {t('info_number', { phoneNumber: '107-81-78996' })}
-          <br />
-          {t('info_address', { address })}
-          <br />
-          <a href="mailto:mailname@email.com" />
-        </address>
-        <small className="text-12 font-normal tracking-0.4 text-gray-30">
-          {t('copyright', { year: 2023 })}
-        </small>
+    <footer
+      className={cx(
+        'flex w-full flex-col gap-16 bg-white px-16 py-28',
+        className
+      )}
+      {...props}
+    >
+      <div className="flex flex-wrap items-center gap-12">
+        <p className="text-12 font-semibold text-gray-30">{t('terms')}</p>
+        <div className="h-8 w-1 bg-gray-80"></div>
+        <p className="text-12 font-semibold text-gray-30">
+          {t('privacy_policy')}
+        </p>
+        <div className="h-8 w-1 bg-gray-80"></div>
+        <p className="text-12 font-semibold text-gray-30">
+          {t('customer_service')}
+        </p>
+        <div className="h-8 w-1 bg-gray-80"></div>
+        <p className="text-12 font-semibold text-gray-30">
+          {t('copyright_policy')}
+        </p>
       </div>
+      <Logo width={82} height={24} />
+      <address className="mb-0 text-12 font-normal leading-1.66 text-gray-30">
+        {t('info_name')}
+        <br />
+        {t('info_number', { phoneNumber: '107-81-78996' })}
+        <br />
+        {t('info_address', { address })}
+        <br />
+        <a href="mailto:mailname@email.com" />
+      </address>
+      <small className="text-12 font-normal text-gray-30">
+        {t('copyright', { year: 2023 })}
+      </small>
     </footer>
   );
 }

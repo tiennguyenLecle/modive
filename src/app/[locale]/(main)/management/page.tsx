@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 
 import { ArrowRight } from '@/assets/icons';
-import { Header } from '@/components';
+import { Footer, Header } from '@/components';
 import { Link } from '@/lib/navigation';
 import { ROUTES } from '@/utils/constants';
 
@@ -12,7 +12,7 @@ export default function ManagementPage() {
   return (
     <>
       <Header pageTitle={t('my_page')} showAlarmIcon showCashIcon />
-      <main className="flex flex-col gap-8">
+      <main className="flex flex-col gap-8 bg-gray-90">
         <div className="flex flex-col bg-white px-16">
           <Link href={ROUTES.MANAGEMENT.MY_INFORMATION}>
             <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
@@ -69,6 +69,7 @@ export default function ManagementPage() {
             </p>
           </div>
         </div>
+        <Footer className="mt-auto" />
       </main>
     </>
   );

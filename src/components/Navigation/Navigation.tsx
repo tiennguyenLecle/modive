@@ -16,6 +16,13 @@ import NavItem from './NavItem';
 
 type NavigationProps = ComponentProps<'nav'>;
 
+const activePaths = {
+  [ROUTES.HOME]: [ROUTES.HOME, ROUTES.INTRODUCTION],
+  [ROUTES.CHAT]: [ROUTES.CHAT],
+  [ROUTES.GOODS]: [ROUTES.GOODS],
+  [ROUTES.MANAGEMENT.INDEX]: [ROUTES.MANAGEMENT.INDEX],
+};
+
 export default function Navigation({ className, ...rest }: NavigationProps) {
   const t = useTranslations('nav');
 
@@ -29,14 +36,26 @@ export default function Navigation({ className, ...rest }: NavigationProps) {
         icon={<NavHome />}
         activeIcon={<NavHomeFilled />}
         text={t('home')}
+        activePaths={activePaths[ROUTES.HOME]}
       />
-      <NavItem href={ROUTES.CHAT} icon={<NavChat />} text={t('chat')} />
-      <NavItem href={ROUTES.GOODS} icon={<NavVase />} text={t('goods')} />
+      <NavItem
+        href={ROUTES.CHAT}
+        icon={<NavChat />}
+        text={t('chat')}
+        activePaths={activePaths[ROUTES.CHAT]}
+      />
+      <NavItem
+        href={ROUTES.GOODS}
+        icon={<NavVase />}
+        text={t('goods')}
+        activePaths={activePaths[ROUTES.GOODS]}
+      />
       <NavItem
         href={ROUTES.MANAGEMENT.INDEX}
         icon={<NavPerson />}
         activeIcon={<NavPersonFilled />}
         text={t('me')}
+        activePaths={activePaths[ROUTES.MANAGEMENT.INDEX]}
       />
     </nav>
   );

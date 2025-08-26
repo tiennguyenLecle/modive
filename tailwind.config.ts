@@ -91,10 +91,11 @@ const config: Config = {
       1.72: '1.72',
     },
     letterSpacing: {
-      0.8: '0.8',
-      0.6: '0.6',
-      0.5: '0.5',
-      0.4: '0.4',
+      0.8: '0.8rem',
+      0.6: '0.6rem',
+      0.5: '0.5rem',
+      0.4: '0.4rem',
+      0.07: '0.07rem',
     },
     // Override Tailwind's default font family
     fontFamily: {

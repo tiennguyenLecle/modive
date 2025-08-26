@@ -3,12 +3,14 @@
 import { ComponentProps } from 'react';
 
 import { Link, usePathname } from '@/lib/navigation';
+import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
 type NavItemProps = ComponentProps<typeof Link> & {
   icon?: React.ReactNode;
   activeIcon?: React.ReactNode;
   text: string;
+  activePaths?: string[];
 };
 
 export default function NavItem({
@@ -16,10 +18,15 @@ export default function NavItem({
   icon,
   activeIcon,
   text,
+  activePaths = [],
   ...rest
 }: NavItemProps) {
   const pathname = usePathname();
-  const isActive = pathname === href;
+
+  const isHome = href === ROUTES.HOME;
+  const isActive = isHome
+    ? pathname === ROUTES.HOME || activePaths.some(path => pathname === path)
+    : pathname === href || activePaths.some(path => pathname.startsWith(path));
 
   return (
     <Link

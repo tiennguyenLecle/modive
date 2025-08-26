@@ -64,10 +64,10 @@ export default function IntroductionClient({
             {workDetail.title}
           </h2>
           <div>
-            <p className="text-14 font-normal leading-1.66 tracking-0.5 text-gray-00">
+            <p className="text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
               {workDetail.description}
             </p>
-            <p className="flex gap-8 text-14 font-normal leading-1.66 tracking-0.5 text-gray-00">
+            <p className="flex gap-8 text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
               {workDetail.tags?.map(tag => (
                 <span key={tag}>#{tag}</span>
               ))}

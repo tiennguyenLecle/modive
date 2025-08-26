@@ -34,7 +34,7 @@ const CharacterCardItem = ({
       {/* Actor Info */}
       <div className="flex flex-col gap-8">
         <p className="text-16 font-semibold text-gray-20">{name}</p>
-        <p className="text-14 font-normal leading-1.66 tracking-0.5 text-gray-00">
+        <p className="text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
           {introduction}
         </p>
         {/* <p className="text-14 font-normal leading-1.66 tracking-0.5 text-gray-00">

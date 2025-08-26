@@ -39,7 +39,7 @@ const CommentItem = forwardRef<HTMLDivElement, CommentItemProps>(
               by. {comment?.user?.name}
             </p>
           </div>
-          <p className="whitespace-pre text-14 font-normal leading-1.66 -tracking-0.5 text-gray-00">
+          <p className="whitespace-pre text-wrap text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
             {comment?.content}
           </p>
           <span

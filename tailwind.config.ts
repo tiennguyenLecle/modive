@@ -174,6 +174,9 @@ const config: Config = {
       addVariant('active', '&.active');
     }),
   ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
 };
 
 export default config;

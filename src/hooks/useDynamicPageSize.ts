@@ -73,18 +73,8 @@ export function useDynamicPageSize(
     // Recalculate on window resize
     window.addEventListener('resize', recalculate);
 
-    // Recalculate when container size changes (if ref provided)
-    let resizeObserver: ResizeObserver | null = null;
-    if (containerRef?.current && window.ResizeObserver) {
-      resizeObserver = new ResizeObserver(recalculate);
-      resizeObserver.observe(containerRef.current);
-    }
-
     return () => {
       window.removeEventListener('resize', recalculate);
-      if (resizeObserver) {
-        resizeObserver.disconnect();
-      }
     };
   }, [calculatePageSize, containerRef]);
 

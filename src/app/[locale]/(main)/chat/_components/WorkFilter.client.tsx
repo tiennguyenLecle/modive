@@ -11,14 +11,16 @@ import { cx } from '@/utils/method';
 import styles from './WorkFilter.module.scss';
 
 interface WorkFilterProps {
-  selectedWorkIds: string[];
-  onToggleWork: (value: string) => void;
+  selectedWorkIds: string[] | null;
+  setSelectedWorkIds: (value: string[] | null) => void;
 }
 
-const WorkFilter = ({ selectedWorkIds, onToggleWork }: WorkFilterProps) => {
+const WorkFilter = ({
+  selectedWorkIds,
+  setSelectedWorkIds,
+}: WorkFilterProps) => {
   const t = useTranslations('chat_page');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [isViewByWork, setIsViewByWork] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const { data: works } = useChatRoomWorks();
@@ -29,6 +31,16 @@ const WorkFilter = ({ selectedWorkIds, onToggleWork }: WorkFilterProps) => {
         scrollContainerRef.current;
       setIsScrolled(scrollLeft > 0);
       setHasMore(clientWidth < scrollWidth - scrollLeft - 1);
+    }
+  };
+
+  const onToggleWork = (value: string) => {
+    if (!selectedWorkIds) return;
+
+    if (selectedWorkIds.includes(value)) {
+      setSelectedWorkIds(selectedWorkIds.filter(id => id !== value));
+    } else {
+      setSelectedWorkIds([...selectedWorkIds, value]);
     }
   };
 
@@ -49,10 +61,19 @@ const WorkFilter = ({ selectedWorkIds, onToggleWork }: WorkFilterProps) => {
     <>
       <div className="container flex h-48 items-center justify-between gap-16 border-b border-gray-90">
         <span>{t('view_by_work')}</span>
-        <Toggle.Button onToggle={() => setIsViewByWork(prev => !prev)} />
+        <Toggle.Button
+          initialState={selectedWorkIds !== null}
+          onToggle={() => {
+            if (selectedWorkIds !== null) {
+              setSelectedWorkIds(null);
+            } else {
+              setSelectedWorkIds([]);
+            }
+          }}
+        />
       </div>
       <AnimatePresence>
-        {isViewByWork && (
+        {selectedWorkIds !== null && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             exit={{ opacity: 0, height: 0 }}

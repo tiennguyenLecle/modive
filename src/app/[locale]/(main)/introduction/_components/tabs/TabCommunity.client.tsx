@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { DirectIcon, Plus } from '@/assets/icons';
+import { Direction, Plus } from '@/assets/icons';
 import { useDynamicPageSize } from '@/hooks/useDynamicPageSize';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { ROUTES } from '@/utils/constants';
@@ -37,6 +37,7 @@ export default function TabCommunity() {
   const {
     comments,
     isValidating,
+    isLoading,
     toggleLike,
     size,
     setSize,
@@ -81,12 +82,12 @@ export default function TabCommunity() {
             onClick={handleChangeSort}
           >
             <p>{sortAscending ? t('oldest') : t('latest')}</p>
-            <DirectIcon
+            <Direction
               width={14}
               height={14}
               className={cx(
                 'text-gray-00',
-                sortAscending ? 'rotate-180' : 'rotate-0'
+                sortAscending ? 'rotate-90' : '-rotate-90'
               )}
             />
           </div>
@@ -100,7 +101,10 @@ export default function TabCommunity() {
             onEdit: handleEdit,
             onDelete: handleDelete,
           }}
-          className="min-h-0 flex-1 overflow-auto"
+          className={cx(
+            'min-h-0 flex-1 overflow-auto transition-opacity',
+            isLoading && isValidating && 'opacity-50'
+          )}
         />
       </div>
 

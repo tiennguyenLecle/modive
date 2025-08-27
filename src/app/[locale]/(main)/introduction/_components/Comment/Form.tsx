@@ -127,14 +127,16 @@ const CommentForm = React.forwardRef<CommentFormRef, CommentFormProps>(
             </>
           )}
         </AnimatePresence>
-        <div className="absolute bottom-full left-0 flex h-56 cursor-pointer items-center px-16">
-          <ArrowRight
-            width={24}
-            height={24}
-            className="rotate-180 text-gray-00 transition-colors hover:bg-gray-90"
-            onClick={closeHandler}
-          />
-        </div>
+        {isOpen && (
+          <div className="absolute bottom-full left-0 flex h-56 cursor-pointer items-center px-16">
+            <ArrowRight
+              width={24}
+              height={24}
+              className="rotate-180 text-gray-00 transition-colors hover:bg-gray-90"
+              onClick={closeHandler}
+            />
+          </div>
+        )}
       </>
     );
   }

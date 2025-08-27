@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 
 import { redirect } from '@/lib/navigation';
@@ -6,7 +7,9 @@ import { createServerSupabase } from '@/lib/supabase/factory.server';
 import { fetchWorkDetail } from '@/lib/supabase/swr/work';
 import { ROUTES } from '@/utils/constants';
 
-import IntroductionClient from './Introduction.client';
+const IntroductionClient = dynamic(() => import('./Introduction.client'), {
+  ssr: false,
+});
 
 type IntroductionProps = {
   params: { locale: string };

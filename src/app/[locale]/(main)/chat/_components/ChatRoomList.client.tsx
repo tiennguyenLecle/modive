@@ -23,7 +23,7 @@ export default function ChatRoomList() {
   const modalRef = React.useRef<React.ElementRef<typeof ModalOptions>>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedWorkIds, setSelectedWorkIds] = useState<string[]>([]);
+  const [selectedWorkIds, setSelectedWorkIds] = useState<string[] | null>(null);
 
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const virtualListRef = useRef<any>(null);
@@ -41,12 +41,13 @@ export default function ChatRoomList() {
     rooms: chatrooms,
     setSize,
     isValidating,
+    isLoading,
     isReachingEnd,
     mutate,
   } = useMyRoomsInfinite({
     pageSize: recommendedPageSize,
     type: searchParams.get('key') === 'chapter' ? 'chapter' : 'general',
-    workIds: selectedWorkIds,
+    workIds: selectedWorkIds ?? undefined,
   });
 
   // Simple scroll handler for load more
@@ -72,13 +73,7 @@ export default function ChatRoomList() {
         <>
           <WorkFilter
             selectedWorkIds={selectedWorkIds}
-            onToggleWork={value => {
-              if (selectedWorkIds.includes(value)) {
-                setSelectedWorkIds(selectedWorkIds.filter(id => id !== value));
-              } else {
-                setSelectedWorkIds([...selectedWorkIds, value]);
-              }
-            }}
+            setSelectedWorkIds={setSelectedWorkIds}
           />
           <VirtualList<ChatRoomType>
             ref={virtualListRef}
@@ -86,7 +81,11 @@ export default function ChatRoomList() {
             itemHeight={92}
             itemKey="id"
             onScroll={handleScroll}
-            className={cx('min-h-0 flex-1', styles.virtualList)}
+            className={cx(
+              'min-h-0 flex-1 transition-opacity duration-300',
+              styles.virtualList,
+              isLoading && isValidating && 'opacity-50'
+            )}
           >
             {item => (
               <ChatListItem
@@ -174,6 +173,7 @@ const ChatListItem = React.forwardRef<HTMLDivElement, ChatListItemProps>(
           width={60}
           height={60}
           className="aspect-square rounded-max bg-gray-80 object-cover"
+          priority
         />
 
         <div className="flex flex-1 items-center gap-8">

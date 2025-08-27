@@ -54,6 +54,7 @@ export function useComments(
       }),
     {
       revalidateAll: true,
+      keepPreviousData: true,
     }
   );
 

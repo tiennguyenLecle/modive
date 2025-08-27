@@ -1,6 +1,14 @@
 'use client';
 
-import React, { ComponentProps, useCallback, useMemo, useState } from 'react';
+import React, {
+  ComponentProps,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { motion } from 'framer-motion';
 
 import { cx } from '@/utils/method';
@@ -18,7 +26,40 @@ type MenuTabProps = ComponentProps<'div'> & {
   onTabChange?: (tab: string) => void;
   // Uncontrolled mode: component manages its own state
   defaultActiveKey?: string;
+  /**
+   * Lazy loading and performance options
+   *
+   * @param destroyInactiveTabPane - Default: false
+   * - true: Destroy inactive tab contents to save memory (like Antd)
+   * - false: Cache inactive tabs for faster switching
+   *
+   * @param forceRender - Default: false
+   * - true: Disable lazy loading, render all tabs immediately
+   * - false: Enable lazy loading, only render tabs when first visited
+   */
+  destroyInactiveTabPane?: boolean;
+  forceRender?: boolean;
 };
+
+// Individual tab panel component optimized with memo
+const TabPanel = memo<{
+  tab: TabItem;
+  isActive: boolean;
+  children: React.ReactNode;
+}>(({ tab, isActive, children }) => (
+  <div
+    key={tab.key}
+    role="tabpanel"
+    id={`panel-${tab.key}`}
+    aria-labelledby={`tab-${tab.key}`}
+    aria-hidden={!isActive}
+    className={cx('h-full w-full', isActive ? 'block' : 'hidden')}
+  >
+    {children}
+  </div>
+));
+
+TabPanel.displayName = 'TabPanel';
 
 const MenuTab: React.FC<MenuTabProps> = ({
   tabs,
@@ -26,6 +67,8 @@ const MenuTab: React.FC<MenuTabProps> = ({
   defaultActiveKey,
   onTabChange,
   className,
+  destroyInactiveTabPane = false,
+  forceRender = false,
   ...props
 }) => {
   // Determine if component is controlled or uncontrolled
@@ -42,11 +85,52 @@ const MenuTab: React.FC<MenuTabProps> = ({
   // Use controlled or internal state
   const activeTab = isControlled ? controlledActiveTab : internalActiveTab;
 
-  // Memoize active tab children
-  const activeTabChildren = useMemo(
-    () => tabs?.find(tab => tab.key === activeTab)?.children,
-    [tabs, activeTab]
-  );
+  // Track which tabs have been visited for lazy loading
+  const visitedTabsRef = useRef<Set<string>>(new Set());
+
+  // Initialize with default active tab or first tab
+  useEffect(() => {
+    if (activeTab) {
+      visitedTabsRef.current.add(activeTab);
+    }
+  }, [activeTab]);
+
+  // Cache for rendered tab contents
+  const renderedTabsRef = useRef<Map<string, React.ReactNode>>(new Map());
+
+  // Memoize tabs that should be rendered based on lazy loading strategy
+  const tabsToRender = useMemo(() => {
+    if (forceRender) {
+      // Force render all tabs - disable lazy loading
+      return tabs.reduce(
+        (acc, tab) => {
+          acc[tab.key] = tab.children;
+          return acc;
+        },
+        {} as Record<string, React.ReactNode>
+      );
+    }
+
+    const result: Record<string, React.ReactNode> = {};
+
+    for (const tab of tabs) {
+      const hasBeenVisited = visitedTabsRef.current.has(tab.key);
+      const isActive = activeTab === tab.key;
+
+      if (isActive || (hasBeenVisited && !destroyInactiveTabPane)) {
+        // Render if active OR (visited and not destroying inactive)
+        if (!renderedTabsRef.current.has(tab.key) || isActive) {
+          renderedTabsRef.current.set(tab.key, tab.children);
+        }
+        result[tab.key] = renderedTabsRef.current.get(tab.key);
+      } else if (destroyInactiveTabPane) {
+        // Remove from cache if destroying inactive tabs
+        renderedTabsRef.current.delete(tab.key);
+      }
+    }
+
+    return result;
+  }, [tabs, activeTab, destroyInactiveTabPane, forceRender]);
 
   const handleTabClick = useCallback(
     (tab: string) => {
@@ -97,15 +181,25 @@ const MenuTab: React.FC<MenuTabProps> = ({
           </button>
         ))}
       </div>
-      <div
-        role="tabpanel"
-        id={`panel-${activeTab}`}
-        aria-labelledby={`tab-${activeTab}`}
-      >
-        {activeTabChildren}
+      <div className="group-tabpanel">
+        {tabs.map(tab => {
+          const isActive = activeTab === tab.key;
+          const shouldRender = tabsToRender.hasOwnProperty(tab.key);
+
+          if (!shouldRender) {
+            return null;
+          }
+
+          return (
+            <TabPanel key={tab.key} tab={tab} isActive={isActive}>
+              {tabsToRender[tab.key]}
+            </TabPanel>
+          );
+        })}
       </div>
     </div>
   );
 };
 
-export default MenuTab;
+// Export memoized version for better performance
+export default memo(MenuTab);

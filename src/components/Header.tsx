@@ -1,11 +1,11 @@
 'use client';
 
 import React, { ComponentProps } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Alarm, ArrowRight, Cash, LogoText, Search } from '@/assets/icons';
 import { Badge } from '@/components';
+import { Link } from '@/lib/navigation';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
@@ -66,7 +66,7 @@ const Header = ({
           </Link>
         )}
         {showAlarmIcon && (
-          <Link href="#">
+          <Link href="#" className="h-24">
             <Badge.Wrapper count={3} showZero>
               <Alarm width={24} height={24} className="text-gray-00" />
             </Badge.Wrapper>

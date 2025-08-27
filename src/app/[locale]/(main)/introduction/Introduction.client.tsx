@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { Direction } from '@/assets/icons';
 import { CharacterCard, Header, MenuTab } from '@/components';
+import { useHashRoute } from '@/hooks/useHashRoute';
 import { useWorkDetail } from '@/hooks/useWork';
 import { useRouter } from '@/lib/navigation';
 import { WorkType } from '@/types/work';
@@ -30,6 +31,8 @@ export default function IntroductionClient({
   const searchParams = useSearchParams();
   const { data: workDetail } = useWorkDetail(workId, fallbackData);
 
+  const [activeTab, setActiveTab] = useHashRoute('character');
+
   const modalCharacterRef =
     useRef<React.ElementRef<typeof ModalCharacter>>(null);
 
@@ -44,12 +47,11 @@ export default function IntroductionClient({
         showBackButton
         className="border-b border-gray-80"
       />
-      <div className="flex min-h-0 flex-1 flex-col overflow-auto">
+      <div className="flex min-h-0 flex-1 flex-col">
         <div
           className={cx(
             styles.introductionHeader,
-            searchParams.get('key') === 'community' &&
-              styles.collapsedIntroductionHeader
+            activeTab === 'community' && styles.collapsedIntroductionHeader
           )}
         >
           <Image
@@ -86,13 +88,7 @@ export default function IntroductionClient({
           <MenuTab
             className="flex h-full flex-col"
             onTabChange={key => {
-              const params = new URLSearchParams(searchParams);
-              params.set('key', key);
-              if (key === 'community') {
-                router.push(`?${params.toString()}`);
-              } else {
-                router.replace(`?${params.toString()}`);
-              }
+              setActiveTab(key, key !== 'community');
             }}
             tabs={[
               {
@@ -134,7 +130,7 @@ export default function IntroductionClient({
                 children: <TabCommunity />,
               },
             ]}
-            activeTab={searchParams.get('key') || 'character'}
+            activeTab={activeTab}
           />
           <ModalCharacter ref={modalCharacterRef} />
         </div>

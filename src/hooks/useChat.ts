@@ -66,6 +66,7 @@ export function useMyRoomsInfinite(options: UseMyRoomsOptions = {}) {
       }),
     {
       revalidateAll: true,
+      keepPreviousData: true,
     }
   );
 

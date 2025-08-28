@@ -161,13 +161,18 @@
     },
     "chapter_entrance": "챕터 입장",
     "modal_character": {
-      "start_conversation": "1:1 대화하기",
-      "like": "좋아요"
+      "start_conversation": "일반 대화 하기",
+      "like": "좋아요",
+      "favorability": "호감도 1",
+      "portrait": "인물 한마디",
+      "selectWhenEntering": "진입 시점 선택하기",
+      "round": "{ value }회차",
+      "introduction": "인물 소개"
     },
     "modal_guide_to_use": {
       "title": "이용 수칙 안내",
       "description_1": "채팅 응답 및 콘텐츠는 AI에 의해 생성되었으며, 부정확한 정보를 포함할 가능성이 있습니다.",
-      "description_2": "이 내용은 모다이브의 공식 입장과는 무관함을 알려드립니다. ",
+      "description_2": "이 내용은 모다이브의 공식 입장과는 무관함을 알려드립니다.",
       "description_3": "모든 이용자는 윤리적 기준을 준수해야하며, 기준에 어긋나는 대화는 삼가주세요.",
       "description_4": "운영정책 위반 및 서비스 악용 시 무통보 제재 또는 법적 조치를 받을 수 있습니다.",
       "agree_and_start": "동의하고 시작하기",

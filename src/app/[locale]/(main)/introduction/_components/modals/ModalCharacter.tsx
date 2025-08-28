@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
 import { Heart } from '@/assets/icons';
-import { Button, Modal } from '@/components';
+import { Button, Modal, ProgressBar, Slider } from '@/components';
 import { useCreateChat } from '@/hooks/useChat';
 import { useRouter } from '@/lib/navigation';
 import { STORAGE } from '@/utils/constants';
@@ -37,6 +37,8 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
   const { characterDetail, toggleLike } = useCharacter(characterId);
   const character = characterDetail.data;
   const createChat = useCreateChat();
+
+  console.log('characterDetail:', characterDetail.data);
 
   const closeHandler = () => {
     setIsOpen(false);
@@ -118,6 +120,7 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
           closeHandler();
           removeCharacterId();
         }}
+        title={t('introduction')}
         footer={
           character ? (
             <div className="flex w-full items-center gap-8">
@@ -132,20 +135,22 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
           ) : null
         }
       >
-        <div className="container flex flex-col gap-16">
-          <div className="relative aspect-square w-full">
+        <div className={cx('container flex flex-col')}>
+          <div className="relative mx-auto mb-12 aspect-square w-3/4">
             <Image
               src={getPublicUrl(character?.avatar_key)}
               alt={character?.name || 'User avatar'}
               fill
-              className="rounded-4"
+              className="rounded-8"
             />
           </div>
-          <div className="flex items-start gap-8">
-            <p title={character?.name}>{character?.name}</p>
+          <div className="mb-8 flex h-40 items-center gap-8">
+            <p title={character?.name} className="text-20 font-medium">
+              {character?.name}
+            </p>
             <div
               onClick={handleLike}
-              className="group ml-auto flex cursor-pointer items-center gap-4"
+              className="group ml-auto flex cursor-pointer items-center gap-4 text-12 text-gray-30"
             >
               <Heart
                 className={cx(
@@ -160,10 +165,44 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
                 : character?.total_likes}
             </div>
           </div>
-          <p>{character?.introduction}</p>
+          <div className="mb-8 flex items-center gap-8">
+            <p className="flex-1 whitespace-nowrap text-14 font-semibold text-primary">
+              {t('favorability')}
+            </p>
+            <ProgressBar
+              value={characterDetail.data?.chat_rooms[0].intimacy || 0}
+            />
+          </div>
+          <p className="mb-16 text-14 font-normal leading-1.66 -tracking-0.5 text-gray-00">
+            {character?.introduction}
+          </p>
           {character?.quote && (
-            <q className="text-center">{character?.quote}</q>
+            <>
+              <p className="mb-12 text-14 font-semibold text-gray-00">
+                {t('portrait')}
+              </p>
+              <p className="text-gray-16 mb-16 whitespace-pre-line rounded-8 bg-gray-90 p-8 text-center text-14 font-semibold leading-1.7 -tracking-0.07">
+                {character?.quote}
+              </p>
+            </>
           )}
+
+          <div className="my-12 border-t border-gray-80" />
+
+          <p className="mb-12 text-14 font-semibold text-gray-00">
+            {t('selectWhenEntering')}
+          </p>
+          <Slider
+            defaultValue={1}
+            min={1}
+            max={16}
+            marks={{
+              1: t('round', { value: 1 }),
+              16: t('round', { value: 16 }),
+            }}
+            tooltip={value => (value ? t('round', { value }) : value)}
+            className="mb-16"
+          />
         </div>
       </Modal>
 

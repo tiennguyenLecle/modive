@@ -15,3 +15,4 @@ export { default as Story } from './Story';
 export { default as SuspenseComponent } from './SuspenseComponent';
 export { Toggle } from './Toggle';
 export { default as Work } from './Work';
+export { default as Slider } from './Slider/Slider';

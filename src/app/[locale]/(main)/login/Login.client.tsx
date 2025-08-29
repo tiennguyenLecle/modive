@@ -77,7 +77,8 @@ export default function LoginClient() {
           icon={<SocialKakaoTalk className="size-24" />}
           animationDelay={0.8}
           onClick={async () => {
-            await signInWithKakao();
+            await signInWithProvider('kakao', callbackUrl);
+            // await signInWithKakao();
           }}
         >
           {t('login_with_kakao')}
@@ -116,7 +117,7 @@ function LoginButton({
     >
       <button
         className={cx(
-          'flex min-w-292 items-center gap-24 rounded-m px-xxl py-xl text-16 font-medium transition-shadow duration-300 hover:shadow-xl',
+          'hover:shadow-xl flex min-w-292 items-center gap-24 rounded-m px-xxl py-xl text-16 font-medium transition-shadow duration-300',
           className
         )}
         {...props}

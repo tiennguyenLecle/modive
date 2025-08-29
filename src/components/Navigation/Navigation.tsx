@@ -40,7 +40,7 @@ export default function Navigation({ className, ...rest }: NavigationProps) {
       />
       <NavItem
         href={ROUTES.CHAT}
-        icon={<NavChat />}
+        icon={<NavChat className="size-25" />}
         text={t('chat')}
         activePaths={activePaths[ROUTES.CHAT]}
       />

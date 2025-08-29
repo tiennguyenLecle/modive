@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import VirtualList from 'rc-virtual-list';
 
-import { Pin } from '@/assets/icons';
+import { NavChat, Pin } from '@/assets/icons';
 import { Badge, Spinner } from '@/components';
 import { useMyRoomsInfinite } from '@/hooks/useChat';
 import { useDynamicPageSize } from '@/hooks/useDynamicPageSize';
@@ -128,7 +128,12 @@ export default function ChatRoomList() {
           </VirtualList>
         </>
       )}
-      {!isValidating && chatrooms.length === 0 && <div>{t('no_rooms')}</div>}
+      {!isValidating && chatrooms.length === 0 && (
+        <div className="flex h-full flex-col items-center justify-center gap-16 bg-gray-90 text-gray-70">
+          <NavChat className="size-48" />
+          <p>진행중인 일반대화가 없어요</p>
+        </div>
+      )}
       {isValidating && (
         <div className="flex items-center justify-center p-16">
           <Spinner className="mx-auto" />

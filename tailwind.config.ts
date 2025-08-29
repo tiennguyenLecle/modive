@@ -46,6 +46,7 @@ const config: Config = {
       19: '19rem',
       20: '20rem',
       24: '24rem',
+      25: '25rem',
       28: '28rem',
       32: '32rem',
       36: '36rem',

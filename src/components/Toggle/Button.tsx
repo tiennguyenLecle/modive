@@ -36,7 +36,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
       <motion.div
         layout
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-        className="absolute flex h-18 w-18 items-center justify-center rounded-max bg-white shadow-md"
+        className="shadow-md absolute flex h-18 w-18 items-center justify-center rounded-max bg-white"
         style={{
           left: enabled ? 'calc(100% - 21rem)' : '3rem',
           boxShadow: '0px 4px 8px 0px #00000014',

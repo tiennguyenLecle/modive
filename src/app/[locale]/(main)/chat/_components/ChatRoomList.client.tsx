@@ -23,6 +23,9 @@ export default function ChatRoomList() {
   const modalRef = React.useRef<React.ElementRef<typeof ModalOptions>>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const searchParamsKey =
+    searchParams.get('key') === 'chapter' ? 'chapter' : 'general';
+
   const [selectedWorkIds, setSelectedWorkIds] = useState<string[] | null>(null);
 
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
@@ -46,7 +49,7 @@ export default function ChatRoomList() {
     mutate,
   } = useMyRoomsInfinite({
     pageSize: recommendedPageSize,
-    type: searchParams.get('key') === 'chapter' ? 'chapter' : 'general',
+    type: searchParamsKey,
     workIds: selectedWorkIds ?? undefined,
   });
 
@@ -129,9 +132,13 @@ export default function ChatRoomList() {
         </>
       )}
       {!isValidating && chatrooms.length === 0 && (
-        <div className="flex h-full flex-col items-center justify-center gap-16 bg-gray-90 text-gray-70">
+        <div className="flex h-full flex-col items-center justify-center gap-12 bg-gray-90 text-gray-70">
           <NavChat className="size-48" />
-          <p>진행중인 일반대화가 없어요</p>
+          <p className="text-14 font-semibold text-gray-60">
+            {searchParamsKey === 'general'
+              ? t('no_generalization')
+              : t('no_chapter')}
+          </p>
         </div>
       )}
       {isValidating && (

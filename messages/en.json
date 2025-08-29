@@ -121,7 +121,9 @@
       "confirm_deletion_title": "Delete chat room",
       "confirm_deletion_description": "Are you sure you want to delete this chat room? This action cannot be undone."
     },
-    "view_by_work": "View by work"
+    "view_by_work": "View by work",
+    "no_generalization": "There is no generalization in progress",
+    "no_chapter": "There is no chapter in progress"
   },
   "goods_page": {
     "metadata": {

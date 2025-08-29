@@ -170,7 +170,7 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
               {t('favorability')}
             </p>
             <ProgressBar
-              value={characterDetail.data?.chat_rooms[0].intimacy || 0}
+              value={characterDetail.data?.chat_rooms[0]?.intimacy || 0}
             />
           </div>
           <p className="mb-16 text-14 font-normal leading-1.66 -tracking-0.5 text-gray-00">

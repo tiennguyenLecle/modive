@@ -152,3 +152,28 @@ export async function fetchUserWorks(
 
   return worksData as unknown as UserWorksResponse;
 }
+
+export async function fetchChatRoomDetail(
+  supabase: SupabaseClient,
+  chatroomId?: string
+) {
+  const { data, error } = await supabase
+    .from('chat_rooms')
+    .select(
+      `*,
+      work:works!chat_rooms_work_id_works_id_fk (
+        bundle_id,
+        universe_id
+      ),
+      character:characters!chat_rooms_character_id_characters_id_fk (
+        avatar_key,
+        bot_id,
+        id,
+        name
+      )`
+    )
+    .eq('room_id', chatroomId || '70a63523-2221-4e60-a434-52b879ed6166')
+    .single();
+  if (error) throw error;
+  return data as unknown as ChatRoomType;
+}

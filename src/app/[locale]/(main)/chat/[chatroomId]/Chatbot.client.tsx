@@ -18,6 +18,8 @@ import {
   MessageInfoProps,
   MessageListModule,
 } from '@/lib/chatbot-modules';
+import { ChatRoomType } from '@/types/chatroom';
+import { getPublicUrl } from '@/utils/method';
 
 import PreviewImageModal from './_components/modals/PreviewImageModal';
 import styles from './ChatRoom.module.scss';
@@ -27,19 +29,21 @@ import {
   useMessageManagement,
   useSendMessage,
 } from './hooks/useChatbot';
-import { mapMessagesToInfoProps } from './messageTransformers';
+import { mapMessagesToInfoProps } from './utils/messageTransformers';
 
 // Types
 type ChatbotProps = ComponentProps<'div'> & {
   messages: Message[];
-  chatbotName: string;
+  chatRoomDetail: ChatRoomType;
 };
 
 // Main component
 const Chatbot = memo(
-  ({ messages: initialMessages, chatbotName }: ChatbotProps) => {
+  ({ messages: initialMessages, chatRoomDetail }: ChatbotProps) => {
     const t = useTranslations('chat_page');
     const { chatroomId } = useParams();
+    const { character } = chatRoomDetail;
+    const avatarCharacterUrl = getPublicUrl(character?.avatar_key ?? '');
     // ref to message list
     const messageListRef = useRef<any>(null);
 
@@ -48,6 +52,7 @@ const Chatbot = memo(
 
     const { messages, setMessages, updatedMessagesRef } =
       useMessageManagement(initialMessages);
+
     const { isPreviousLoading, handleLoadMore } = useLoadMoreMessages(
       chatroomId as string,
       updatedMessagesRef,
@@ -83,8 +88,15 @@ const Chatbot = memo(
         }
 
         try {
-          const transformed = await mapMessagesToInfoProps(messages);
-          setTransformedMessages(transformed);
+          const transformed = (await mapMessagesToInfoProps(messages)) ?? [];
+          const transformedWithAvatar = transformed?.map(
+            (msg: MessageInfoProps) => ({
+              ...msg,
+              avatarUrl:
+                msg.speakerType === 'chatbot' ? avatarCharacterUrl : '',
+            })
+          );
+          setTransformedMessages(transformedWithAvatar);
         } catch (error) {
           setTransformedMessages([]);
         }
@@ -135,7 +147,7 @@ const Chatbot = memo(
           composerComponent={
             <Composer
               chatroomId={chatroomId as string}
-              chatbotName={chatbotName}
+              chatbotName={character?.name ?? ''}
               sendMessage={sendMessage}
               isChapterMode={false}
             />
@@ -144,7 +156,7 @@ const Chatbot = memo(
         <PreviewImageModal
           item={selectedImageItem}
           close={() => setSelectedImageItem(null)}
-          characterName={chatbotName}
+          characterName={character?.name ?? ''}
         />
       </>
     );

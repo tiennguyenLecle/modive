@@ -1,7 +1,12 @@
+import { cache } from 'react';
 import { getTranslations } from 'next-intl/server';
 
 import { SuspenseComponent } from '@/components';
 import { ChatApi } from '@/lib/api/server';
+import { redirect } from '@/lib/navigation';
+import { createServerSupabase } from '@/lib/supabase/factory.server';
+import { fetchChatRoomDetail } from '@/lib/supabase/swr/chatroom';
+import { ROUTES } from '@/utils/constants';
 
 import ChatRoom from './ChatRoom.client';
 
@@ -24,18 +29,30 @@ export async function generateMetadata({
 export default async function ChatRoomPage({
   params,
 }: {
-  params: { chatroomId: string };
+  params: { chatroomId: string; locale: string };
 }) {
-  const { chatroomId } = params;
-  const chatBotName = process.env.DIT_CHATBOT_NAME;
+  const { chatroomId, locale } = params;
 
-  const res = await ChatApi.getMessages(chatroomId, undefined, 20);
+  const { chatRoomDetail, error } = await _getChatRoomData(chatroomId);
+
+  if (error) {
+    redirect({ href: ROUTES.CHAT, locale });
+  }
 
   return (
     <div data-no-navigation>
-      <SuspenseComponent>
-        <ChatRoom messages={res.data ?? []} chatBotName={chatBotName!} />
-      </SuspenseComponent>
+      <ChatRoom chatRoomDetail={chatRoomDetail!} />
     </div>
   );
 }
+
+// Use React cache to ensure only one fetch in the same request
+const _getChatRoomData = async (chatroomId: string) => {
+  const supabase = createServerSupabase('user');
+  try {
+    const chatRoomDetail = await fetchChatRoomDetail(supabase, chatroomId);
+    return { chatRoomDetail, error: null };
+  } catch (error) {
+    return { chatRoomDetail: null, error };
+  }
+};

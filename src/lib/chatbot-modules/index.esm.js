@@ -37983,19 +37983,6 @@ const useMessageCache = (conversationId, initial, cache) => {
   useEffect(() => {
     setMessages(initial);
   }, [initial]);
-  // Helper function to compare messages
-  const areMessagesEqual = (msg1, msg2) => {
-    if (msg1.length !== msg2.length) return false;
-    return msg1?.every((message, index) => {
-      const otherMessage = msg2[index];
-      if (!message || !otherMessage) return false;
-      return (
-        message.id === otherMessage.id &&
-        message.message === otherMessage.message
-      );
-    });
-  };
-  // Helper function to save messages to cache
   const saveToCache = useCallback(
     msgs => {
       if (!cache) return;
@@ -38011,10 +37998,10 @@ const useMessageCache = (conversationId, initial, cache) => {
     },
     [cache, conversationId]
   );
-  // Get messages from cache
+  // Load messages from cache on mount
   useEffect(() => {
     if (!cache) return;
-    const getMessagesFromCache = async () => {
+    const loadFromCache = async () => {
       let cachedMessages = null;
       if (cache === MESSAGE_CACHE_TYPE.LOCAL) {
         const raw = localStorage.getItem(`chatbox_cache_${conversationId}`);
@@ -38022,36 +38009,28 @@ const useMessageCache = (conversationId, initial, cache) => {
       } else if (cache === MESSAGE_CACHE_TYPE.INDEXED) {
         cachedMessages = await readIndexedDB(conversationId);
       }
-      if (
-        cachedMessages &&
-        cachedMessages?.length === 0 &&
-        initial?.length === 0
-      ) {
-        return;
-      }
-      if (cachedMessages && cachedMessages?.length > 0) {
-        // Cache exists, compare with initial messages
-        if (!areMessagesEqual(cachedMessages, initial)) {
-          // Messages are different, update cache with new messages
+      // Use cached messages if they exist and are different from initial
+      if (cachedMessages && cachedMessages.length > 0) {
+        const hasChanged =
+          JSON.stringify(cachedMessages) !== JSON.stringify(initial);
+        if (hasChanged) {
           setMessages(initial);
           saveToCache(initial);
         } else {
-          // Messages are the same, use cached messages
           setMessages(cachedMessages);
         }
       } else {
-        // No cache exists, save initial messages
         setMessages(initial);
         saveToCache(initial);
       }
     };
-    getMessagesFromCache();
+    loadFromCache();
   }, [conversationId, cache, initial, saveToCache]);
-  // Update cache when messages change (for new messages added via onNewMessage)
+  // Update cache when messages change
   useEffect(() => {
     if (!cache) return;
     saveToCache(messages);
-  }, [messages, cache, conversationId, saveToCache]);
+  }, [messages, cache, saveToCache]);
   return [messages, setMessages];
 };
 
@@ -38082,7 +38061,6 @@ const MessageListComponent = forwardRef(
     // Store the messages in a ref to avoid re-rendering the component when the messages prop changes
     const messagesRef = useRef(messages);
     const lastMessageIndexBeforeLoadMore = useRef(0);
-    const isFirstRender = useRef(false);
     const virtuosoRef = useRef(null);
     // Check if the user has scrolled to the top of the list
     const prevScrollTopRef = useRef(false);
@@ -38121,13 +38099,6 @@ const MessageListComponent = forwardRef(
       const isLoading = theLastMessage?.messageArray?.[0]?.type === 'loading';
       if (isLoading) {
         scrollToEnd(virtuosoRef.current, msgs);
-      }
-      // handle for first render - scroll to end
-      if (!isFirstRender.current) {
-        setTimeout(() => {
-          scrollToEnd(virtuosoRef.current, msgs);
-        }, 100);
-        isFirstRender.current = true;
       }
     }, [msgs]);
     return jsxRuntimeExports.jsxs('div', {
@@ -38299,9 +38270,7 @@ const useLoadMore = ({
             const newMessageCount = messageElements.length - lengthBeforeLoad;
             const targetIndex = newMessageCount;
             if (messageElements[targetIndex]) {
-              messageElements[
-                targetIndex > 0 ? targetIndex - 1 : 0
-              ].scrollIntoView({
+              messageElements[targetIndex].scrollIntoView({
                 behavior: 'instant',
                 block: 'start',
               });
@@ -38323,10 +38292,7 @@ const useLoadMore = ({
       }, 2000);
     } finally {
       setIsLoadingMore(false);
-      // Reset the trigger after a delay to allow for new scroll events
-      setTimeout(() => {
-        loadMoreTriggered.current = false;
-      }, 100);
+      loadMoreTriggered.current = false;
     }
   }, [
     onLoadMorePreviousData,
@@ -38423,6 +38389,7 @@ const MessageListModuleComponent = forwardRef(
     const listRef = useRef(null);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const loadMoreTriggered = useRef(false);
+    const isFirstRender = useRef(true);
     // Custom hooks for different concerns
     const { scrollToEnd, setupResizeObserver, shouldScrollToEnd } =
       useAutoScroll({
@@ -38489,30 +38456,8 @@ const MessageListModuleComponent = forwardRef(
         theLastMessage?.createdAt &&
         new Date(theLastMessage.createdAt).getTime() > Date.now() - 60000; // Within last minute
       // Don't auto-scroll if we're loading more messages from the top
-      if (isLoadingMore) {
+      if (isLoadingMore || loadMoreTriggered.current) {
         return;
-      }
-      // Don't auto-scroll if we're in the process of loading more previous messages
-      if (loadMoreTriggered.current) {
-        return;
-      }
-      // Don't auto-scroll if user is near the top (reading older messages)
-      if (listRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-        const scrollPercentage = scrollTop / (scrollHeight - clientHeight);
-        // If user is within 20% of the top, don't auto-scroll
-        if (scrollPercentage <= 0.2) {
-          return;
-        }
-      }
-      // Additional check: if messages increased but it's likely from loading previous data
-      // (when the increase is significant, it's usually from loading previous messages)
-      if (isNewMessage && msgs.length > 0 && messagesRef.current.length > 0) {
-        const messageIncrease = msgs.length - messagesRef.current.length;
-        // If we added more than 5 messages at once, it's likely loading previous data
-        if (messageIncrease > 5) {
-          return;
-        }
       }
       // Scroll to end when:
       // 1. Last message is loading (showing loading state)
@@ -38525,12 +38470,17 @@ const MessageListModuleComponent = forwardRef(
     // Scroll to end on first render only
     useEffect(() => {
       // Don't scroll to end if we're loading more messages
-      if (isLoadingMore || loadMoreTriggered.current) {
+      if (
+        isLoadingMore ||
+        loadMoreTriggered.current ||
+        !isFirstRender.current
+      ) {
         return;
       }
       setTimeout(() => {
         scrollToEnd(listRef);
-      }, 500);
+        isFirstRender.current = false;
+      }, 100);
     }, [scrollToEnd, isLoadingMore, loadMoreTriggered]); // Added dependencies
     // Cleanup on unmount
     useEffect(() => {
@@ -38576,15 +38526,8 @@ const MessageListModuleComponent = forwardRef(
                     className: `c-chatbox-scroll-to-end-button`,
                     icon: '↓',
                     onClick: () => {
-                      // Don't scroll to end if loading more messages
-                      if (!isLoadingMore && !loadMoreTriggered.current) {
-                        scrollToEnd(listRef);
-                        scrollToEndButtonProps?.onClick?.();
-                      } else {
-                        console.log(
-                          'Scroll-to-end button blocked: loading more messages'
-                        );
-                      }
+                      scrollToEnd(listRef);
+                      scrollToEndButtonProps?.onClick?.();
                     },
                     ...scrollToEndButtonProps,
                   }),

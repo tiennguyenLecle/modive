@@ -136,7 +136,7 @@ export const useMessagePolling = (chatroomId: string) => {
             return true;
           }
 
-          return false; // tiếp tục poll
+          return false; // continue polling
         } catch (err) {
           console.error('Error polling for messages:', err);
           onComplete([]);

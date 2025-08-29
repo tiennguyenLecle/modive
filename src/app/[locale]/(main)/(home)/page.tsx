@@ -1,9 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 
 import { Header } from '@/components';
-
-// import { createServerSupabase } from '@/lib/supabase/factory.server';
-// import { fetchInterface } from '@/lib/supabase/swr/interface';
+import { createServerSupabase } from '@/lib/supabase/factory.server';
+import { fetchInterface } from '@/lib/supabase/swr/interface';
 
 import HomeClient from './Home.client';
 
@@ -19,15 +18,24 @@ export const generateMetadata = async ({
   };
 };
 
+// Cache for 2 minutes (120 seconds) - faster updates for better UX
+export const revalidate = 120;
+
 export default async function Home() {
-  // const supabase = createServerSupabase('user');
-  // const interfaceData = await fetchInterface(supabase);
   return (
     <>
       <Header showLogoText showSearchIcon showAlarmIcon showCashIcon />
       <main>
-        <HomeClient /> {/* fallbackData={interfaceData} */}
+        <HomePageContent />
       </main>
     </>
   );
+}
+
+// Separate component for data fetching to enable streaming
+async function HomePageContent() {
+  const supabase = createServerSupabase('user');
+  const interfaceData = await fetchInterface(supabase);
+
+  return <HomeClient interfaceData={interfaceData} />;
 }

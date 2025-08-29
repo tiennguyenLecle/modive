@@ -24,7 +24,9 @@ async function handler(request: NextRequest, context: any) {
     typeof querySchema
   >;
 
-  const response = NextResponse.redirect(new URL(redirect, request.url));
+  const response = NextResponse.redirect(
+    new URL(redirect, process.env.NEXT_PUBLIC_BASE_URL!)
+  );
 
   const supabase = createServerSupabase(role, {
     get(name: string) {

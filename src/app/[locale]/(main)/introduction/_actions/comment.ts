@@ -116,7 +116,7 @@ export const fetchComments = async ({
       page,
       limit,
       sort: [{ field: 'created_at', ascending: sortAscending }],
-      work_id: workId,
+      work_ids: [workId],
     },
   });
 

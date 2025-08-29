@@ -94,6 +94,10 @@ const Chatbot = memo(
               ...msg,
               avatarUrl:
                 msg.speakerType === 'chatbot' ? avatarCharacterUrl : '',
+              name:
+                msg.speakerType === 'chatbot'
+                  ? character?.name
+                  : msg.speakerType,
             })
           );
           setTransformedMessages(transformedWithAvatar);

@@ -1,5 +1,7 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 
+import packageJson from './package.json' with { type: 'json' };
+
 const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
 /** @type {import('next').NextConfig} */
@@ -28,6 +30,9 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  env: {
+    NEXT_PUBLIC_APP_VERSION: packageJson.version,
   },
 };
 

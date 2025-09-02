@@ -15,6 +15,7 @@ type Props = {
  * This keeps the root layout as a Server Component and centralizes provider logic.
  */
 export const Providers = ({ children, messages, locale }: Props) => {
+  console.log(process.env.NEXT_PUBLIC_APP_VERSION);
   return (
     <ThemeRegistry>
       <NextIntlClientProvider

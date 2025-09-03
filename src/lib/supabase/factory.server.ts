@@ -55,5 +55,5 @@ export function createServerSupabase(
         },
       },
     }
-  );
+  ) as any;
 }

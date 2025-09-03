@@ -19,6 +19,6 @@ export function createBrowserSupabase(role: Role): SupabaseClient {
     {
       cookieOptions: { name: cookieName },
     }
-  );
-  return browserClient;
+  ) as any;
+  return browserClient as any;
 }

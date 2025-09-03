@@ -2,7 +2,7 @@ import { forwardRef, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
-import { Ellipsis, Heart } from '@/assets/icons';
+import { Ellipsis, Heart, Pencil, Trash } from '@/assets/icons';
 import { useOnClickOutside } from '@/hooks/useClickOutSide';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { CommentType } from '@/types/comment';
@@ -11,7 +11,7 @@ import { cx } from '@/utils/method';
 type CommentItemProps = {
   comment: CommentType;
   onLike: (commentId: string, currentLike: boolean) => void;
-  onEdit: (commentId: string, newContent: string) => void;
+  onEdit: (comment: CommentType) => void;
   onDelete: (commentId: string) => void;
 };
 
@@ -39,7 +39,7 @@ const CommentItem = forwardRef<HTMLDivElement, CommentItemProps>(
               by. {comment?.user?.name}
             </p>
           </div>
-          <p className="whitespace-pre text-wrap text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
+          <p className="text-wrap text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
             {comment?.content}
           </p>
           <span
@@ -59,7 +59,7 @@ const CommentItem = forwardRef<HTMLDivElement, CommentItemProps>(
         </div>
         {canEditOrDelete && (
           <CommentOptions
-            onEdit={() => onEdit(comment.id, comment.content)}
+            onEdit={() => onEdit(comment)}
             onDelete={() => onDelete(comment.id)}
           />
         )}
@@ -130,7 +130,7 @@ const CommentOptions = ({ onEdit, onDelete }: CommentOptionsType) => {
             exit="closed"
           >
             <ul
-              className="absolute right-0 top-full rounded-l bg-white text-14 text-gray-00"
+              className="absolute right-0 top-full w-200 rounded-l bg-white text-14 text-gray-00"
               style={{ boxShadow: '0 4rem 4rem 0 rgba(0, 0, 0, 0.08)' }}
             >
               <li>
@@ -138,13 +138,15 @@ const CommentOptions = ({ onEdit, onDelete }: CommentOptionsType) => {
                   onClick={() => onEdit()}
                   className="line-clamp-1 flex h-48 items-center gap-8 whitespace-nowrap px-16 leading-[48rem] transition-colors duration-300 hover:text-primary"
                 >
-                  {t('edit')}
+                  <Pencil width={18} height={18} className="text-gray-00" />
+                  {t('modification')}
                 </button>
                 <button
                   onClick={() => onDelete()}
                   className="line-clamp-1 flex h-48 items-center gap-8 whitespace-nowrap px-16 leading-[48rem] transition-colors duration-300 hover:text-primary"
                 >
-                  {t('delete')}
+                  <Trash width={18} height={18} className="text-gray-00" />
+                  {t('deletion')}
                 </button>
               </li>
             </ul>

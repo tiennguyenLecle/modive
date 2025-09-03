@@ -187,15 +187,18 @@
     "community": {
       "save": "Save",
       "cancel": "Cancel",
-      "edit": "Edit",
-      "delete": "Delete",
+      "modification": "Modification",
+      "deletion": "Deletion",
       "placeholder": "Please write within 200 characters.",
-      "send": "Completed",
+      "send": "save",
       "latest": "Latest",
       "like": "Like",
       "oldest": "Oldest",
       "delete_comment": "Are you sure to delete this comment?",
-      "delete_comment_title": "Delete Comment"
+      "delete_comment_title": "Delete Comment",
+      "edit_comment": "Community posts modification",
+      "new_comment": "Write a community article",
+      "completion": "Completion"
     },
     "error": {
       "title": "Sorry, an error occurred!",

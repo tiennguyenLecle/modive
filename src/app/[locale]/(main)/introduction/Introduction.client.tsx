@@ -127,7 +127,7 @@ export default function IntroductionClient({
               {
                 key: 'community',
                 label: t('tabs.community'),
-                children: <TabCommunity />,
+                children: <TabCommunity workDetail={workDetail} />,
               },
             ]}
             activeTab={activeTab}

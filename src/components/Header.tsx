@@ -17,6 +17,7 @@ type HomeHeaderProps = ComponentProps<'header'> & {
   showCashIcon?: boolean;
   showLogoText?: boolean;
   showBackButton?: boolean;
+  onClickBackButton?: () => void;
 };
 
 const Header = ({
@@ -27,6 +28,7 @@ const Header = ({
   showCashIcon,
   showLogoText,
   showBackButton,
+  onClickBackButton,
   ...rest
 }: HomeHeaderProps) => {
   const router = useRouter();
@@ -45,7 +47,13 @@ const Header = ({
             width={24}
             height={24}
             className="rotate-180 cursor-pointer text-gray-00 transition-colors hover:bg-gray-90"
-            onClick={() => router.back()}
+            onClick={() => {
+              if (onClickBackButton) {
+                onClickBackButton();
+              } else {
+                router.back();
+              }
+            }}
           />
         )}
         {showLogoText && (

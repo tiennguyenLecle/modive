@@ -7,6 +7,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Direction, Plus } from '@/assets/icons';
 import { useDynamicPageSize } from '@/hooks/useDynamicPageSize';
 import { useAuth } from '@/lib/authentication/auth-context';
+import { CommentType } from '@/types/comment';
+import { WorkType } from '@/types/work';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
@@ -14,7 +16,11 @@ import { useComments } from '../../_hooks/useComments';
 import { CommentForm, CommentList } from '../Comment';
 import ModalDeleteComment from '../modals/ModalDeleteComment';
 
-export default function TabCommunity() {
+type TabCommunityProps = {
+  workDetail: WorkType;
+};
+
+export default function TabCommunity({ workDetail }: TabCommunityProps) {
   const t = useTranslations('introduction.community');
   const { user } = useAuth();
   const searchParams = useSearchParams();
@@ -55,8 +61,8 @@ export default function TabCommunity() {
     toggleLike({ commentId, currentLike });
   };
 
-  const handleEdit = (commentId: string, content: string) => {
-    commentFormRef.current?.open({ id: commentId, content });
+  const handleEdit = (comment: CommentType) => {
+    commentFormRef.current?.open(comment);
   };
 
   const handleDelete = (commentId: string) => {
@@ -121,6 +127,7 @@ export default function TabCommunity() {
         ref={commentFormRef}
         createComment={createComment}
         updateComment={updateComment}
+        workDetail={workDetail}
       />
       <ModalDeleteComment
         ref={modalDeleteCommentRef}

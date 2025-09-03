@@ -164,7 +164,7 @@ export function useComments(
 
   const updateComment = useSWRMutation(
     ['comments'],
-    async (_, { arg }: { arg: Pick<CommentType, 'id' | 'content'> }) => {
+    async (_, { arg }: { arg: { comment: CommentType; content: string } }) => {
       try {
         // Optimistic update - update comment content immediately
         infiniteComments.mutate(
@@ -176,7 +176,7 @@ export function useComments(
             return current.map((segment: CommentsResponseType) => ({
               ...segment,
               data: segment.data.map((comment: CommentType) => {
-                if (comment.id === arg.id) {
+                if (comment.id === arg.comment.id) {
                   return {
                     ...comment,
                     content: arg.content,
@@ -189,7 +189,7 @@ export function useComments(
           },
           { revalidate: false }
         );
-        await updateCommentAction(arg);
+        await updateCommentAction(arg.comment, arg.content);
       } catch (error) {
         throw error;
       } finally {

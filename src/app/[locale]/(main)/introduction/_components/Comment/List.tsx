@@ -14,7 +14,7 @@ type CommentListProps = ComponentProps<'div'> & {
   onLoadMore: () => void;
   itemProps: {
     onLike: (commentId: string, currentLike: boolean) => void;
-    onEdit: (commentId: string, newContent: string) => void;
+    onEdit: (comment: CommentType) => void;
     onDelete: (commentId: string) => void;
   };
 };

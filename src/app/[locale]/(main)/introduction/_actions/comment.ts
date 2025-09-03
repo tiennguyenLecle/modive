@@ -25,7 +25,8 @@ export async function createCommentAction(workId: string, content: string) {
 }
 
 export async function updateCommentAction(
-  comment: Pick<CommentType, 'id' | 'content'>
+  comment: CommentType,
+  content: string
 ) {
   const supabase = createServerSupabase('user');
   const user = await getServerAuth();
@@ -34,7 +35,7 @@ export async function updateCommentAction(
 
   const { data, error } = await supabase
     .from('comments')
-    .update({ content: comment.content })
+    .update({ content: content })
     .match({ id: comment.id, user_id: user.id }) // Ensure user can only update their own comments
     .select()
     .single();

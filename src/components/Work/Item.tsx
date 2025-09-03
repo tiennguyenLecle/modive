@@ -50,7 +50,7 @@ const WorkItem = ({
           <div
             key={character.id}
             className={cx(
-              'overflow-hidden rounded-max border border-white',
+              'aspect-square size-24 overflow-hidden rounded-max border border-white',
               index !== 0 && '-ml-4'
             )}
             style={{
@@ -63,6 +63,7 @@ const WorkItem = ({
               alt={character.name}
               width={24}
               height={24}
+              className="h-full w-full object-cover"
             />
           </div>
         ))}

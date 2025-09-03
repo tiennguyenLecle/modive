@@ -184,22 +184,22 @@ const ChatListItem = React.forwardRef<HTMLDivElement, ChatListItemProps>(
           alt={name}
           width={60}
           height={60}
-          className="aspect-square rounded-max bg-gray-80 object-cover"
+          className="aspect-square h-60 w-60 rounded-max bg-gray-80 object-cover"
           priority
         />
-
-        <div className="flex flex-1 items-center gap-8">
-          <p className="max-w-150 truncate text-16 font-bold text-gray-00">
-            {name}
-          </p>
-          {isPinned && <Pin className="size-18 text-gray-00" />}
+        <div className="min-w-0 flex-1 leading-normal">
+          <div className="mb-8 flex items-center gap-8">
+            <p className="truncate text-16 font-bold text-gray-00">{name}</p>
+            {isPinned && <Pin className="size-18 shrink-0 text-gray-00" />}
+          </div>
+          {lastMessage && (
+            <p className="line-clamp-2 text-14 font-normal text-gray-50">
+              {lastMessage}
+            </p>
+          )}
         </div>
 
-        {lastMessage && (
-          <p className="text-14 font-normal text-gray-50">{lastMessage}</p>
-        )}
-
-        <div className="flex w-60 flex-col items-end gap-8 py-4">
+        <div className="flex w-60 shrink-0 flex-col items-end gap-8 py-4">
           <time
             className="text-12 font-semibold text-gray-50"
             title={format.dateTime(time, {

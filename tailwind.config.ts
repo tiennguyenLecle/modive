@@ -85,6 +85,7 @@ const config: Config = {
       24: '24rem',
     },
     lineHeight: {
+      normal: 'normal',
       1: '1',
       1.66: '1.66',
       1.69: '1.69',

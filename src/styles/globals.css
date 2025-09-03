@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'nprogress/nprogress.css';
+
 @layer base {
   html {
     /* In this project, use 1 rem as default spacing unit (1rem = 1px) */
@@ -140,3 +142,13 @@
 }
 
 /* --- End: Image preview --- Ant design image preview --- */
+
+#nprogress .bar {
+  background: #ff627b; /* progress bar color */
+  height: 2px;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}

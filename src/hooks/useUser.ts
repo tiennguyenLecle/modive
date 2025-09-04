@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import { USER_KEYS } from '@/app/[locale]/cms/user-management/UsersManagementTable.client';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import {
+  fetchMeExtraData,
   fetchUserDetail,
   fetchUsers,
   UsersListQuery,
@@ -32,4 +33,11 @@ export function useUserDetail(id: string, fallbackData?: UserType) {
     fallbackData,
     revalidateOnMount: false,
   });
+}
+
+export function useMeExtraData(shouldFetch: boolean, userId: UserType['id']) {
+  const supabase = useMemo(() => createBrowserSupabase('user'), []);
+  return useSWR(shouldFetch ? 'me' : null, () =>
+    fetchMeExtraData(supabase, userId)
+  );
 }

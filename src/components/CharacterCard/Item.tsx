@@ -27,14 +27,19 @@ const CharacterCardItem = ({
       {...props}
     >
       {/* Actor Image */}
-      <div className="relative aspect-square h-60 w-60 overflow-hidden rounded-8 bg-gray-80">
-        <Image src={getPublicUrl(avatar_key)} alt={name} fill />
+      <div className="relative aspect-square h-60 w-60 shrink-0 overflow-hidden rounded-8 bg-gray-80">
+        <Image
+          src={getPublicUrl(avatar_key)}
+          alt={name}
+          fill
+          className="object-cover"
+        />
       </div>
 
       {/* Actor Info */}
       <div className="flex flex-col gap-8">
         <p className="text-16 font-semibold text-gray-20">{name}</p>
-        <p className="text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
+        <p className="line-clamp-2 text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">
           {introduction}
         </p>
         {/* <p className="text-14 font-normal leading-1.66 tracking-0.5 text-gray-00">
@@ -43,7 +48,7 @@ const CharacterCardItem = ({
           ))}
         </p> */}
       </div>
-      <ArrowRight className="ml-auto h-18 w-18 self-center text-primary" />
+      <ArrowRight className="ml-auto h-18 w-18 shrink-0 self-center text-primary" />
     </div>
   );
 };

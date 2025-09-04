@@ -5,11 +5,14 @@ import AsteristkIcon from './asterisk.svg';
 import BaselineError from './baseline-error.svg';
 import Cash from './cash.svg';
 import Check from './check.svg';
+import CheckBoxFilled from './checkbox-filled.svg';
+import CheckBox from './checkbox.svg';
 import Chevron from './chevron.svg';
 import Close from './close.svg';
 import DirectDisabledIcon from './direct-disabled.svg';
 import DirectIcon from './direct.svg';
 import Direction from './direction.svg';
+import Download from './download.svg';
 import Ellipsis from './ellipsis.svg';
 import Heart from './heart.svg';
 import Info from './info.svg';
@@ -43,11 +46,14 @@ export {
   BaselineError,
   Cash,
   Check,
+  CheckBox,
+  CheckBoxFilled,
   Chevron,
   Close,
   DirectDisabledIcon,
   DirectIcon,
   Direction,
+  Download,
   Ellipsis,
   Heart,
   Info,

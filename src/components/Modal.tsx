@@ -67,7 +67,7 @@ const Modal = ({
           />
           <motion.div
             className={cx(
-              'fixed inset-0 z-50 mx-auto flex max-w-768 items-center justify-center p-4',
+              'fixed inset-0 z-50 mx-auto flex max-w-768 items-center justify-center',
               modalParentClassName
             )}
             initial={{ opacity: 0, scale: 0.95 }}

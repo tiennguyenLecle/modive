@@ -2,7 +2,7 @@ import React from 'react';
 import { Checkbox, CheckboxProps, ConfigProvider } from 'antd';
 
 type CheckboxComponentProps = CheckboxProps & {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const CheckboxComponent = ({ children, ...rest }: CheckboxComponentProps) => {

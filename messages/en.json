@@ -159,7 +159,42 @@
     "tabs": {
       "chat": "Chat",
       "personal_relationship": "Personal relationship",
-      "community": "Community"
+      "community": "Community",
+      "episodes": "Go to see a novel"
+    },
+    "episodes": {
+      "selection": "Selection",
+      "full_choice": "Full choice",
+      "sort_by": {
+        "latest_soon": "Latest Soon",
+        "episode": "Episode"
+      },
+      "empty": "There are no episodes."
+    },
+    "modal_purchase": {
+      "order_details": "Order details",
+      "order_amount": "Order amount",
+      "holding_money": "Holding money",
+      "view_immediately": "See immediately after payment",
+      "payment": "Payment",
+      "currency": "won",
+      "auto_charging_at_a_cheaper": "Automatic charging at a cheaper",
+      "general_charging": "General charging",
+      "insufficient_balance": "Insufficient balance",
+      "collect items": "{count, plural, one {Collect # round} other {Collect # rounds}}"
+    },
+    "episode_viewer": {
+      "loading": "Loading...",
+      "error": "An error occurred"
+    },
+    "selection": {
+      "full_choice": "Full choice",
+      "selected_count": "{count} selected",
+      "select_all": "Select All",
+      "deselect_all": "Deselect All",
+      "bulk_purchase": "Bulk Purchase",
+      "auto_charge": "Automatic charging at a cheaper",
+      "general_charge": "General charging"
     },
     "chapter_entrance": "Chapter entrance",
     "modal_character": {

@@ -13,7 +13,7 @@ export type UserType = {
   notification_enabled?: boolean;
   last_login_provider?: string;
   last_login_at?: string;
-  coins?: number;
+  coins: number;
   avatar_key?: string;
   balance?: number;
   language_code?: string;

@@ -159,7 +159,42 @@
     "tabs": {
       "chat": "채팅하기",
       "personal_relationship": "인물관계도",
-      "community": "커뮤니티"
+      "community": "커뮤니티",
+      "episodes": "소설 보러가기"
+    },
+    "episodes": {
+      "selection": "선택구매",
+      "full_choice": "전체 선택",
+      "sort_by": {
+        "latest_soon": "최신순",
+        "episode": "회차순"
+      },
+      "empty": "에피소드가 없습니다."
+    },
+    "modal_purchase": {
+      "order_details": "주문 내역",
+      "order_amount": "주문 금액",
+      "holding_money": "보유 금액",
+      "view_immediately": "결제 후 바로 보기",
+      "payment": "결제",
+      "currency": "원",
+      "auto_charging_at_a_cheaper": "더 저렴하게 자동충전하기",
+      "general_charging": "일반 충전하기",
+      "insufficient_balance": "잔액이 부족함",
+      "collect items": "{count}개 회차 소장하기"
+    },
+    "episode_viewer": {
+      "loading": "로딩 중...",
+      "error": "에러가 발생했습니다"
+    },
+    "selection": {
+      "full_choice": "전체 선택",
+      "selected_count": "{count}개 선택됨",
+      "select_all": "모두 선택",
+      "deselect_all": "선택 해제",
+      "bulk_purchase": "일괄 구매",
+      "auto_charge": "자동 충전으로 더 저렴하게",
+      "general_charge": "일반 충전"
     },
     "chapter_entrance": "챕터 입장",
     "modal_character": {

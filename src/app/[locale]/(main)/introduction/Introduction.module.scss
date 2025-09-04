@@ -1,11 +1,11 @@
 .introductionLayout {
-  @apply flex h-full flex-col;
+  @apply flex h-full flex-col overflow-y-auto;
 
   .introductionTabs {
     @apply relative min-h-0 flex-1;
 
     :global(.group-tabpanel) {
-      @apply min-h-0;
+      @apply flex min-h-0 flex-1 flex-col;
     }
 
     [role='tabpanel'] {

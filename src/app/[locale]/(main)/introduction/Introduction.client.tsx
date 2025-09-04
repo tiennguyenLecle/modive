@@ -15,6 +15,7 @@ import { cx, getPublicUrl } from '@/utils/method';
 
 import ModalCharacter from './_components/modals/ModalCharacter';
 import TabCommunity from './_components/tabs/TabCommunity.client';
+import TabEpisodes from './_components/tabs/TabEpisodes.client';
 import styles from './Introduction.module.scss';
 
 type IntroductionClientProps = {
@@ -36,6 +37,8 @@ export default function IntroductionClient({
   const modalCharacterRef =
     useRef<React.ElementRef<typeof ModalCharacter>>(null);
 
+  const imageRef = useRef<HTMLImageElement>(null);
+
   if (!workDetail) {
     return null;
   }
@@ -45,16 +48,18 @@ export default function IntroductionClient({
       <Header
         pageTitle={workDetail.title}
         showBackButton
-        className="border-b border-gray-80"
+        className="sticky top-0 border-b border-gray-80"
       />
       <div className="flex min-h-0 flex-1 flex-col">
         <div
           className={cx(
             styles.introductionHeader,
-            activeTab === 'community' && styles.collapsedIntroductionHeader
+            (activeTab === 'community' || activeTab === 'episodes') &&
+              styles.collapsedIntroductionHeader
           )}
         >
           <Image
+            ref={imageRef}
             src={getPublicUrl(workDetail.thumbnail_key)}
             alt={workDetail.title}
             priority
@@ -128,6 +133,11 @@ export default function IntroductionClient({
                 key: 'community',
                 label: t('tabs.community'),
                 children: <TabCommunity workDetail={workDetail} />,
+              },
+              {
+                key: 'episodes',
+                label: t('tabs.episodes'),
+                children: <TabEpisodes />,
               },
             ]}
             activeTab={activeTab}

@@ -55,7 +55,7 @@ const ModalDeleteComment = React.forwardRef<
           loading={deleteComment.isMutating}
           disabled={deleteComment.isMutating}
         >
-          {t('delete')}
+          {t('deletion')}
         </Button>
       }
     >

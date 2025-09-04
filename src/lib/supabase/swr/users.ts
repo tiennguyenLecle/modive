@@ -38,3 +38,16 @@ export async function fetchUserDetail(supabase: SupabaseClient, id: string) {
   if (error) throw error;
   return data as UserType;
 }
+
+export async function fetchMeExtraData(
+  supabase: SupabaseClient,
+  userId: string
+) {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('id', userId)
+    .single();
+  if (error) throw error;
+  return data as UserType;
+}

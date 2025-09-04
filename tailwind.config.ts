@@ -153,6 +153,7 @@ const config: Config = {
       l: '12rem',
       xl: '16rem',
       max: '9999rem',
+      0: '0rem',
       1: '1rem',
       2: '2rem',
       4: '4rem',
@@ -162,6 +163,7 @@ const config: Config = {
       8: '8rem',
       12: '12rem',
       16: '16rem',
+      20: '20rem',
     },
     backgroundImage: {
       'modive-background': 'url(/images/background.png)',

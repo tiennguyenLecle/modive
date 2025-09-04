@@ -3,6 +3,7 @@
 # Ignore local VSCode settings
 /.vscode/settings.json
 /.history
+/public/version.json
 
 # dependencies
 /node_modules

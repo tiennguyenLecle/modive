@@ -28,7 +28,6 @@ export const Providers = ({ children, messages, locale }: Props) => {
     }
   }, [pathname]);
 
-  console.log(process.env.NEXT_PUBLIC_APP_VERSION);
   return (
     <ThemeRegistry>
       <NextIntlClientProvider

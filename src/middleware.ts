@@ -176,14 +176,15 @@ export const config = {
      * - _next/image (image optimization files)
      * - .well-known (metadata files)
      * - SEO files (robots.txt, sitemap.xml)
-     * - All files with extensions (e.g., .ico, .png, .svg, .js)
+     * - All files with extensions (e.g., .ico, .png, .svg, .js, .json)
      * - PWA files (site.webmanifest)
+     * - Version files (version.json)
      *
      * This ensures that:
      * 1. API routes handle their own responses without i18n processing
      * 2. Static assets are served directly
      * 3. Only page routes go through authentication and i18n logic
      */
-    '/((?!api|auth/callback|_next/static|_next/image|\\.well-known|robots\\.txt|sitemap\\.xml|.*\\.(?:ico|png|svg|js)$|site\\.webmanifest).*)',
+    '/((?!api|auth/callback|_next/static|_next/image|\\.well-known|robots\\.txt|sitemap\\.xml|.*\\.(?:ico|png|svg|js|json)$|site\\.webmanifest).*)',
   ],
 };

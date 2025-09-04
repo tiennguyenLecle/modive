@@ -1,4 +1,3 @@
-const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -6,18 +5,9 @@ const path = require('path');
 const packageJson = require('../package.json');
 const version = packageJson.version;
 
-// Get commit hash from Git
-let commitHash = 'unknown';
-try {
-  commitHash = execSync('git rev-parse --short HEAD').toString().trim();
-} catch (e) {
-  console.error('Cannot get the commit hash:', e);
-}
-
 // Create object version information
 const versionInfo = {
   version,
-  commit: commitHash,
   buildTime: new Date().getTime(),
 };
 

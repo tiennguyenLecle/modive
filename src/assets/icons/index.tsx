@@ -30,6 +30,7 @@ import Pin from './pin.svg';
 import Plus from './plus.svg';
 import Reload from './reload.svg';
 import Search from './search.svg';
+import SocialApple2 from './social-apple-2.svg';
 import SocialApple from './social-apple.svg';
 import SocialGoogle from './social-google.svg';
 import SocialKakaoTalk2 from './social-kakao-talk-2.svg';
@@ -72,6 +73,7 @@ export {
   Reload,
   Search,
   SocialApple,
+  SocialApple2,
   SocialGoogle,
   SocialKakaoTalk,
   SocialKakaoTalk2,

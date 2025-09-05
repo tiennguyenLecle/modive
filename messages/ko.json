@@ -268,7 +268,8 @@
     "check": "확인",
     "log_out_notification": "로그아웃 알림",
     "log_out_description": "로그아웃 하시겠습니까?",
-    "google": "Google"
+    "google": "Google",
+    "apple": "Apple"
   },
   "login_page": {
     "title": "모다이브",

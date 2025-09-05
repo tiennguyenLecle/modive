@@ -268,7 +268,8 @@
     "check": "check",
     "log_out_notification": "Log out notification",
     "log_out_description": "Would you like to log out?",
-    "google": "Google"
+    "google": "Google",
+    "apple": "Apple"
   },
   "login_page": {
     "title": "Login",

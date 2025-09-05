@@ -43,3 +43,9 @@ export const ROUTES = {
     USER_MANAGEMENT: '/cms/user-management',
   },
 };
+
+export const SOCIAL_PROVIDERS = {
+  KAKAO: 'kakao',
+  GOOGLE: 'google',
+  APPLE: 'apple',
+};

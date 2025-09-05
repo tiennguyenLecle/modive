@@ -1,15 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Pencil, SocialGoogle, SocialKakaoTalk2 } from '@/assets/icons';
+import {
+  Pencil,
+  SocialApple2,
+  SocialGoogle,
+  SocialKakaoTalk2,
+} from '@/assets/icons';
 import { Header } from '@/components';
 import { useAuth } from '@/lib/authentication/auth-context';
+import { SOCIAL_PROVIDERS } from '@/utils/constants';
 
 import ModalLogout from './_components/ModalLogout';
 import ModalWidrawal from './_components/ModalWidrawal';
 
+const { GOOGLE, APPLE, KAKAO } = SOCIAL_PROVIDERS;
 export default function MyInformation() {
   const t = useTranslations('my_information');
   const { user } = useAuth();
@@ -18,7 +25,48 @@ export default function MyInformation() {
   const logOutModalRef =
     React.useRef<React.ElementRef<typeof ModalLogout>>(null);
 
-  console.log(user);
+  const activeProviders = useMemo(() => {
+    const { providers } = user?.app_metadata || {};
+    const iss = user?.user_metadata?.iss;
+    let currentProvider:
+      | (typeof SOCIAL_PROVIDERS)[keyof typeof SOCIAL_PROVIDERS]
+      | null = null;
+
+    switch (true) {
+      case iss?.includes(GOOGLE):
+        currentProvider = GOOGLE;
+        break;
+      case iss?.includes(APPLE):
+        currentProvider = APPLE;
+        break;
+      case iss?.includes(KAKAO):
+        currentProvider = KAKAO;
+        break;
+    }
+
+    if (!Array.isArray(providers)) return [];
+
+    return [
+      ...providers.filter((p: string) => p !== currentProvider),
+      currentProvider,
+    ];
+  }, [user]);
+
+  const socialName = useMemo(() => {
+    return {
+      kakao: t('kakao'),
+      google: t('google'),
+      apple: t('apple'),
+    };
+  }, [t]);
+
+  const socialIcon = useMemo(() => {
+    return {
+      kakao: <SocialKakaoTalk2 className="size-20 rounded-5" />,
+      google: <SocialGoogle className="size-20 rounded-5" />,
+      apple: <SocialApple2 className="size-20 rounded-5" />,
+    };
+  }, []);
 
   return (
     <>
@@ -42,40 +90,38 @@ export default function MyInformation() {
               {t('social_login')}
             </p>
             <div className="flex items-center gap-8">
-              {user?.user_metadata?.provider === 'kakao' && (
-                <>
-                  <SocialKakaoTalk2 className="size-20 rounded-5" />
-                  <p className="text-14 font-semibold text-gray-00">
-                    {t('kakao')}
-                  </p>
-                </>
-              )}
-              {user?.app_metadata?.provider === 'google' && (
-                <>
-                  <SocialGoogle className="size-20 rounded-5" />
-                  <p className="text-14 font-semibold text-gray-00">
-                    {t('google')}
-                  </p>
-                </>
-              )}
+              {activeProviders?.map((provider: keyof typeof socialIcon) => (
+                <span key={provider} className="bg-white">
+                  {socialIcon[provider]}
+                </span>
+              ))}
+              <span className="text-14 font-semibold">
+                {
+                  socialName[
+                    activeProviders?.[
+                      activeProviders.length - 1
+                    ] as keyof typeof socialName
+                  ]
+                }
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-12">
-          <p
-            className="text-16 font-normal text-gray-40"
+        <div className="flex items-center justify-center">
+          <button
+            className="cursor- px-6 text-16 font-normal text-gray-40"
             onClick={() => logOutModalRef.current?.open()}
           >
             {t('logout')}
-          </p>
+          </button>
           <div className="h-12 w-1 bg-gray-03" />
-          <p
-            className="text-16 font-normal text-gray-40"
+          <button
+            className="px-6 text-16 font-normal text-gray-40"
             onClick={() => withdrawalModalRef.current?.open()}
           >
             {t('withdrawal')}
-          </p>
+          </button>
         </div>
       </main>
       <ModalLogout ref={logOutModalRef} />

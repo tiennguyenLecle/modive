@@ -1,7 +1,22 @@
+/**
+ * The `cx` function joins class strings with spaces, filtering out falsy values.
+ * This is useful for conditionally joining class names.
+ * @param classes - The class strings to join.
+ * @returns The joined class string.
+ */
 export const cx = (...classes: (string | boolean | undefined | null)[]) => {
   return classes.filter(Boolean).join(' ');
 };
 
+/**
+ * The `deepMerge` function recursively merges two objects.
+ * - If the value is an array, it replaces the target's array with the source's array,
+ *   and deeply clones any object elements within the array.
+ * - If the value is a plain object, it recursively merges the target and source objects.
+ * - If the value is a Date or RegExp, it creates a new instance (clone) of that value.
+ * - For all other types, the source value overwrites the target value.
+ * This function ensures immutability of the input objects.
+ */
 export const deepMerge = <
   T extends Record<string, unknown>,
   U extends Record<string, unknown>,
@@ -90,3 +105,12 @@ export const getPublicUrl = (key?: string) => {
   if (!key) return '';
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/medias/${key}`;
 };
+
+/**
+ * The `hasFields` function checks if all the specified fields exist in the object and are not undefined.
+ * @param obj - The object to check.
+ * @param fields - The fields to check.
+ * @returns True if all the fields exist and are not undefined, false otherwise.
+ */
+export const hasFields = (obj: object, fields: string[]): boolean =>
+  fields.every(field => obj?.hasOwnProperty(field));

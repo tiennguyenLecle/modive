@@ -6,7 +6,7 @@ import { Work } from '@/components';
 import { Link } from '@/lib/navigation';
 import { InterfaceType } from '@/types/interface';
 import { ROUTES } from '@/utils/constants';
-import { getPublicUrl } from '@/utils/method';
+import { getPublicUrl, hasFields } from '@/utils/method';
 
 type HomeProps = {
   interfaceData?: InterfaceType;
@@ -29,8 +29,13 @@ export default function HomeClient({ interfaceData }: HomeProps) {
               {block?.title}
             </h2>
             <div className="no-scrollbar flex items-start gap-4 overflow-x-auto pl-12">
-              {block?.sub_blocks?.map(
-                ({ work_id, work: { title, thumbnail_key, characters } }) => (
+              {block?.sub_blocks?.map(({ work_id, work }) =>
+                hasFields(work, [
+                  'id',
+                  'title',
+                  'thumbnail_key',
+                  'characters',
+                ]) ? (
                   <Link
                     key={work_id}
                     href={{
@@ -39,12 +44,12 @@ export default function HomeClient({ interfaceData }: HomeProps) {
                     }}
                   >
                     <Work.Item
-                      title={title}
-                      bannerImg={getPublicUrl(thumbnail_key ?? '')}
-                      characters={characters}
+                      title={work.title}
+                      bannerImg={getPublicUrl(work.thumbnail_key ?? '')}
+                      characters={work.characters}
                     />
                   </Link>
-                )
+                ) : null
               )}
             </div>
           </div>

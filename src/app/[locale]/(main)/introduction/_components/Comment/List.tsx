@@ -2,13 +2,12 @@
 
 import React, { ComponentProps, forwardRef } from 'react';
 import { useTranslations } from 'next-intl';
-import VirtualList from 'rc-virtual-list';
 
+import { VirtualList } from '@/components';
 import { CommentType } from '@/types/comment';
 import { cx } from '@/utils/method';
 
 import Empty from '../Empty';
-import styles from './CommentList.module.scss';
 import CommentItem from './Item';
 
 type CommentListProps = ComponentProps<'div'> & {
@@ -47,21 +46,19 @@ const CommentList = forwardRef<HTMLDivElement, CommentListProps>(
     return (
       <div
         ref={ref}
-        className={cx('flex flex-col gap-16', className)}
+        className={cx('flex min-h-0 flex-1 flex-col', className)}
         {...props}
       >
         {comments?.length > 0 ? (
           <VirtualList<CommentType>
             data={comments}
             itemKey="id"
-            fullHeight={true}
             itemHeight={135}
             onScroll={onScroll}
-            className={cx('min-h-0 flex-1', styles.virtualList)}
+            className="bg-white"
           >
             {comment => (
               <CommentItem
-                key={comment.id}
                 comment={comment}
                 onLike={onLike}
                 onEdit={onEdit}

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Direction, Plus } from '@/assets/icons';
+import { Spinner } from '@/components';
 import { useDynamicPageSize } from '@/hooks/useDynamicPageSize';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { CommentType } from '@/types/comment';
@@ -81,7 +82,7 @@ export default function TabCommunity() {
   return (
     <>
       {comments.length > 0 ? (
-        <div className="flex h-full flex-col bg-gray-90">
+        <>
           <div className="flex h-40 w-full items-center border-b border-gray-90 bg-white px-24">
             <div
               className={cx(
@@ -111,15 +112,18 @@ export default function TabCommunity() {
               onDelete: handleDelete,
             }}
             className={cx(
-              'min-h-0 flex-1 overflow-auto transition-opacity',
+              'min-h-0 flex-1 overflow-auto transition-opacity duration-300',
               isLoading && isValidating && 'opacity-50'
             )}
           />
+        </>
+      ) : isLoading && isValidating ? (
+        <div className="flex h-full items-center justify-center">
+          <Spinner />
         </div>
       ) : (
         <Empty message={t('no_posts')} />
       )}
-
       <button
         onClick={() => {
           commentFormRef.current?.open();

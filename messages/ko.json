@@ -168,6 +168,7 @@
     "episodes": {
       "selection": "선택구매",
       "full_choice": "전체 선택",
+      "exit_full_choice": "전체 선택 해제",
       "sort_by": {
         "latest_soon": "최신순",
         "episode": "회차순"

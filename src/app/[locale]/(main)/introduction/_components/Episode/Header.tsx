@@ -2,8 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 
-import { ArrowRight, Check, Direction } from '@/assets/icons';
+import { Check, Close, Direction } from '@/assets/icons';
 import CheckboxComponent from '@/components/Checkbox';
+import { cx } from '@/utils/method';
 
 import { useEpisodeContext } from './EpisodeProvider';
 
@@ -21,34 +22,48 @@ const EpisodeHeader: React.FC = () => {
     exitSelectionMode,
   } = useEpisodeContext();
 
-  const unreadEpisodes = episodes.filter(ep => !ep.is_ordered);
+  const unOrderedEpisodes = episodes.filter(ep => !ep.is_ordered);
   const allUnreadSelected =
-    unreadEpisodes.length > 0 &&
-    selectedEpisodes.length === unreadEpisodes.length;
+    unOrderedEpisodes.length > 0 &&
+    selectedEpisodes.length === unOrderedEpisodes.length;
 
   if (episodes.length === 0) return null;
 
   return (
-    <div className="flex h-40 shrink-0 items-center justify-between border-b border-gray-80 bg-white px-16">
+    <div
+      className={cx(
+        'sticky top-104 z-50 flex h-40 shrink-0 items-center justify-between border-b border-gray-80 bg-white px-16'
+      )}
+    >
       {isSelectionMode ? (
-        <CheckboxComponent
-          onChange={(event: any) => {
-            if (event.target.checked) {
-              selectAllEpisodes(episodes);
-            } else {
-              setSelectedEpisodes([]);
-            }
-          }}
-          checked={allUnreadSelected}
-          disabled={episodes.length === 0}
-        >
-          {t('episodes.full_choice')}{' '}
-        </CheckboxComponent>
+        <>
+          <CheckboxComponent
+            onChange={(event: any) => {
+              if (event.target.checked) {
+                selectAllEpisodes(episodes);
+              } else {
+                setSelectedEpisodes([]);
+              }
+            }}
+            checked={allUnreadSelected}
+            disabled={episodes.length === 0 || unOrderedEpisodes.length === 0}
+          >
+            {t('episodes.full_choice')}
+          </CheckboxComponent>
+          <button
+            onClick={() => exitSelectionMode()}
+            className="ml-8 mr-auto flex size-24 shrink-0 items-center justify-center transition-colors duration-300 hover:bg-gray-90 hover:text-primary"
+            title={t('episodes.exit_full_choice')}
+            disabled={episodes.length === 0 || unOrderedEpisodes.length === 0}
+          >
+            <Close className="size-14" />
+          </button>
+        </>
       ) : (
         <button
-          className="flex items-center gap-4 text-14 font-normal text-gray-00"
+          className="flex items-center gap-4 text-14 font-normal text-gray-00 disabled:text-gray-50"
           onClick={() => setIsSelectionMode(true)}
-          disabled={episodes.length === 0}
+          disabled={episodes.length === 0 || unOrderedEpisodes.length === 0}
         >
           <span>{t('episodes.selection')}</span>
           <Check className="w-7" />
@@ -70,16 +85,6 @@ const EpisodeHeader: React.FC = () => {
         )}
         <Direction className="size-14 rotate-90" />
       </button>
-      {isSelectionMode && (
-        <div className="absolute bottom-full left-0 flex h-56 cursor-pointer items-center px-16">
-          <ArrowRight
-            width={24}
-            height={24}
-            className="rotate-180 text-gray-00 transition-colors hover:bg-gray-90"
-            onClick={() => exitSelectionMode()}
-          />
-        </div>
-      )}
     </div>
   );
 };

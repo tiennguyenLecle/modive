@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
 import { Button, Header } from '@/components';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { CommentType } from '@/types/comment';
 import { WorkType } from '@/types/work';
 
@@ -27,6 +28,8 @@ const CommentForm = React.forwardRef<CommentFormRef, CommentFormProps>(
     const [content, setContent] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [comment, setComment] = useState<CommentType>();
+
+    const { user } = useAuth();
 
     const closeHandler = () => {
       setComment(undefined);
@@ -98,13 +101,13 @@ const CommentForm = React.forwardRef<CommentFormRef, CommentFormProps>(
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="absolute inset-0 -mt-56 bg-white"
+              className="absolute inset-0 bg-white"
             >
               <div className="relative flex h-full flex-col">
                 <Header
                   pageTitle={comment?.id ? t('edit_comment') : t('new_comment')}
                   showBackButton
-                  className="h-56 border-b border-gray-80"
+                  className="z-50 h-56 border-b border-gray-80"
                   onClickBackButton={closeHandler}
                 />
 
@@ -113,7 +116,10 @@ const CommentForm = React.forwardRef<CommentFormRef, CommentFormProps>(
                     {workDetail?.title}
                   </h3>
                   <p className="text-14 font-semibold text-gray-50">
-                    by. {comment?.user.name}
+                    by.{' '}
+                    {comment?.id
+                      ? comment?.user.name
+                      : user?.user_metadata?.full_name}
                   </p>
 
                   <form

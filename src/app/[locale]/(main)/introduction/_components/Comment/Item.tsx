@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useRef, useState } from 'react';
+import { ComponentProps, forwardRef, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
@@ -8,7 +8,7 @@ import { useAuth } from '@/lib/authentication/auth-context';
 import { CommentType } from '@/types/comment';
 import { cx } from '@/utils/method';
 
-type CommentItemProps = {
+type CommentItemProps = ComponentProps<'div'> & {
   comment: CommentType;
   onLike: (commentId: string, currentLike: boolean) => void;
   onEdit: (comment: CommentType) => void;
@@ -16,7 +16,7 @@ type CommentItemProps = {
 };
 
 const CommentItem = forwardRef<HTMLDivElement, CommentItemProps>(
-  ({ comment, onLike, onEdit, onDelete }, ref) => {
+  ({ comment, onLike, onEdit, onDelete, className, ...props }, ref) => {
     const t = useTranslations('introduction.community');
     const { user } = useAuth();
 
@@ -30,8 +30,10 @@ const CommentItem = forwardRef<HTMLDivElement, CommentItemProps>(
         ref={ref}
         className={cx(
           'flex gap-12 border-b border-gray-80 bg-white px-24 py-16 opacity-100 transition-opacity duration-200',
-          comment._loading && '!opacity-40'
+          comment._loading && '!opacity-40',
+          className
         )}
+        {...props}
       >
         <div className="flex flex-1 flex-col gap-12">
           <div className="flex items-center justify-between">

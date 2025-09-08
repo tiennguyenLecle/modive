@@ -40,7 +40,7 @@ export default async function IntroductionDetailPage({
   const safeWorkDetail = _handleWorkDataError(workDetail, error);
 
   return (
-    <main className="bg-white">
+    <main className="relative bg-gray-90">
       <IntroductionClient fallbackData={safeWorkDetail} workId={workId} />
     </main>
   );

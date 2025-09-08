@@ -165,6 +165,7 @@
     "episodes": {
       "selection": "Selection",
       "full_choice": "Full choice",
+      "exit_full_choice": "Exit full choice",
       "sort_by": {
         "latest_soon": "Latest Soon",
         "episode": "Episode"

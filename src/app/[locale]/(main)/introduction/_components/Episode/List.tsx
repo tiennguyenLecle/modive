@@ -2,14 +2,12 @@
 
 import { ComponentProps, forwardRef } from 'react';
 import { useTranslations } from 'next-intl';
-import VirtualList from 'rc-virtual-list';
 
-import { Spinner } from '@/components';
+import { Spinner, VirtualList } from '@/components';
 import { cx } from '@/utils/method';
 
 import { ExtendedEpisodeType } from '../../_actions/episode';
 import Empty from '../Empty';
-import styles from './Episode.module.scss';
 import { useEpisodeContext } from './EpisodeProvider';
 import EpisodeItem from './Item';
 
@@ -31,7 +29,7 @@ const EpisodeList = forwardRef<HTMLDivElement, ComponentProps<'div'>>(
       <div
         ref={ref}
         className={cx(
-          'flex min-h-0 flex-1 flex-col transition-opacity duration-300',
+          'transition-opacity duration-300',
           isValidating && isLoading && 'opacity-50',
           className
         )}
@@ -42,7 +40,6 @@ const EpisodeList = forwardRef<HTMLDivElement, ComponentProps<'div'>>(
             data={episodes}
             itemKey="id"
             itemHeight={90}
-            className={cx('min-h-0 flex-1', styles.episodeList)}
             onScroll={event => {
               const target = event?.currentTarget as HTMLElement | undefined;
               if (!target) return;
@@ -58,12 +55,12 @@ const EpisodeList = forwardRef<HTMLDivElement, ComponentProps<'div'>>(
           >
             {episode => <EpisodeItem key={episode.id} episode={episode} />}
           </VirtualList>
-        ) : isValidating && isReachingEnd ? (
-          <div className="flex h-full items-center justify-center bg-gray-90 px-16 text-center text-14 font-semibold text-gray-60">
+        ) : isValidating && isLoading ? (
+          <div className="flex h-full min-h-200 items-center justify-center">
             <Spinner />
           </div>
         ) : (
-          <Empty message={t('empty')} />
+          <Empty message={t('empty')} className="min-h-200" />
         )}
       </div>
     );

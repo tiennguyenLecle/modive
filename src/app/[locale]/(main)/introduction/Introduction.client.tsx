@@ -2,10 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 
 import { Direction } from '@/assets/icons';
-import { Header, MenuTab } from '@/components';
+import { AutoImage, Header, MenuTab } from '@/components';
 import { useHashRoute } from '@/hooks/useHashRoute';
 import { useWorkDetail } from '@/hooks/useWork';
 import { WorkType } from '@/types/work';
@@ -68,12 +67,11 @@ export default function IntroductionClient({
           className="sticky top-0 z-50 border-b border-gray-80"
         />
         <div className={cx(activeTab === 'community' && 'h-0 overflow-hidden')}>
-          <Image
+          <AutoImage
             src={getPublicUrl(workDetail.thumbnail_key)}
             alt={workDetail.title}
             priority
-            width={720}
-            height={464}
+            defaultAspectRatio="720/464"
             className="h-auto w-full object-cover"
           />
           <div className="flex flex-col gap-13 bg-white p-16">

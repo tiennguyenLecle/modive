@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 
+import { AutoImage } from '@/components';
 import { getPublicUrl } from '@/utils/method';
 
 import Empty from '../Empty';
@@ -12,14 +12,12 @@ export default function TabRelationship() {
 
   return workDetail && workDetail.characters_map_key ? (
     <div className="container">
-      <div className="relative aspect-square">
-        <Image
-          src={getPublicUrl(workDetail.characters_map_key)}
-          alt={`${workDetail.title} characters map`}
-          className="object-contain"
-          fill
-        />
-      </div>
+      <AutoImage
+        src={getPublicUrl(workDetail.characters_map_key)}
+        alt={`${workDetail.title} characters map`}
+        className="object-contain"
+        fill
+      />
     </div>
   ) : (
     <Empty message={t('no_relationship_data')} className="min-h-200" />

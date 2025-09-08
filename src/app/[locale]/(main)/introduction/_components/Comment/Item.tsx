@@ -29,7 +29,7 @@ const CommentItem = forwardRef<HTMLDivElement, CommentItemProps>(
       <div
         ref={ref}
         className={cx(
-          'flex gap-12 border-b border-gray-80 p-16 opacity-100 transition-opacity duration-200',
+          'flex gap-12 border-b border-gray-80 bg-white px-24 py-16 opacity-100 transition-opacity duration-200',
           comment._loading && '!opacity-40'
         )}
       >

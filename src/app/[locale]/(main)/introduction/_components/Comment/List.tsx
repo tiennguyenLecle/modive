@@ -1,11 +1,13 @@
 'use client';
 
 import React, { ComponentProps, forwardRef } from 'react';
+import { useTranslations } from 'next-intl';
 import VirtualList from 'rc-virtual-list';
 
 import { CommentType } from '@/types/comment';
 import { cx } from '@/utils/method';
 
+import Empty from '../Empty';
 import styles from './CommentList.module.scss';
 import CommentItem from './Item';
 
@@ -30,6 +32,8 @@ const CommentList = forwardRef<HTMLDivElement, CommentListProps>(
     },
     ref
   ) {
+    const t = useTranslations('introduction.community');
+
     const onScroll = (e: any) => {
       const target = e?.currentTarget as HTMLElement | undefined;
       if (!target) return;
@@ -46,7 +50,7 @@ const CommentList = forwardRef<HTMLDivElement, CommentListProps>(
         className={cx('flex flex-col gap-16', className)}
         {...props}
       >
-        {comments?.length > 0 && (
+        {comments?.length > 0 ? (
           <VirtualList<CommentType>
             data={comments}
             itemKey="id"
@@ -65,6 +69,8 @@ const CommentList = forwardRef<HTMLDivElement, CommentListProps>(
               />
             )}
           </VirtualList>
+        ) : (
+          <Empty message={t('no_posts')} />
         )}
       </div>
     );

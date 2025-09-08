@@ -66,8 +66,20 @@ const CommentForm = React.forwardRef<CommentFormRef, CommentFormProps>(
       <AnimatePresence>
         {isOpen && (
           <>
-            <div className="absolute inset-0 bg-white/50 p-16"></div>
-
+            <motion.div
+              variants={{
+                hidden: {
+                  opacity: 0,
+                },
+                visible: {
+                  opacity: 1,
+                },
+              }}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className="absolute inset-0 bg-white/50 duration-300 ease-in-out"
+            />
             <motion.div
               variants={{
                 hidden: {

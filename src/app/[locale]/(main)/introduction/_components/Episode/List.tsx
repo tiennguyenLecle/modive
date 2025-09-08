@@ -4,9 +4,11 @@ import { ComponentProps, forwardRef } from 'react';
 import { useTranslations } from 'next-intl';
 import VirtualList from 'rc-virtual-list';
 
+import { Spinner } from '@/components';
 import { cx } from '@/utils/method';
 
 import { ExtendedEpisodeType } from '../../_actions/episode';
+import Empty from '../Empty';
 import styles from './Episode.module.scss';
 import { useEpisodeContext } from './EpisodeProvider';
 import EpisodeItem from './Item';
@@ -56,10 +58,12 @@ const EpisodeList = forwardRef<HTMLDivElement, ComponentProps<'div'>>(
           >
             {episode => <EpisodeItem key={episode.id} episode={episode} />}
           </VirtualList>
-        ) : (
+        ) : isValidating && isReachingEnd ? (
           <div className="flex h-full items-center justify-center bg-gray-90 px-16 text-center text-14 font-semibold text-gray-60">
-            <p>{t('empty')}</p>
+            <Spinner />
           </div>
+        ) : (
+          <Empty message={t('empty')} />
         )}
       </div>
     );

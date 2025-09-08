@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { useImperativeHandle, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
 
 import { Heart } from '@/assets/icons';
-import { Button, Modal, ProgressBar, Slider } from '@/components';
+import { Button, Modal, ProgressBar, Slider, Spinner } from '@/components';
 import { useCreateChat } from '@/hooks/useChat';
 import { useRouter } from '@/lib/navigation';
+import { ExtendedCharacterType } from '@/lib/supabase/swr/character';
+import { CharacterType } from '@/types/character';
 import { STORAGE } from '@/utils/constants';
 import { cx, getPublicUrl } from '@/utils/method';
 
@@ -17,50 +18,48 @@ import ModalExistChatRoom from './ModalExistChatRoom';
 import ModalGuideToUse from './ModalGuideToUse';
 
 type ModalCharacterRef = {
-  open: () => void;
+  open: (character: CharacterType) => void;
   close: () => void;
 };
 
 const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
   const t = useTranslations('introduction.modal_character');
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const characterId = searchParams.get('character');
 
   const modalGuideToUseRef =
     useRef<React.ElementRef<typeof ModalGuideToUse>>(null);
   const modalExistChatRoomRef =
     useRef<React.ElementRef<typeof ModalExistChatRoom>>(null);
 
-  const [isOpen, setIsOpen] = useState(false);
-
+  const [characterId, setCharacterId] = useState<string | null>(null);
+  const optimisticDataRef = useRef<ExtendedCharacterType | null>(null);
   const { characterDetail, toggleLike } = useCharacter(characterId);
-  const character = characterDetail.data;
-  const createChat = useCreateChat();
-
-  console.log('characterDetail:', characterDetail.data);
+  const character = characterDetail.data || optimisticDataRef.current;
 
   const closeHandler = () => {
-    setIsOpen(false);
+    setCharacterId(null);
+    optimisticDataRef.current = null;
   };
 
   useImperativeHandle(ref, () => ({
-    open: () => {
-      setIsOpen(true);
+    open: character => {
+      console.log('character:', character);
+      optimisticDataRef.current = character as ExtendedCharacterType;
+      setCharacterId(character.id);
     },
     close: closeHandler,
   }));
 
   const removeCharacterId = () => {
-    const params = new URLSearchParams(searchParams);
-    params.delete('character');
-    router.replace(`?${params.toString()}`);
+    setCharacterId(null);
+    optimisticDataRef.current = null;
   };
 
   const redirectToChatRoom = (roomId: string, sessionId: string) => {
     router.push(`/chat/${roomId}/?sessionId=${sessionId}`);
   };
 
+  const createChat = useCreateChat();
   const createChatHandler = () =>
     createChat
       .trigger({
@@ -101,38 +100,29 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
   };
 
   const handleLike = async () => {
-    if (!character) return;
     await toggleLike.trigger();
   };
-
-  useEffect(() => {
-    if (characterId) {
-      setIsOpen(true);
-    }
-  }, [characterId]);
 
   return (
     <>
       <Modal
-        open={isOpen}
-        loading={characterDetail.isLoading}
+        open={!!characterId}
         onCancel={() => {
           closeHandler();
           removeCharacterId();
         }}
         title={t('introduction')}
         footer={
-          character ? (
-            <div className="flex w-full items-center gap-8">
-              <Button
-                variant="primary"
-                className="flex-1"
-                onClick={handleConfirm}
-              >
-                {t('start_conversation')}
-              </Button>
-            </div>
-          ) : null
+          <div className="flex w-full items-center gap-8">
+            <Button
+              variant="primary"
+              className="flex-1"
+              onClick={handleConfirm}
+              disabled={characterDetail.isLoading}
+            >
+              {t('start_conversation')}
+            </Button>
+          </div>
         }
       >
         <div className={cx('container flex flex-col')}>
@@ -141,37 +131,40 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
               src={getPublicUrl(character?.avatar_key)}
               alt={character?.name || 'User avatar'}
               fill
-              className="rounded-8"
+              className="rounded-8 object-cover"
             />
           </div>
+
           <div className="mb-8 flex h-40 items-center gap-8">
             <p title={character?.name} className="text-20 font-medium">
               {character?.name}
             </p>
-            <div
-              onClick={handleLike}
-              className="group ml-auto flex cursor-pointer items-center gap-4 text-12 text-gray-30"
-            >
-              <Heart
-                className={cx(
-                  'size-18 transition-colors duration-200 group-hover:stroke-primary group-hover:text-primary',
-                  character?.is_liked
-                    ? 'stroke-primary text-primary'
-                    : 'text-white'
-                )}
-              />
-              {character?.total_likes === 0
-                ? t('like')
-                : character?.total_likes}
-            </div>
+            {characterDetail.isLoading ? (
+              <Spinner className="ml-auto" size={24} />
+            ) : (
+              <div
+                onClick={handleLike}
+                className="group ml-auto flex cursor-pointer items-center gap-4 text-12 text-gray-30"
+              >
+                <Heart
+                  className={cx(
+                    'size-18 transition-colors duration-200 group-hover:stroke-primary group-hover:text-primary',
+                    character?.is_liked
+                      ? 'stroke-primary text-primary'
+                      : 'text-white'
+                  )}
+                />
+                {character?.total_likes === 0
+                  ? t('like')
+                  : character?.total_likes}
+              </div>
+            )}
           </div>
           <div className="mb-8 flex items-center gap-8">
             <p className="flex-1 whitespace-nowrap text-14 font-semibold text-primary">
               {t('favorability')}
             </p>
-            <ProgressBar
-              value={characterDetail.data?.chat_rooms[0]?.intimacy || 0}
-            />
+            <ProgressBar value={character?.chat_rooms?.[0]?.intimacy || 0} />
           </div>
           <p className="mb-16 text-14 font-normal leading-1.66 -tracking-0.5 text-gray-00">
             {character?.introduction}

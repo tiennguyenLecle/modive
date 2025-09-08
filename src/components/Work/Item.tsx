@@ -27,10 +27,10 @@ const WorkItem = ({
       <div className="mb-12 h-80 w-140 overflow-hidden rounded-4 border border-gray-80 bg-gray-100">
         <Image
           src={bannerImg}
-          alt="Contents Card"
-          width={140}
-          height={80}
-          className="aspect-[7/4] object-fill"
+          alt={title}
+          width={210}
+          height={120}
+          className="aspect-[7/4] object-cover"
           loading="lazy"
         />
       </div>

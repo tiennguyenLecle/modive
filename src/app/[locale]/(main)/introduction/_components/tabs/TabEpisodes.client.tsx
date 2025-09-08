@@ -2,14 +2,10 @@
 
 import { EpisodeHeader, EpisodeList, EpisodeProvider } from '../Episode';
 
-type TabEpisodesProps = {
-  workId?: string;
-};
-
 export default function TabEpisodes() {
   return (
     <EpisodeProvider>
-      <div className="flex h-full flex-col">
+      <div className="flex h-full flex-col bg-gray-90">
         <EpisodeHeader />
         <EpisodeList />
       </div>

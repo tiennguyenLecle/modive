@@ -26,16 +26,10 @@ const EpisodeHeader: React.FC = () => {
     unreadEpisodes.length > 0 &&
     selectedEpisodes.length === unreadEpisodes.length;
 
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      selectAllEpisodes(episodes);
-    } else {
-      setSelectedEpisodes([]);
-    }
-  };
+  if (episodes.length === 0) return null;
 
   return (
-    <div className="flex h-40 shrink-0 items-center justify-between border-b border-gray-80 px-16">
+    <div className="flex h-40 shrink-0 items-center justify-between border-b border-gray-80 bg-white px-16">
       {isSelectionMode ? (
         <CheckboxComponent
           onChange={(event: any) => {

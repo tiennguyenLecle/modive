@@ -11,6 +11,7 @@ import { useAuth } from '@/lib/authentication/auth-context';
 
 import { ExtendedEpisodeType } from '../../_actions/episode';
 import { useEpisodeContext } from '../Episode';
+import { useWork } from '../WorkProvider';
 
 type ModalPurchaseRef = {
   open: (episode: ExtendedEpisodeType[]) => void;
@@ -62,6 +63,7 @@ const overlayVariants = {
 const ModalPurchase = React.forwardRef<ModalPurchaseRef, ModalPurchaseProps>(
   ({}, ref) => {
     const t = useTranslations('introduction.modal_purchase');
+    const { workDetail } = useWork();
     const [isOpen, setIsOpen] = useState(false);
     const [dragOffset, setDragOffset] = useState(0);
 
@@ -85,8 +87,11 @@ const ModalPurchase = React.forwardRef<ModalPurchaseRef, ModalPurchaseProps>(
       if (selectedEpisodes.length === 1) {
         return selectedEpisodes[0].name;
       }
-      return `WORK_NAME (${selectedEpisodes.length} items)`;
-    }, [selectedEpisodes]);
+      return t('purchase_multiple_items', {
+        workName: workDetail?.title,
+        count: selectedEpisodes.length,
+      });
+    }, [selectedEpisodes, t, workDetail?.title]);
 
     const closeHandler = () => {
       setIsOpen(false);

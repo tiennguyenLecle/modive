@@ -171,6 +171,9 @@
       },
       "empty": "There are no episodes."
     },
+    "characters": {
+      "empty": "There are no characters."
+    },
     "modal_purchase": {
       "order_details": "Order details",
       "order_amount": "Order amount",
@@ -181,7 +184,8 @@
       "auto_charging_at_a_cheaper": "Automatic charging at a cheaper",
       "general_charging": "General charging",
       "insufficient_balance": "Insufficient balance",
-      "collect items": "{count, plural, one {Collect # round} other {Collect # rounds}}"
+      "collect items": "{count, plural, one {Collect # round} other {Collect # rounds}}",
+      "purchase_multiple_items": "{workName} ({count} items)"
     },
     "episode_viewer": {
       "loading": "Loading...",
@@ -235,12 +239,16 @@
       "delete_comment_title": "Delete Comment",
       "edit_comment": "Community posts modification",
       "new_comment": "Write a community article",
-      "completion": "Completion"
+      "completion": "Completion",
+      "no_posts": "No posts"
     },
     "error": {
       "title": "Sorry, an error occurred!",
       "try_again": "Try again",
       "go_home": "Back to Home"
+    },
+    "relationship": {
+      "no_relationship_data": "No relationship data"
     }
   },
   "my_page": {

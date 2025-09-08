@@ -32,13 +32,8 @@ type MenuTabProps = ComponentProps<'div'> & {
    * @param destroyInactiveTabPane - Default: false
    * - true: Destroy inactive tab contents to save memory (like Antd)
    * - false: Cache inactive tabs for faster switching
-   *
-   * @param forceRender - Default: false
-   * - true: Disable lazy loading, render all tabs immediately
-   * - false: Enable lazy loading, only render tabs when first visited
    */
   destroyInactiveTabPane?: boolean;
-  forceRender?: boolean;
 };
 
 // Individual tab panel component optimized with memo
@@ -68,7 +63,6 @@ const MenuTab: React.FC<MenuTabProps> = ({
   onTabChange,
   className,
   destroyInactiveTabPane = false,
-  forceRender = false,
   ...props
 }) => {
   // Determine if component is controlled or uncontrolled
@@ -100,17 +94,6 @@ const MenuTab: React.FC<MenuTabProps> = ({
 
   // Memoize tabs that should be rendered based on lazy loading strategy
   const tabsToRender = useMemo(() => {
-    if (forceRender) {
-      // Force render all tabs - disable lazy loading
-      return tabs.reduce(
-        (acc, tab) => {
-          acc[tab.key] = tab.children;
-          return acc;
-        },
-        {} as Record<string, React.ReactNode>
-      );
-    }
-
     const result: Record<string, React.ReactNode> = {};
 
     for (const tab of tabs) {
@@ -130,7 +113,7 @@ const MenuTab: React.FC<MenuTabProps> = ({
     }
 
     return result;
-  }, [tabs, activeTab, destroyInactiveTabPane, forceRender]);
+  }, [tabs, activeTab, destroyInactiveTabPane]);
 
   const handleTabClick = useCallback(
     (tab: string) => {

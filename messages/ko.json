@@ -162,6 +162,9 @@
       "community": "커뮤니티",
       "episodes": "소설 보러가기"
     },
+    "characters": {
+      "empty": "인물이 없습니다."
+    },
     "episodes": {
       "selection": "선택구매",
       "full_choice": "전체 선택",
@@ -181,7 +184,8 @@
       "auto_charging_at_a_cheaper": "더 저렴하게 자동충전하기",
       "general_charging": "일반 충전하기",
       "insufficient_balance": "잔액이 부족함",
-      "collect items": "{count}개 회차 소장하기"
+      "collect items": "{count}개 회차 소장하기",
+      "purchase_multiple_items": "{workName} (총 {count}회)"
     },
     "episode_viewer": {
       "loading": "로딩 중...",
@@ -240,7 +244,11 @@
       "delete_comment_title": "댓글 삭제",
       "edit_comment": "커뮤니티 글 수정",
       "new_comment": "커뮤니티 글 작성",
-      "completion": "작성 완료"
+      "completion": "작성 완료",
+      "no_posts": "게시글이 없습니다."
+    },
+    "relationship": {
+      "no_relationship_data": "인물관계도 데이터가 없습니다."
     }
   },
   "my_page": {

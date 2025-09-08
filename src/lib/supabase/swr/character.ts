@@ -8,7 +8,7 @@ export const CHARACTER_KEY = {
   detail: (characterId: string) => ['character', characterId],
 };
 
-type ExtendedCharacterType = CharacterType & {
+export type ExtendedCharacterType = CharacterType & {
   work: Pick<
     WorkType,
     'id' | 'tags' | 'title' | 'thumbnail_key' | 'bundle_id' | 'universe_id'

@@ -8,25 +8,23 @@ import { Direction, Plus } from '@/assets/icons';
 import { useDynamicPageSize } from '@/hooks/useDynamicPageSize';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { CommentType } from '@/types/comment';
-import { WorkType } from '@/types/work';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
 import { useComments } from '../../_hooks/useComments';
 import { CommentForm, CommentList } from '../Comment';
+import Empty from '../Empty';
 import ModalDeleteComment from '../modals/ModalDeleteComment';
+import { useWork } from '../WorkProvider';
 
-type TabCommunityProps = {
-  workDetail: WorkType;
-};
-
-export default function TabCommunity({ workDetail }: TabCommunityProps) {
+export default function TabCommunity() {
   const t = useTranslations('introduction.community');
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const workId = searchParams.get('workId') as string;
   const [sortAscending, setSortAscending] = useState(false);
   const router = useRouter();
+  const { workDetail } = useWork();
 
   const commentFormRef = useRef<React.ElementRef<typeof CommentForm>>(null);
   const commentListRef = useRef<HTMLDivElement>(null);
@@ -76,43 +74,51 @@ export default function TabCommunity({ workDetail }: TabCommunityProps) {
   };
 
   const handleChangeSort = () => {
+    if (comments.length === 0) return;
     setSortAscending(!sortAscending);
   };
 
   return (
     <>
-      <div className="flex h-full flex-col gap-16 px-8">
-        <div className="flex h-40 w-full items-center border-b border-gray-90 px-16">
-          <div
-            className="flex cursor-pointer items-center gap-4"
-            onClick={handleChangeSort}
-          >
-            <p>{sortAscending ? t('oldest') : t('latest')}</p>
-            <Direction
-              width={14}
-              height={14}
+      {comments.length > 0 ? (
+        <div className="flex h-full flex-col bg-gray-90">
+          <div className="flex h-40 w-full items-center border-b border-gray-90 bg-white px-24">
+            <div
               className={cx(
-                'text-gray-00',
-                sortAscending ? 'rotate-90' : '-rotate-90'
+                'flex items-center gap-4',
+                comments.length > 0 ? 'cursor-pointer' : 'cursor-default'
               )}
-            />
+              onClick={handleChangeSort}
+            >
+              <p>{sortAscending ? t('oldest') : t('latest')}</p>
+              <Direction
+                width={14}
+                height={14}
+                className={cx(
+                  'text-gray-00',
+                  sortAscending ? 'rotate-90' : '-rotate-90'
+                )}
+              />
+            </div>
           </div>
+          <CommentList
+            ref={commentListRef}
+            comments={comments}
+            onLoadMore={loadMore}
+            itemProps={{
+              onLike: handleLike,
+              onEdit: handleEdit,
+              onDelete: handleDelete,
+            }}
+            className={cx(
+              'min-h-0 flex-1 overflow-auto transition-opacity',
+              isLoading && isValidating && 'opacity-50'
+            )}
+          />
         </div>
-        <CommentList
-          ref={commentListRef}
-          comments={comments || []}
-          onLoadMore={loadMore}
-          itemProps={{
-            onLike: handleLike,
-            onEdit: handleEdit,
-            onDelete: handleDelete,
-          }}
-          className={cx(
-            'min-h-0 flex-1 overflow-auto transition-opacity',
-            isLoading && isValidating && 'opacity-50'
-          )}
-        />
-      </div>
+      ) : (
+        <Empty message={t('no_posts')} />
+      )}
 
       <button
         onClick={() => {
@@ -127,7 +133,7 @@ export default function TabCommunity({ workDetail }: TabCommunityProps) {
         ref={commentFormRef}
         createComment={createComment}
         updateComment={updateComment}
-        workDetail={workDetail}
+        workDetail={workDetail!}
       />
       <ModalDeleteComment
         ref={modalDeleteCommentRef}

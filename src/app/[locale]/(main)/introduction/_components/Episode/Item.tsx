@@ -27,7 +27,7 @@ const EpisodeItem = forwardRef<HTMLDivElement, EpisodeItemProps>(
       <div
         ref={ref}
         className={cx(
-          'flex h-90 shrink-0 items-center gap-12 border-b border-gray-80 px-16 py-8',
+          'flex h-90 shrink-0 items-center gap-12 border-b border-gray-80 bg-white px-16 py-8',
           (!isSelectionMode || !episode.is_ordered) &&
             'cursor-pointer transition-colors duration-300 hover:bg-gray-90',
           isSelectionMode && episode.is_ordered && 'cursor-not-allowed'

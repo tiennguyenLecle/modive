@@ -6,6 +6,11 @@ import { useRouter } from 'next/navigation';
 
 import { type Role } from '@/lib/authentication/auth.types';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
+import {
+  backgroundRegisterSW,
+  backgroundSubscribe,
+  requestNotificationPermission,
+} from '@/notifications';
 import { ROUTES } from '@/utils/constants';
 
 import { NextApi } from '../api';
@@ -63,6 +68,37 @@ export function AuthProvider({ children, role }: AuthProviderProps) {
       sub.subscription?.unsubscribe();
     };
   }, [supabase]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const handleLoad = () => {
+      requestNotificationPermission();
+      // Run service worker registration immediately instead of waiting for idle
+      backgroundRegisterSW()
+        .then(reg => {
+          if (reg) {
+            backgroundSubscribe(supabase);
+          }
+        })
+        .catch(error => {
+          console.error('Providers: Service worker registration failed', error);
+        });
+    };
+
+    // Check if the page has already loaded
+    if (document.readyState === 'complete') {
+      // Page is already loaded, run immediately
+      handleLoad();
+    } else {
+      // Page is still loading, wait for the load event
+      window.addEventListener('load', handleLoad);
+
+      return () => {
+        window.removeEventListener('load', handleLoad);
+      };
+    }
+  }, [user, supabase]);
 
   const signInWithProvider = async (
     provider: 'google' | string,

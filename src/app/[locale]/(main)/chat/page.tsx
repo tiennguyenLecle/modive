@@ -1,6 +1,8 @@
+import { User } from '@supabase/supabase-js';
 import { getTranslations } from 'next-intl/server';
 
 import { Header } from '@/components';
+import { createServerSupabase } from '@/lib/supabase/factory.server';
 
 import ChatView from './ChatView.client';
 
@@ -24,6 +26,10 @@ export default async function Home({
   params: { locale: string };
 }) {
   const t = await getTranslations({ namespace: 'chat_page', locale });
+  const supabase = createServerSupabase('user');
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <>
@@ -32,7 +38,7 @@ export default async function Home({
         className="border-b border-gray-80"
       />
       <main className="flex flex-col">
-        <ChatView />
+        <ChatView user={user as User} />
       </main>
     </>
   );

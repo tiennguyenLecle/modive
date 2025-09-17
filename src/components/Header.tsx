@@ -1,11 +1,22 @@
 'use client';
 
-import React, { ComponentProps, useMemo } from 'react';
+import React, { ComponentProps, useEffect, useMemo } from 'react';
+import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 
 import { Alarm, ArrowRight, Cash, LogoText, Search } from '@/assets/icons';
+import { messageCountAtom, roomListAtom } from '@/atoms/messagesAtom';
 import { Badge } from '@/components';
+import { useServiceWorkerMessages } from '@/hooks/useServiceWorkerMessages';
+import { useMeExtraData } from '@/hooks/useUser';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { Link } from '@/lib/navigation';
+import { createBrowserSupabase } from '@/lib/supabase/factory';
+import {
+  getRoomDetail,
+  updateChatroomField,
+} from '@/lib/supabase/swr/chatroom';
+import { updateNewMsgCountUser } from '@/lib/supabase/swr/users';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
@@ -32,6 +43,47 @@ const Header = ({
   ...rest
 }: HomeHeaderProps) => {
   const router = useRouter();
+  const { user } = useAuth();
+  const { data: userData } = useMeExtraData(!!user, user?.id || '');
+  const [messageCount, setMessageCount] = useAtom(messageCountAtom);
+  const [roomsAtom, setRoomsAtom] = useAtom(roomListAtom);
+
+  const supabase = createBrowserSupabase('user');
+
+  // Handle new message from service worker - update user metadata and room metadata
+  const handleNewMessage = async (data: any) => {
+    const currentCount = messageCount || userData?.metadata?.new_msg_count;
+    const newCount = currentCount + 1;
+
+    // Set new message count in user metadata - show in header Alarm Icon
+    updateNewMsgCountUser(supabase, user?.id as string, newCount);
+    setMessageCount(newCount);
+
+    // Set info - update room metadata - show in room list
+    const detail = await getRoomDetail(supabase, data.chatroom_id as string);
+
+    const updatedItem = {
+      metadata: {
+        new_msg_count: detail?.metadata?.new_msg_count + 1 || 1,
+      },
+      last_accessed_at: data?.message?.created_at,
+      last_message: data?.message?.content,
+    };
+
+    updateChatroomField(supabase, data.chatroom_id as string, updatedItem);
+    setRoomsAtom(
+      roomsAtom.map(room =>
+        room.room_id === data.chatroom_id ? { ...room, ...updatedItem } : room
+      )
+    );
+  };
+
+  useServiceWorkerMessages(handleNewMessage);
+  // Handle new message from service worker - update user metadata and room metadata
+
+  useEffect(() => {
+    setMessageCount(userData?.metadata?.new_msg_count || 0);
+  }, [userData, user]);
 
   const titlePaddingX = useMemo(() => {
     const paddingRight =
@@ -105,7 +157,7 @@ const Header = ({
           )}
           {showAlarmIcon && (
             <Link href="#" className="h-24">
-              <Badge.Wrapper count={3} showZero>
+              <Badge.Wrapper count={messageCount || 0} showZero>
                 <Alarm width={24} height={24} className="text-gray-00" />
               </Badge.Wrapper>
             </Link>

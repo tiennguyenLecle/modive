@@ -1,5 +1,6 @@
 'use client';
 
+import { User } from '@supabase/supabase-js';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 
@@ -8,7 +9,7 @@ import { useRouter } from '@/lib/navigation';
 
 import ChatRoomList from './_components/ChatRoomList.client';
 
-export default function ChatView() {
+export default function ChatView({ user }: { user: User }) {
   const t = useTranslations('chat_page');
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function ChatView() {
         ]}
         defaultActiveKey={searchParams.get('key') || 'general'}
       />
-      <ChatRoomList />
+      <ChatRoomList user={user} />
     </>
   );
 }

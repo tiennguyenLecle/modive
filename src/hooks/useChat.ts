@@ -1,8 +1,10 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useAtom } from 'jotai';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 
+import { roomListAtom } from '@/atoms/messagesAtom';
 import { NextApi } from '@/lib/api';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
@@ -38,6 +40,7 @@ type UseMyRoomsOptions = {
 
 export function useMyRoomsInfinite(options: UseMyRoomsOptions = {}) {
   const { pageSize = 10, workIds, type } = options;
+  const [, setRoomsAtom] = useAtom(roomListAtom);
 
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
 
@@ -70,15 +73,22 @@ export function useMyRoomsInfinite(options: UseMyRoomsOptions = {}) {
     }
   );
 
-  const rooms: ChatRoomType[] = data
-    ? ([] as ChatRoomType[]).concat(...data.map(item => item.data))
-    : [];
+  const rooms: ChatRoomType[] = useMemo(() => {
+    return data
+      ? ([] as ChatRoomType[]).concat(...data.map(item => item.data))
+      : [];
+  }, [data]);
 
   const isReachingEnd =
     data &&
     data[data.length - 1] &&
     data[data.length - 1].metadata.currentPage >=
       data[data.length - 1].metadata.totalPages;
+
+  // Sync rooms with atom
+  useEffect(() => {
+    setRoomsAtom(rooms);
+  }, [rooms, setRoomsAtom]);
 
   return {
     rooms,

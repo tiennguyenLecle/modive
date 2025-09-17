@@ -36,14 +36,18 @@ const BadgeWrapper = ({
       {...rest}
     >
       {children}
-      <sup className="absolute right-0 top-0">
-        <BadgeCountNode
-          count={Number(displayCount)}
-          showZero={showZero}
-          dot={dot}
-          overflowCount={overflowCount}
-        />
-      </sup>
+      {count ? (
+        <sup className="absolute right-0 top-0">
+          <BadgeCountNode
+            count={Number(displayCount)}
+            showZero={showZero}
+            dot={dot}
+            overflowCount={overflowCount}
+          />
+        </sup>
+      ) : (
+        <></>
+      )}
     </span>
   );
 };

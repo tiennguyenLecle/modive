@@ -1,24 +1,29 @@
 'use client';
 
 import React, { ComponentProps, useRef, useState } from 'react';
-import { useFormatter, useTranslations } from 'next-intl';
+import { User } from '@supabase/supabase-js';
+import { useAtom } from 'jotai';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import NProgress from 'nprogress';
 import VirtualList from 'rc-virtual-list';
 
 import { NavChat, Pin } from '@/assets/icons';
+import { roomListAtom } from '@/atoms/messagesAtom';
 import { Badge, Spinner } from '@/components';
 import { useMyRoomsInfinite } from '@/hooks/useChat';
 import { useDynamicPageSize } from '@/hooks/useDynamicPageSize';
 import { useRouter } from '@/lib/navigation';
 import { ChatRoomType } from '@/types/chatroom';
+import { formatDateOrTime } from '@/utils/formatTime';
 import { cx, getPublicUrl } from '@/utils/method';
 
 import styles from './ChatRoomList.module.scss';
 import ModalOptions from './modals/ModalOptions.client';
 import WorkFilter from './WorkFilter.client';
 
-export default function ChatRoomList() {
+export default function ChatRoomList({ user }: { user: User }) {
   const t = useTranslations('chat_page');
   const modalRef = React.useRef<React.ElementRef<typeof ModalOptions>>(null);
   const router = useRouter();
@@ -30,6 +35,7 @@ export default function ChatRoomList() {
 
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const virtualListRef = useRef<any>(null);
+  const [roomsAtom] = useAtom(roomListAtom);
 
   // Calculate dynamic page size based on container height
   const { recommendedPageSize } = useDynamicPageSize({
@@ -56,15 +62,12 @@ export default function ChatRoomList() {
   // Simple scroll handler for load more
   const handleScroll = (e: any) => {
     if (isReachingEnd || isValidating) return;
-
     const target = e?.currentTarget as HTMLElement | undefined;
     if (!target) return;
-
     const threshold = 50; // px from bottom to trigger load more
     const remaining =
       target.scrollHeight - target.scrollTop - target.clientHeight;
     const isNearBottom = remaining < threshold;
-
     if (isNearBottom) {
       setSize(prev => prev + 1);
     }
@@ -80,7 +83,7 @@ export default function ChatRoomList() {
           />
           <VirtualList<ChatRoomType>
             ref={virtualListRef}
-            data={chatrooms}
+            data={roomsAtom}
             itemHeight={92}
             itemKey="id"
             onScroll={handleScroll}
@@ -96,15 +99,19 @@ export default function ChatRoomList() {
                 id={item.id}
                 name={item.character.name}
                 avatar={getPublicUrl(item.character.avatar_key)}
-                time={new Date(item.created_at)}
+                time={formatDateOrTime(
+                  item.last_accessed_at ?? item.created_at,
+                  'time'
+                )}
                 lastMessage={item.last_message}
-                unreadCount={0}
+                unreadCount={item?.metadata?.new_msg_count ?? 0}
                 isPinned={item.is_pinned}
-                onClick={() =>
+                onClick={async () => {
+                  NProgress.start();
                   router.push(
                     `/chat/${item.room_id}?sessionId=${item.session_id}`
-                  )
-                }
+                  );
+                }}
                 onContextMenu={e => {
                   e.preventDefault();
                   modalRef.current?.open({
@@ -160,7 +167,7 @@ type ChatListItemProps = ComponentProps<'div'> & {
   id: string;
   name: string;
   avatar: string;
-  time: Date;
+  time: string;
   lastMessage: string;
   unreadCount: number;
   isPinned: boolean;
@@ -171,8 +178,6 @@ const ChatListItem = React.forwardRef<HTMLDivElement, ChatListItemProps>(
     { name, avatar, time, lastMessage, unreadCount, isPinned, ...rest },
     ref
   ) => {
-    const format = useFormatter();
-
     return (
       <div
         className="container flex w-full cursor-pointer gap-16 rounded-8 border-b border-gray-90 bg-gray-100 py-16 transition-colors duration-300 hover:bg-gray-90"
@@ -200,18 +205,8 @@ const ChatListItem = React.forwardRef<HTMLDivElement, ChatListItemProps>(
         </div>
 
         <div className="flex w-60 shrink-0 flex-col items-end gap-8 py-4">
-          <time
-            className="text-12 font-semibold text-gray-50"
-            title={format.dateTime(time, {
-              dateStyle: 'medium',
-              timeStyle: 'short',
-            })}
-          >
-            {format.dateTime(time, {
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: true,
-            })}
+          <time className="text-12 font-semibold text-gray-50" title={time}>
+            {time}
           </time>
           <Badge.CountNode count={unreadCount} />
         </div>

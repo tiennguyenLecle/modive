@@ -51,3 +51,24 @@ export async function fetchMeExtraData(
   if (error) throw error;
   return data as UserType;
 }
+
+export async function updateNewMsgCountUser(
+  supabase: SupabaseClient,
+  id: string,
+  new_msg_count: number
+) {
+  const { data, error } = await supabase
+    .from('users')
+    .update({
+      metadata: {
+        new_msg_count: new_msg_count,
+      },
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as UserType;
+}

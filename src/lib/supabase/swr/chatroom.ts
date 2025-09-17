@@ -177,3 +177,69 @@ export async function fetchChatRoomDetail(
   if (error) throw error;
   return data as unknown as ChatRoomType;
 }
+
+/**
+ * Get detailed information about a specific chat room
+ * @param supabase - Supabase client instance
+ * @param chatroomId - The ID of the chat room to fetch
+ * @returns Promise<ChatRoomType> - The chat room details with related work and character data
+ * @throws Error if chatroomId is not provided or if the room is not found
+ */
+export async function getRoomDetail(
+  supabase: SupabaseClient,
+  chatroomId: string
+): Promise<ChatRoomType> {
+  if (!chatroomId) {
+    throw new Error('Chatroom ID is required');
+  }
+
+  const { data, error } = await supabase
+    .from('chat_rooms')
+    .select(
+      `*,
+      work:works!chat_rooms_work_id_works_id_fk (
+        bundle_id,
+        universe_id
+      ),
+      character:characters!chat_rooms_character_id_characters_id_fk (
+        avatar_key,
+        bot_id,
+        id,
+        name
+      )`
+    )
+    .eq('room_id', chatroomId)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      throw new Error(`Chat room with ID ${chatroomId} not found`);
+    }
+    throw error;
+  }
+
+  return data as unknown as ChatRoomType;
+}
+
+/**
+ * Update multiple fields in a chatroom
+ */
+export async function updateChatroomField(
+  supabase: SupabaseClient,
+  chatroomId: string,
+  fields: {
+    last_accessed_at?: string;
+    last_message?: string;
+    metadata?: Record<string, any>;
+  }
+) {
+  const { data, error } = await supabase
+    .from('chat_rooms')
+    .update(fields)
+    .eq('room_id', chatroomId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}

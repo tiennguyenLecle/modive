@@ -79,13 +79,13 @@ async function backgroundRegisterSW() {
 async function getOrCreateSubscription(reg: any) {
   if (!('PushManager' in window)) return null;
 
-  //const existing = await reg.pushManager.getSubscription();
-  //if (existing) return existing.toJSON();
-
   if (Notification.permission !== 'granted') {
     console.warn('Notification permission is not granted.');
     return null;
   }
+
+  const existing = await reg.pushManager.getSubscription();
+  if (existing) return existing.toJSON();
 
   const sub = await reg.pushManager.subscribe({
     userVisibleOnly: true,

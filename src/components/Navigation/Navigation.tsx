@@ -45,10 +45,12 @@ export default function Navigation({ className, ...rest }: NavigationProps) {
         activePaths={activePaths[ROUTES.CHAT]}
       />
       <NavItem
-        href={ROUTES.GOODS}
+        // href={ROUTES.GOODS}
+        href=""
         icon={<NavVase />}
         text={t('goods')}
         activePaths={activePaths[ROUTES.GOODS]}
+        disabled={true}
       />
       <NavItem
         href={ROUTES.MANAGEMENT.INDEX}

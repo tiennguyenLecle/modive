@@ -163,7 +163,7 @@ const Header = ({
             </Link>
           )}
           {showCashIcon && (
-            <Link href="#">
+            <Link href={ROUTES.MANAGEMENT.MY_CASH}>
               <Cash width={24} height={24} />
             </Link>
           )}

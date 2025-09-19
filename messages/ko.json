@@ -142,10 +142,11 @@
     "privacy_policy": "개인정보 처리방침",
     "customer_service": "고객센터",
     "copyright_policy": "저작권 관리 정책",
-    "info_name": "모다이브 | 대표 임다솔",
+    "info_name": "(주)문화방송\n대표자 안형준 / 사내독립기업 모다이브 대표자 임다솔",
     "info_number": "사업자등록번호 : { phoneNumber }",
-    "info_address": "주소 : { address }",
-    "copyright": "© { year } Modive. All rights reserved."
+    "info_address": "서울특별시 마포구 성암로 267, 경영센터 6층 모다이브 파트 (03925)",
+    "copyright": "© { year } modive Inc. all rights reserved",
+    "business_report_number": "통신판매업 신고번호 : {businessReportNumber}"
   },
   "components": {
     "chapter": {
@@ -160,7 +161,9 @@
       "chat": "채팅하기",
       "personal_relationship": "인물관계도",
       "community": "커뮤니티",
-      "episodes": "소설 보러가기"
+      "episodes": "소설 보러가기",
+      "cash": "캐시 충전",
+      "charging": "충전 내역"
     },
     "characters": {
       "empty": "인물이 없습니다."
@@ -250,7 +253,9 @@
     },
     "relationship": {
       "no_relationship_data": "인물관계도 데이터가 없습니다."
-    }
+    },
+    "holding": "보유 캐시",
+    "title": "나의 캐시"
   },
   "my_page": {
     "my_infomation": "내 정보",
@@ -290,5 +295,18 @@
   "general": {
     "cancel": "취소",
     "confirm": "확인하다"
+  },
+  "my-cash": {
+    "cash_amount": "{value} 캐시",
+    "payment_amount": "₩ {value}",
+    "use_guide": "이용안내",
+    "use_guide_1": "충전 캐시는 결제일로부터 1년 이내 사용 가능합니다.",
+    "use_guide_2": "결제일로부터 7일 이내 환불을 요청할 수 있으나, 사용한 이력이 있는 경우 환불은 불가능합니다.",
+    "use_guide_3": "콘텐츠 이용에 대한 개인적 불만족이나 기대와 다른 반응 등 주관적 사유로는 환불이 어렵습니다.",
+    "use_guide_4": "법정대리인 동의 없는 미성년자 명의 결제는 취소가 가능합니다.",
+    "use_guide_5": "환불 요청 및 기타 문의 사항은 고객센터 또는 이용약관에서 확인하실 수 있습니다.",
+    "charging_cash": "충전 캐시",
+    "payment_amount_column": "결제 금액",
+    "no_charging_history": "캐시 충전 내역이 없어요"
   }
 }

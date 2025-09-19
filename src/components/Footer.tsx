@@ -11,11 +11,6 @@ export default function Footer({
   const t = useTranslations('footer');
   const locale = useLocale();
 
-  const address =
-    locale === 'ko'
-      ? '서울특별시 마포구 성암로 267 (03925)'
-      : '267 (03925) Seongam-ro, Mapo-gu, Seoul';
-
   return (
     <footer
       className={cx(
@@ -43,14 +38,19 @@ export default function Footer({
       <address className="mb-0 text-12 font-normal leading-1.66 text-gray-30">
         {t('info_name')}
         <br />
-        {t('info_number', { phoneNumber: '107-81-78996' })}
+        {t('info_number', { phoneNumber: '116-81-13833' })}
         <br />
-        {t('info_address', { address })}
+        {t('info_address')}
         <br />
-        <a href="mailto:mailname@email.com" />
+        {t('business_report_number', {
+          businessReportNumber: '2016-서울마포-0494',
+        })}
+        <br />
+        <br />
+        <a href="mailto:moit@modive.me">moit@modive.me</a>
       </address>
       <small className="text-12 font-normal text-gray-30">
-        {t('copyright', { year: 2023 })}
+        {t('copyright', { year: 2025 })}
       </small>
     </footer>
   );

@@ -142,10 +142,11 @@
     "privacy_policy": "Privacy Policy",
     "customer_service": "Customer Service Center",
     "copyright_policy": "Copyright Management Policy",
-    "info_name": "Modive | Representative Lim Dasol",
+    "info_name": "Culture Broadcasting Co., Ltd.\nRepresentative Ahn Hyung-jun / In-house independent company Modive Live CEO Lim Dasol",
     "info_number": "Business Registration Number: { phoneNumber }",
-    "info_address": "Address: { address }",
-    "copyright": "© { year } Modive. All rights reserved."
+    "info_address": "267, Seongam -ro, Mapo -gu, Seoul, 6th floor of Management Center Modive Part (03925)",
+    "copyright": "© { year } modive Inc. all rights reserved",
+    "business_report_number": "Telecommunications Business Report Number: {businessReportNumber}"
   },
   "components": {
     "chapter": {
@@ -160,7 +161,9 @@
       "chat": "Chat",
       "personal_relationship": "Personal relationship",
       "community": "Community",
-      "episodes": "Go to see a novel"
+      "episodes": "Go to see a novel",
+      "cash": "Cash charging",
+      "charging": "Charging"
     },
     "episodes": {
       "selection": "Selection",
@@ -250,7 +253,9 @@
     },
     "relationship": {
       "no_relationship_data": "No relationship data"
-    }
+    },
+    "holding": "Holding",
+    "title": "My cash"
   },
   "my_page": {
     "my_infomation": "My information",
@@ -290,5 +295,18 @@
   "general": {
     "cancel": "cancellation",
     "confirm": "confirm"
+  },
+  "my-cash": {
+    "cash_amount": "{value} cash",
+    "payment_amount": "₩ {value}",
+    "use_guide": "Use guide",
+    "use_guide_1": "Charging cash can be used within one year from the date of payment.",
+    "use_guide_2": "You can request a refund within 7 days from the date of payment, but if you have a history you have used, you will not be able to refund.",
+    "use_guide_3": "Refunds are difficult for subjective reasons, such as personal dissatisfaction with the use of content and other expectations.",
+    "use_guide_4": "Payment of minors who are not consented by legal agents can be canceled.",
+    "use_guide_5": "Refund requests and other inquiries can be found in the Customer Center or Terms of Use.",
+    "charging_cash": "Charging cash",
+    "payment_amount_column": "Payment amount",
+    "no_charging_history": "There is no cash charging history"
   }
 }

@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-import { Header } from '@/components';
+import { Footer, Header } from '@/components';
 import { createServerSupabase } from '@/lib/supabase/factory.server';
 import { fetchInterface } from '@/lib/supabase/swr/interface';
 
@@ -25,8 +25,9 @@ export default async function Home() {
   return (
     <>
       <Header showLogoText showSearchIcon showAlarmIcon showCashIcon />
-      <main>
+      <main className="space-y-8 bg-gray-80">
         <HomePageContent />
+        <Footer />
       </main>
     </>
   );

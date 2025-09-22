@@ -309,5 +309,23 @@
     "charging_cash": "충전 캐시",
     "payment_amount_column": "결제 금액",
     "no_charging_history": "캐시 충전 내역이 없어요"
+  },
+  "payments": {
+    "fail": {
+      "button": {
+        "try_again": "다시 시도하기",
+        "check": "확인"
+      },
+      "page_title": "캐시 충전",
+      "title": "충전에 실패했어요.",
+      "description": "결제가 정상적으로 처리되지 않았습니다. 다시 시도해주세요."
+    },
+    "success": {
+      "button": {
+        "check": "확인"
+      },
+      "page_title": "캐시 충전",
+      "title": "충전이 완료되었습니다."
+    }
   }
 }

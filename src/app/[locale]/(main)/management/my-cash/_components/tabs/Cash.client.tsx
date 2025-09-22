@@ -1,9 +1,11 @@
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { Button, Footer } from '@/components';
+import { generateClientOrderId, openCardPayment } from '@/lib/toss/payments';
 
 const CashClient = () => {
   const t = useTranslations('my-cash');
+  const locale = useLocale();
 
   const options = [
     {
@@ -53,7 +55,22 @@ const CashClient = () => {
               <div className="flex-1 text-14 font-semibold text-gray-00">
                 {t('cash_amount', { value: option.cash })}
               </div>
-              <Button className="!w-fit min-w-120">
+              <Button
+                className="!w-fit min-w-120"
+                onClick={async () => {
+                  const origin = window.location.origin;
+                  const successUrl = `${origin}/${locale}/payments/success`;
+                  const failUrl = `${origin}/${locale}/payments/fail`;
+
+                  await openCardPayment({
+                    amount: option.price,
+                    orderId: generateClientOrderId('cash'),
+                    orderName: t('cash_amount', { value: option.cash }),
+                    successUrl,
+                    failUrl,
+                  });
+                }}
+              >
                 {t('payment_amount', { value: option.price })}
               </Button>
             </div>

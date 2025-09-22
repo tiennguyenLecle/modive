@@ -309,5 +309,23 @@
     "charging_cash": "Charging cash",
     "payment_amount_column": "Payment amount",
     "no_charging_history": "There is no cash charging history"
+  },
+  "payments": {
+    "fail": {
+      "button": {
+        "try_again": "Try again",
+        "check": "check"
+      },
+      "page_title": "Cash charging",
+      "title": "I failed to charge it.",
+      "description": "Payment was not processed normally. Please try again."
+    },
+    "success": {
+      "button": {
+        "check": "check"
+      },
+      "page_title": "Cash charging",
+      "title": "The charging is complete."
+    }
   }
 }

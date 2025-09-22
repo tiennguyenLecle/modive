@@ -146,7 +146,8 @@
     "info_number": "사업자등록번호 : { phoneNumber }",
     "info_address": "서울특별시 마포구 성암로 267, 경영센터 6층 모다이브 파트 (03925)",
     "copyright": "© { year } modive Inc. all rights reserved",
-    "business_report_number": "통신판매업 신고번호 : {businessReportNumber}"
+    "business_report_number": "통신판매업 신고번호 : {businessReportNumber}",
+    "representative_number": "대표번호 : {number}"
   },
   "components": {
     "chapter": {

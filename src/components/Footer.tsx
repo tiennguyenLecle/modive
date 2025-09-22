@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Logo } from '@/assets/icons';
+import { Link } from '@/lib/navigation';
 import { cx } from '@/utils/method';
 
 export default function Footer({
@@ -20,21 +21,47 @@ export default function Footer({
       {...props}
     >
       <div className="flex flex-wrap items-center gap-12">
-        <p className="text-12 font-semibold text-gray-30">{t('terms')}</p>
+        <Link
+          href={
+            'https://comfortable-margin-430.notion.site/27677f3875ab8043b739e9592c06341a'
+          }
+          target="_blank"
+          className="text-12 font-semibold text-gray-30"
+        >
+          {t('terms')}
+        </Link>
         <div className="h-8 w-1 bg-gray-80"></div>
-        <p className="text-12 font-semibold text-gray-30">
+        <Link
+          href={
+            'https://comfortable-margin-430.notion.site/27677f3875ab8043b739e9592c06341a'
+          }
+          target="_blank"
+          className="text-12 font-semibold text-gray-30"
+        >
           {t('privacy_policy')}
-        </p>
+        </Link>
         <div className="h-8 w-1 bg-gray-80"></div>
-        <p className="text-12 font-semibold text-gray-30">
+        <Link
+          href={
+            'https://comfortable-margin-430.notion.site/27677f3875ab8043b739e9592c06341a'
+          }
+          target="_blank"
+          className="text-12 font-semibold text-gray-30"
+        >
           {t('customer_service')}
-        </p>
+        </Link>
         <div className="h-8 w-1 bg-gray-80"></div>
-        <p className="text-12 font-semibold text-gray-30">
+        <Link
+          href={
+            'https://comfortable-margin-430.notion.site/27677f3875ab8043b739e9592c06341a'
+          }
+          target="_blank"
+          className="text-12 font-semibold text-gray-30"
+        >
           {t('copyright_policy')}
-        </p>
+        </Link>
       </div>
-      <Logo width={82} height={24} />
+      <Logo width={82} height={24} className="text-gray-70" />
       <address className="mb-0 text-12 font-normal leading-1.66 text-gray-30">
         {t('info_name')}
         <br />
@@ -45,6 +72,8 @@ export default function Footer({
         {t('business_report_number', {
           businessReportNumber: '2016-서울마포-0494',
         })}
+        <br />
+        {t('representative_number', { number: '02-789-0011' })}
         <br />
         <br />
         <a href="mailto:moit@modive.me">moit@modive.me</a>

@@ -36,7 +36,7 @@ export default function LoginClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
-        <Logo className="mb-24 mt-100 h-52 w-178" />
+        <Logo className="mb-24 mt-100 h-52 w-178 text-primary" />
       </motion.div>
 
       <motion.p

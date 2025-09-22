@@ -146,7 +146,8 @@
     "info_number": "Business Registration Number: { phoneNumber }",
     "info_address": "267, Seongam -ro, Mapo -gu, Seoul, 6th floor of Management Center Modive Part (03925)",
     "copyright": "© { year } modive Inc. all rights reserved",
-    "business_report_number": "Telecommunications Business Report Number: {businessReportNumber}"
+    "business_report_number": "Telecommunications Business Report Number: {businessReportNumber}",
+    "representative_number": "Representative number: {number}"
   },
   "components": {
     "chapter": {

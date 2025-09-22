@@ -17,7 +17,7 @@ import Ellipsis from './ellipsis.svg';
 import Heart from './heart.svg';
 import Info from './info.svg';
 import Lock from './lock.svg';
-import LogoText from './logo-text.svg';
+import LogoMoit from './logo-moit.svg';
 import Logo from './logo.svg';
 import NavChat from './nav-chat.svg';
 import NavHomeFilled from './nav-home-filled.svg';
@@ -60,7 +60,7 @@ export {
   Info,
   Lock,
   Logo,
-  LogoText,
+  LogoMoit,
   NavChat,
   NavHome,
   NavHomeFilled,

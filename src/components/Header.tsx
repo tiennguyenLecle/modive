@@ -1,10 +1,10 @@
 'use client';
 
-import React, { ComponentProps, useEffect, useMemo } from 'react';
+import { ComponentProps, useEffect, useMemo } from 'react';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 
-import { Alarm, ArrowRight, Cash, LogoText, Search } from '@/assets/icons';
+import { Alarm, ArrowRight, Cash, LogoMoit, Search } from '@/assets/icons';
 import { messageCountAtom, roomListAtom } from '@/atoms/messagesAtom';
 import { Badge } from '@/components';
 import { useServiceWorkerMessages } from '@/hooks/useServiceWorkerMessages';
@@ -130,7 +130,7 @@ const Header = ({
         )}
         {showLogoText && (
           <Link href={ROUTES.HOME}>
-            <LogoText className="h-24 w-80" />
+            <LogoMoit className="h-24 text-primary" />
           </Link>
         )}
       </div>

@@ -159,11 +159,15 @@ export default function ShoppingCart() {
       (item: CartItemType) => item.is_selected
     );
 
-    updateMyCartByBrowser({
+    // updateMyCartByBrowser({
+    //   items: selectedItems ?? [],
+    //   total_items: null,
+    //   total_delivery_fee: null,
+    //   total: null,
+    // });
+    setMyCartValue({
+      ...myCartValue,
       items: selectedItems ?? [],
-      total_items: null,
-      total_delivery_fee: null,
-      total: null,
     });
     router.push(ROUTES.ORDERING);
   };
@@ -174,12 +178,12 @@ export default function ShoppingCart() {
       ...myCartValue,
       items: myCartValue?.items?.map(item => ({ ...item, is_selected: true })),
     });
-    updateMyCartByBrowser({
-      items: myCartValue?.items?.map(item => ({ ...item, is_selected: true })),
-      total_items: null,
-      total_delivery_fee: null,
-      total: null,
-    });
+    // updateMyCartByBrowser({
+    //   items: myCartValue?.items?.map(item => ({ ...item, is_selected: true })),
+    //   total_items: null,
+    //   total_delivery_fee: null,
+    //   total: null,
+    // });
     router.push(ROUTES.ORDERING);
   };
 
@@ -210,7 +214,7 @@ export default function ShoppingCart() {
                 />
                 <strong>{t('full_choice')}</strong>
                 <span className="h-8 w-1 bg-gray-70" />
-                {t('total', { count: myGoods?.length ?? 0 })}
+                {t('total', { count: myGoodsBySelected?.length ?? 0 })}
               </div>
               <Button
                 variant="secondary"

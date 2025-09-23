@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { notification } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -97,19 +98,23 @@ export default function SuccessPage() {
     },
     {
       label: t('order'),
-      value: data?.created_at,
+      value: data?.created_at
+        ? dayjs(data?.created_at).format('YYYY-MM-DD hh:mm')
+        : '',
     },
     {
       label: t('payment_date'),
-      value: data?.paid_at,
+      value: data?.paid_at
+        ? dayjs(data?.paid_at).format('YYYY-MM-DD hh:mm')
+        : '',
     },
     {
       label: t('delivery_fee'),
-      value: data?.total_delivery_fee,
+      value: `${data?.total_delivery_fee ? (data?.total_delivery_fee as number)?.toLocaleString() : ''}${t('won')}`,
     },
     {
       label: t('payment_amount'),
-      value: data?.total,
+      value: `${data?.total ? (data?.total as number)?.toLocaleString() : ''}${t('won')}`,
     },
   ];
 

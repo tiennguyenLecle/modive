@@ -4,9 +4,16 @@ import { useEffect, useState } from 'react';
 import { Form, Input, Select } from 'antd';
 import { useAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
+import useSWR from 'swr';
 
 import { shippingFormAtom } from '@/atoms/goodsAtom';
 import CheckboxComponent from '@/components/Checkbox';
+import { useAuth } from '@/lib/authentication/auth-context';
+import {
+  getShippingAddressList,
+  SHIPPING_KEY,
+  ShippingAddressType,
+} from '@/lib/supabase/swr/shipping';
 
 import styles from './ShippingForm.module.scss';
 
@@ -14,10 +21,28 @@ export default function ShippingForm() {
   const t = useTranslations('ordering');
   const [shippingForm, setShippingForm] = useAtom(shippingFormAtom);
   const [form] = Form.useForm();
-  const [query, setQuery] = useState('');
   const [typingTimeout, setTypingTimeout] = useState<any>(null);
   const [isDaumApiReady, setIsDaumApiReady] = useState(false);
   const [isDefaultShipping, setIsDefaultShipping] = useState(true);
+  const { user } = useAuth();
+
+  const { data: shippingListData, error } = useSWR(
+    SHIPPING_KEY.all,
+    user ? () => getShippingAddressList(user?.id) : null
+  );
+
+  const addressList = shippingListData?.data ?? [];
+
+  useEffect(() => {
+    if (addressList) {
+      const defaultAddress = addressList.find(
+        (address: ShippingAddressType) => address.is_default
+      );
+      if (defaultAddress) {
+        setShippingForm(defaultAddress);
+      }
+    }
+  }, [addressList]);
 
   const SHIPPING_OPTIONS = [
     {
@@ -34,6 +59,7 @@ export default function ShippingForm() {
     },
   ];
 
+  // start of Daum Postcode API
   const openDaumPostcode = (searchTerm: string) => {
     // Check if Daum Postcode API is loaded
     if (typeof window === 'undefined' || !(window as any).daum) {
@@ -91,7 +117,6 @@ export default function ShippingForm() {
 
   const onSearch = (value: string) => {
     const newQuery = value;
-    setQuery(newQuery);
 
     if (typingTimeout) {
       clearTimeout(typingTimeout);
@@ -131,6 +156,8 @@ export default function ShippingForm() {
 
     checkDaumApi();
   }, []);
+
+  // end of Daum Postcode API
 
   // Initialize form with existing atom values
   useEffect(() => {

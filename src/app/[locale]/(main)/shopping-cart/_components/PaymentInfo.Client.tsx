@@ -18,16 +18,20 @@ export default function PaymentInfo({
     <div className={`${className} bg-white`}>
       <h3 className="flex flex-row items-center justify-between border-b border-t border-gray-80 p-16 text-16 font-semibold text-gray-00">
         {t('payment_amount')}{' '}
-        <span className="text-20 font-medium">{paymentAmount} won</span>
+        <span className="text-20 font-medium">
+          {paymentAmount?.toLocaleString()} won
+        </span>
       </h3>
       <div className="flex flex-col gap-16 px-24 py-16 text-14 text-gray-00">
         <p className="flex flex-row items-center justify-between">
           {t('product_amount')}{' '}
-          <span className="text-16 font-semibold">{productAmount} won</span>
+          <span className="text-16 font-semibold">
+            {productAmount?.toLocaleString()} won
+          </span>
         </p>
         <p className="flex flex-row items-center justify-between gap-8">
           {t('delivery_fee')}{' '}
-          <span className='text-16"'>+{deliveryFee} won</span>
+          <span className='text-16"'>+{deliveryFee?.toLocaleString()} won</span>
         </p>
       </div>
     </div>

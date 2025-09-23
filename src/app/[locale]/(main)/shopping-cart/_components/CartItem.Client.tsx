@@ -8,6 +8,7 @@ import { Info } from '@/assets/icons';
 import { CartItemProps } from '@/atoms/goodsAtom';
 import CheckboxComponent from '@/components/Checkbox';
 import DefaultImageComponent from '@/components/DefaultImage';
+import { formatDateOrTime } from '@/utils/formatTime';
 
 import AddItem from './AddItem.Client';
 import InfoBlock from './InfoBlock.Client';
@@ -74,7 +75,7 @@ export default function CartItem({
         <div className="flex flex-col text-gray-00">
           <h3 className="mb-11 line-clamp-2 text-16 font-normal">{title}</h3>
           <p className="mb-8 line-clamp-1 flex flex-row items-center gap-8 text-16 font-bold">
-            {price} {t('won')}
+            {price?.toLocaleString()} {t('won')}
             {showOrderCount ? (
               <>
                 <span className="inline-block h-8 w-1 bg-gray-70 text-gray-70" />
@@ -85,11 +86,13 @@ export default function CartItem({
             )}
           </p>
           <p className="line-clamp-1 text-12 font-normal">
-            {t('shipping_fee')} {shippingFee} {t('won')}
+            {t('shipping_fee')} {shippingFee?.toLocaleString()} {t('won')}
           </p>
         </div>
       </div>
-      {scheduledDate && <InfoBlock scheduledDate={scheduledDate} />}
+      {scheduledDate && (
+        <InfoBlock scheduledDate={formatDateOrTime(scheduledDate, 'date')} />
+      )}
       {showAddItem && (
         <div className="flex flex-1 flex-row items-center justify-between text-12 text-primary">
           {t('remaining_count')}: {remainingCount}

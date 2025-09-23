@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js';
+import { createBrowserSupabase } from '../factory';
 
 export const SHIPPING_KEY = {
   all: ['shipping'] as const,
@@ -23,10 +23,8 @@ type ShippingAddressType = {
 
 type GetShippingAddressListResponseType = ShippingAddressType[];
 
-const getShippingAddressList = async (
-  supabase: SupabaseClient,
-  userId: string
-) => {
+const getShippingAddressList = async (userId: string) => {
+  const supabase = createBrowserSupabase('user');
   const { data, error } = await supabase
     .from('shipping_addresses')
     .select()
@@ -34,8 +32,7 @@ const getShippingAddressList = async (
     .is('deleted_at', null)
     .order('is_default', { ascending: false });
 
-  if (error) throw error;
-  return data as GetShippingAddressListResponseType;
+  return { data, error };
 };
 
 export { getShippingAddressList };

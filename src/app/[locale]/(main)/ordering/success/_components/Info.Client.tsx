@@ -2,6 +2,8 @@
 
 import { useTranslations } from 'next-intl';
 
+import { formatDateOrTime } from '@/utils/formatTime';
+
 import InfoBlock from '../../../shopping-cart/_components/InfoBlock.Client';
 
 type InfoProps = {
@@ -30,7 +32,7 @@ export default function Info({
       {scheduledDateInfo.map((date, index) => (
         <InfoBlock
           key={index}
-          scheduledDate={date}
+          scheduledDate={formatDateOrTime(date, 'date')}
           title={t('pre_sale_product')}
         />
       ))}

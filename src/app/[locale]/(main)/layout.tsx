@@ -1,5 +1,4 @@
 import React from 'react';
-import { Provider } from 'jotai';
 import { headers } from 'next/headers';
 
 import { Navigation } from '@/components';
@@ -29,9 +28,7 @@ export default function Layout({ children }: Props) {
   return (
     <AuthProvider role="user">
       <div className={cx('main-layout', deviceClassName)}>
-        <div className="page-wrapper">
-          <Provider>{children}</Provider>
-        </div>
+        <div className="page-wrapper">{children}</div>
         <div className="navigation-wrapper z-10">
           <Navigation />
         </div>

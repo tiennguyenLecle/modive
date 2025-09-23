@@ -4,6 +4,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
   transpilePackages: ['antd', '@ant-design/cssinjs'],
   webpack(config) {
     config.module.rules.push({

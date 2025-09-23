@@ -1,0 +1,55 @@
+.shippingForm {
+  :global {
+    .ant-form-item {
+      .ant-col {
+        flex: auto !important;
+      }
+
+      .ant-form-item-row {
+        gap: 8rem;
+      }
+
+      .ant-form-item-label {
+        max-width: 25% !important;
+        padding-bottom: 0;
+      }
+
+      .ant-form-item-control-input-content {
+        border-radius: var(--spacer-s, 4px);
+        border: 1px solid var(--color-gray-gray80, #f0eff1);
+        transition: border-color 0.2s ease;
+
+        .ant-input-affix-wrapper,
+        .ant-input-group-addon {
+          background-color: transparent;
+          > button {
+            border: none;
+          }
+        }
+
+        // Focus styles for the container
+        &:focus-within {
+          border-color: var(--primary, #ff627b);
+        }
+      }
+
+      input,
+      textarea,
+      .ant-select-selector {
+        padding: 8rem 12rem;
+        border: none;
+        outline: none;
+
+        &:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+    }
+    #__daum__layer_1 {
+      width: 100% !important;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+  }
+}

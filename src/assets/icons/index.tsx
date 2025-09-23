@@ -13,6 +13,7 @@ import CheckBoxFilled from './checkbox-filled.svg';
 import CheckBox from './checkbox.svg';
 import Chevron from './chevron.svg';
 import Close from './close.svg';
+import DefaultImage from './default-image.svg';
 import DirectDisabledIcon from './direct-disabled.svg';
 import DirectIcon from './direct.svg';
 import Direction from './direction.svg';
@@ -20,6 +21,7 @@ import Download from './download.svg';
 import Ellipsis from './ellipsis.svg';
 import Heart from './heart.svg';
 import Info from './info.svg';
+import Minus from './line.svg';
 import Lock from './lock.svg';
 import LogoMoit from './logo-moit.svg';
 import Logo from './logo.svg';
@@ -90,4 +92,6 @@ export {
   TipDisabledIcon,
   TipIcon,
   Trash,
+  Minus,
+  DefaultImage,
 };

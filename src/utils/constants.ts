@@ -27,6 +27,8 @@ export const ROUTES = {
     // NOTI_SETTINGS: '/management/noti-settings',
     // ANNOUNCEMENT: '/management/announcement',
   },
+  ORDERING: '/ordering',
+  SHOPPING_CART: '/shopping-cart',
   CMS: {
     INDEX: '/cms',
     LOGIN: '/cms/login',

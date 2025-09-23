@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { Provider as JotaiProvider } from 'jotai';
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import NProgress from 'nprogress';
@@ -35,7 +36,7 @@ export const Providers = ({ children, messages, locale }: Props) => {
         messages={messages}
         timeZone="UTC"
       >
-        {children}
+        <JotaiProvider>{children}</JotaiProvider>
       </NextIntlClientProvider>
     </ThemeRegistry>
   );

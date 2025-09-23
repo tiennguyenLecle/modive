@@ -1,0 +1,107 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+
+import { Info } from '@/assets/icons';
+import { CartItemProps } from '@/atoms/goodsAtom';
+import CheckboxComponent from '@/components/Checkbox';
+import DefaultImageComponent from '@/components/DefaultImage';
+
+import AddItem from './AddItem.Client';
+import InfoBlock from './InfoBlock.Client';
+
+export default function CartItem({
+  image,
+  title,
+  price,
+  shippingFee,
+  scheduledDate,
+  id,
+  quantity,
+  remainingCount,
+  showCheckbox,
+  checked,
+  showOrderCount = false,
+  showAddItem = false,
+  onCheckboxChange,
+  onCountChange,
+}: CartItemProps) {
+  const t = useTranslations('shopping_cart');
+  const [count, setCount] = useState(quantity);
+  const isDisabledAddButton = Number(count) >= Number(remainingCount);
+  const isDisabledRemoveButton = Number(count) <= 0;
+
+  const handleAdd = () => {
+    setCount(Number(count) + 1);
+  };
+
+  const handleRemove = () => {
+    setCount(Number(count) - 1);
+  };
+
+  const handleCheckboxChange = (id: string) => {
+    onCheckboxChange && onCheckboxChange(id);
+  };
+
+  useEffect(() => {
+    onCountChange && onCountChange(count ?? 0, id);
+  }, [count, id]);
+
+  return (
+    <div className="flex w-full flex-col gap-12 border-b border-gray-80 border-gray-90 bg-white p-16 last:border-b-0">
+      <div className="flex flex-row items-start gap-12">
+        {showCheckbox && (
+          <CheckboxComponent
+            checked={checked}
+            disabled={false}
+            className="h-18 min-w-18"
+            onChange={() => handleCheckboxChange(id)}
+          />
+        )}
+        {image ? (
+          <Image
+            className="min-h-100 rounded-8"
+            width={100}
+            height={100}
+            src={image}
+            alt="Order Item"
+          />
+        ) : (
+          <DefaultImageComponent className="!h-100 !w-100" />
+        )}
+        <div className="flex flex-col text-gray-00">
+          <h3 className="mb-11 line-clamp-2 text-16 font-normal">{title}</h3>
+          <p className="mb-8 line-clamp-1 flex flex-row items-center gap-8 text-16 font-bold">
+            {price} {t('won')}
+            {showOrderCount ? (
+              <>
+                <span className="inline-block h-8 w-1 bg-gray-70 text-gray-70" />
+                {quantity} {t('pieces')}
+              </>
+            ) : (
+              ''
+            )}
+          </p>
+          <p className="line-clamp-1 text-12 font-normal">
+            {t('shipping_fee')} {shippingFee} {t('won')}
+          </p>
+        </div>
+      </div>
+      {scheduledDate && <InfoBlock scheduledDate={scheduledDate} />}
+      {showAddItem && (
+        <div className="flex flex-1 flex-row items-center justify-between text-12 text-primary">
+          {t('remaining_count')}: {remainingCount}
+          <AddItem
+            itemCount={count ?? 0}
+            onAdd={handleAdd}
+            onRemove={handleRemove}
+            isDisabledAddButton={isDisabledAddButton}
+            isDisabledRemoveButton={isDisabledRemoveButton}
+          />
+        </div>
+      )}
+    </div>
+  );
+}

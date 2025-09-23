@@ -1,9 +1,13 @@
+import AddCart from './add-cart.svg';
+import AddIcon from './add-icon.svg';
 import Alarm from './alarm.svg';
 import ArrowRight from './arrow-right.svg';
 import AsteristkDisabledIcon from './asterisk-disabled.svg';
 import AsteristkIcon from './asterisk.svg';
 import BaselineError from './baseline-error.svg';
+import Cart from './cart.svg';
 import Cash from './cash.svg';
+import CheckFill from './check-fill.svg';
 import Check from './check.svg';
 import CheckBoxFilled from './checkbox-filled.svg';
 import CheckBox from './checkbox.svg';
@@ -35,17 +39,22 @@ import SocialApple from './social-apple.svg';
 import SocialGoogle from './social-google.svg';
 import SocialKakaoTalk2 from './social-kakao-talk-2.svg';
 import SocialKakaoTalk from './social-kakao-talk.svg';
+import SubtractIcon from './subtract-icon.svg';
 import TipDisabledIcon from './tip-disabled.svg';
 import TipIcon from './tip.svg';
 import Trash from './trash.svg';
 
 export {
+  AddCart,
+  AddIcon,
   Alarm,
   ArrowRight,
   AsteristkDisabledIcon,
   AsteristkIcon,
   BaselineError,
+  Cart,
   Cash,
+  CheckFill,
   Check,
   CheckBox,
   CheckBoxFilled,
@@ -77,6 +86,7 @@ export {
   SocialGoogle,
   SocialKakaoTalk,
   SocialKakaoTalk2,
+  SubtractIcon,
   TipDisabledIcon,
   TipIcon,
   Trash,

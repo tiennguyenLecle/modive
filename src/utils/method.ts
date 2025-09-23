@@ -101,7 +101,7 @@ export const filterMessageConditions = (
   return false;
 };
 
-export const getPublicUrl = (key?: string) => {
+export const getPublicUrl = (key?: string | null) => {
   if (!key) return '';
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/medias/${key}`;
 };

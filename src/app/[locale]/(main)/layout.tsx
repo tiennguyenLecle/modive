@@ -32,7 +32,7 @@ export default function Layout({ children }: Props) {
         <div className="page-wrapper">
           <Provider>{children}</Provider>
         </div>
-        <div className="navigation-wrapper">
+        <div className="navigation-wrapper z-10">
           <Navigation />
         </div>
       </div>

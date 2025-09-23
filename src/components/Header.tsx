@@ -4,7 +4,14 @@ import { ComponentProps, useEffect, useMemo } from 'react';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 
-import { Alarm, ArrowRight, Cash, LogoMoit, Search } from '@/assets/icons';
+import {
+  Alarm,
+  ArrowRight,
+  Cart,
+  Cash,
+  LogoMoit,
+  Search,
+} from '@/assets/icons';
 import { messageCountAtom, roomListAtom } from '@/atoms/messagesAtom';
 import { Badge } from '@/components';
 import { useServiceWorkerMessages } from '@/hooks/useServiceWorkerMessages';
@@ -26,6 +33,7 @@ type HomeHeaderProps = ComponentProps<'header'> & {
   showSearchIcon?: boolean;
   showAlarmIcon?: boolean;
   showCashIcon?: boolean;
+  showCartIcon?: boolean;
   showLogoText?: boolean;
   showBackButton?: boolean;
   onClickBackButton?: () => void;
@@ -37,6 +45,7 @@ const Header = ({
   showSearchIcon,
   showAlarmIcon,
   showCashIcon,
+  showCartIcon,
   showLogoText,
   showBackButton,
   onClickBackButton,
@@ -87,7 +96,9 @@ const Header = ({
 
   const titlePaddingX = useMemo(() => {
     const paddingRight =
-      [showSearchIcon, showAlarmIcon, showCashIcon].filter(Boolean).length * 32;
+      [showSearchIcon, showAlarmIcon, showCashIcon, showCartIcon].filter(
+        Boolean
+      ).length * 32;
 
     const paddingLeft = showLogoText ? 80 : 0 + (showBackButton ? 24 : 0);
 
@@ -103,6 +114,7 @@ const Header = ({
     showSearchIcon,
     showAlarmIcon,
     showCashIcon,
+    showCartIcon,
     showLogoText,
     showBackButton,
   ]);
@@ -148,7 +160,7 @@ const Header = ({
         </h2>
       )}
 
-      {(showSearchIcon || showAlarmIcon || showCashIcon) && (
+      {(showSearchIcon || showAlarmIcon || showCashIcon || showCartIcon) && (
         <div className="absolute right-16 flex items-center gap-12">
           {showSearchIcon && (
             <Link href="#">
@@ -165,6 +177,11 @@ const Header = ({
           {showCashIcon && (
             <Link href={ROUTES.MANAGEMENT.MY_CASH}>
               <Cash width={24} height={24} />
+            </Link>
+          )}
+          {showCartIcon && (
+            <Link href="#">
+              <Cart width={24} height={24} className="text-gray-00" />
             </Link>
           )}
         </div>

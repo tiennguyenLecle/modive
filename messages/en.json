@@ -129,6 +129,49 @@
     "metadata": {
       "title": "Goods",
       "description": "View your goods"
+    },
+    "work": {
+      "metadata": {
+        "title": "Goods list of {workTitle}",
+        "description": "View goods of {workTitle}"
+      }
+    },
+    "good_detail": {
+      "metadata": {
+        "title": "Good details of {goodTitle}",
+        "description": "View good details of {goodTitle}"
+      },
+      "tabs": {
+        "detail": {
+          "title": "Detail",
+          "show_more": "Show more",
+          "show_less": "Show less"
+        },
+        "purchase_info": {
+          "title": "Purchase Info"
+        }
+      },
+      "good_thumbnail_alt": "Thumbnail image of { title }",
+      "price": "{price} won",
+      "remaining_quantity": "The remaining quantity: {quantity}",
+      "shipping_fee_description": "(Free shipping when purchasing more than {free_shipping_threshold} won)",
+      "pre_sale_badge": "Pre-sale product.",
+      "pre_sale_description": "The scheduled delivery date is {release_date}.",
+      "purchase_button": "purchase",
+      "free_shipping": "Free shipping",
+      "shipping_cost": "Shipping cost {cost} won",
+      "alert_sign_up": {
+        "title": "alarm",
+        "non_member_search": "Non-member search",
+        "join_membership": "Join the membership",
+        "description": "You can purchase after signing up."
+      },
+      "complete_shopping_cart": {
+        "title": "Completion of shopping cart",
+        "shopping_cart": "Shopping cart",
+        "continue_shopping": "Continuing shopping",
+        "description": "The goods are normally contained in the cart."
+      }
     }
   },
   "me_page": {

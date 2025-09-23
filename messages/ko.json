@@ -129,6 +129,49 @@
     "metadata": {
       "title": "굿즈",
       "description": "굿즈를 확인하세요"
+    },
+    "work": {
+      "metadata": {
+        "title": "{workTitle} 상품 목록",
+        "description": "{workTitle} 상품 보기"
+      }
+    },
+    "good_detail": {
+      "metadata": {
+        "title": "{goodTitle} 상품 상세 정보",
+        "description": "{goodTitle} 상품 상세 정보 보기"
+      },
+      "tabs": {
+        "detail": {
+          "title": "상세 정보",
+          "show_more": "더 보기",
+          "show_less": "간단히 보기"
+        },
+        "purchase_info": {
+          "title": "구매 정보"
+        }
+      },
+      "good_thumbnail_alt": "{title} 상품 썸네일 이미지",
+      "price": "{price}원",
+      "remaining_quantity": "남은 수량: {quantity}",
+      "shipping_cost": "배송비 {cost} 원",
+      "shipping_fee_description": "({free_shipping_threshold}원 이상 구매시 무료 배송)",
+      "pre_sale_badge": "예약 판매 상품입니다.",
+      "pre_sale_description": "예정 배송일은 {release_date}입니다.",
+      "purchase_button": "구매하기",
+      "free_shipping": "무료 배송",
+      "alert_sign_up": {
+        "title": "알림",
+        "non_member_search": "비회원 탐색",
+        "join_membership": "회원가입",
+        "description": "회원가입 후 구매 가능합니다."
+      },
+      "complete_shopping_cart": {
+        "title": "장바구니 담기 완료",
+        "shopping_cart": "장바구니 이동",
+        "continue_shopping": "쇼핑 계속하기",
+        "description": "장바구니에 상품이 정상적으로 담겼습니다."
+      }
     }
   },
   "me_page": {

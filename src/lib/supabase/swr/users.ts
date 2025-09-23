@@ -72,3 +72,23 @@ export async function updateNewMsgCountUser(
   if (error) throw error;
   return data as UserType;
 }
+
+export async function increaseCash(
+  supabase: SupabaseClient,
+  userId: string,
+  amount: number
+) {
+  const currentCoins = (await fetchUserDetail(supabase, userId))?.coins || 0;
+
+  const { data, error } = await supabase
+    .from('users')
+    .update({
+      coins: currentCoins + amount,
+      // coins: 0,
+    })
+    .eq('id', userId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as UserType;
+}

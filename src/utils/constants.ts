@@ -9,6 +9,8 @@ export const COOKIE_PREFIX_SB_ADMIN = 'modive.admin-auth_token';
 
 export const STORAGE = {
   HIDE_GUIDE_TO_USE: 'hide_guide_to_use',
+  PAYMENT_SUCCESS_CALLBACK: 'payment_success_callback',
+  EPISODES_PENDING_PAYMENT: 'episodes_pending_payment',
 };
 
 export const ROUTES = {
@@ -50,3 +52,34 @@ export const SOCIAL_PROVIDERS = {
   GOOGLE: 'google',
   APPLE: 'apple',
 };
+
+export const CASH_CHARGING_OPTIONS = [
+  {
+    cash: 1000,
+    price: 1200,
+  },
+  {
+    cash: 3000,
+    price: 3600,
+  },
+  {
+    cash: 5000,
+    price: 6000,
+  },
+  {
+    cash: 10000,
+    price: 12000,
+  },
+  {
+    cash: 30000,
+    price: 36000,
+  },
+  {
+    cash: 50000,
+    price: 60000,
+  },
+  {
+    cash: 100000,
+    price: 120000,
+  },
+];

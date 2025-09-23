@@ -8,6 +8,8 @@ import { Button } from '@/components';
 import CheckboxComponent from '@/components/Checkbox';
 import { useMeExtraData } from '@/hooks/useUser';
 import { useAuth } from '@/lib/authentication/auth-context';
+import { useRouter } from '@/lib/navigation';
+import { ROUTES, STORAGE } from '@/utils/constants';
 
 import { ExtendedEpisodeType } from '../../_actions/episode';
 import { useEpisodeContext } from '../Episode';
@@ -66,6 +68,7 @@ const ModalPurchase = React.forwardRef<ModalPurchaseRef, ModalPurchaseProps>(
     const { workDetail } = useWork();
     const [isOpen, setIsOpen] = useState(false);
     const [dragOffset, setDragOffset] = useState(0);
+    const router = useRouter();
 
     const {
       isSelectionMode,
@@ -259,8 +262,8 @@ const ModalPurchase = React.forwardRef<ModalPurchaseRef, ModalPurchaseProps>(
                       </Button>
                     ) : (
                       <>
-                        <Button disabled>{t('insufficient_balance')}</Button>
-                        {/* <Button
+                        {/* <Button disabled>{t('insufficient_balance')}</Button>
+                        <Button
                           className="mb-12 h-48"
                           loading={
                             orderEpisodes.isMutating ||
@@ -268,7 +271,7 @@ const ModalPurchase = React.forwardRef<ModalPurchaseRef, ModalPurchaseProps>(
                           }
                         >
                           {t('auto_charging_at_a_cheaper')}
-                        </Button>
+                        </Button> */}
                         <Button
                           variant="secondary"
                           className="h-48"
@@ -276,9 +279,21 @@ const ModalPurchase = React.forwardRef<ModalPurchaseRef, ModalPurchaseProps>(
                             orderEpisodes.isMutating ||
                             episodeInfinite.isValidating
                           }
+                          onClick={() => {
+                            const { pathname, search, hash } = window.location;
+                            sessionStorage.setItem(
+                              STORAGE.PAYMENT_SUCCESS_CALLBACK,
+                              `${pathname.replace(/^\/(en|ko)/, '')}${search}${hash}`
+                            );
+                            sessionStorage.setItem(
+                              STORAGE.EPISODES_PENDING_PAYMENT,
+                              JSON.stringify(selectedEpisodes)
+                            );
+                            router.push(ROUTES.MANAGEMENT.MY_CASH);
+                          }}
                         >
                           {t('general_charging')}
-                        </Button> */}
+                        </Button>
                       </>
                     )}
                   </div>

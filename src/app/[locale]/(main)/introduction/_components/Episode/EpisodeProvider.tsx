@@ -4,15 +4,14 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from 'react';
-import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 
-import { useAuth } from '@/lib/authentication/auth-context';
 import { useRouter } from '@/lib/navigation';
-import { ROUTES } from '@/utils/constants';
+import { STORAGE } from '@/utils/constants';
 
 import { ExtendedEpisodeType } from '../../_actions/episode';
 import { useEpisodes, useOrderEpisodes } from '../../_hooks/useEpisode';
@@ -131,9 +130,6 @@ export const EpisodeProvider: React.FC<EpisodeProviderProps> = ({
   // Episode actions
   const handleEpisodeClick = useCallback(
     (episode: ExtendedEpisodeType) => {
-      router.push(ROUTES.MANAGEMENT.MY_CASH);
-      return;
-
       if (isSelectionMode) {
         if (!episode.is_ordered) {
           _toggleEpisodeSelection(episode);
@@ -200,7 +196,22 @@ export const EpisodeProvider: React.FC<EpisodeProviderProps> = ({
     ]
   );
 
-  console.log('selectedEpisodes:', selectedEpisodes);
+  useEffect(() => {
+    const storageEpisodesPendingPayment = sessionStorage.getItem(
+      STORAGE.EPISODES_PENDING_PAYMENT
+    );
+
+    // console.log(
+    //   'storageEpisodesPendingPayment:',
+    //   storageEpisodesPendingPayment
+    // );
+    if (storageEpisodesPendingPayment) {
+      const selectedEpisodes = JSON.parse(storageEpisodesPendingPayment);
+      setSelectedEpisodes(selectedEpisodes);
+      sessionStorage.removeItem(STORAGE.EPISODES_PENDING_PAYMENT);
+      modalPurchaseRef.current?.open(selectedEpisodes);
+    }
+  }, []);
 
   const contextValue: EpisodeContextType = {
     // Selection state

@@ -2,41 +2,11 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import { Button, Footer } from '@/components';
 import { generateClientOrderId, openCardPayment } from '@/lib/toss/payments';
+import { CASH_CHARGING_OPTIONS } from '@/utils/constants';
 
 const CashClient = () => {
   const t = useTranslations('my-cash');
   const locale = useLocale();
-
-  const options = [
-    {
-      cash: 1000,
-      price: 1200,
-    },
-    {
-      cash: 3000,
-      price: 3600,
-    },
-    {
-      cash: 5000,
-      price: 6000,
-    },
-    {
-      cash: 10000,
-      price: 12000,
-    },
-    {
-      cash: 30000,
-      price: 36000,
-    },
-    {
-      cash: 50000,
-      price: 60000,
-    },
-    {
-      cash: 100000,
-      price: 120000,
-    },
-  ];
 
   return (
     <>
@@ -47,7 +17,7 @@ const CashClient = () => {
         </div>
 
         <div className="flex flex-col">
-          {options.map(option => (
+          {CASH_CHARGING_OPTIONS.map(option => (
             <div
               key={option.cash}
               className="flex items-center justify-between border-b border-gray-80 p-8 px-16 py-12 text-14 font-semibold text-gray-50"

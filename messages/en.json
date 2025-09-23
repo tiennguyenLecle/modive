@@ -325,7 +325,11 @@
         "check": "check"
       },
       "page_title": "Cash charging",
-      "title": "The charging is complete."
+      "title": "The charging is complete.",
+      "charging_amount": "{value} won",
+      "cash_holding": "Cash holding after charging",
+      "cash_amount": "{value} Cash",
+      "charging": "Charging"
     }
   }
 }

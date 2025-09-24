@@ -1,4 +1,5 @@
 import { CartItemType } from '@/lib/supabase/swr/cart';
+import { getPublicUrl } from '@/utils/method';
 
 export const mappedCartItems = (
   items: CartItemType[],
@@ -12,7 +13,7 @@ export const mappedCartItems = (
 
     return {
       id,
-      image: good?.url,
+      image: good?.thumbnail_key ? getPublicUrl(good?.thumbnail_key) : '',
       title: good?.title,
       price: good?.price,
       shippingFee: good?.delivery_fee,

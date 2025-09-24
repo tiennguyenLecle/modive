@@ -185,10 +185,10 @@ export default function ShippingForm() {
         form={form}
         onValuesChange={onValuesChange}
       >
-        <Form.Item name="receiver_name" label={t('conferee')}>
+        <Form.Item name="receiver_name" label={t('conferee')} required>
           <Input placeholder={t('conferee_placeholder')} />
         </Form.Item>
-        <Form.Item name="phone_number" label={t('phone_number')}>
+        <Form.Item name="phone_number" label={t('phone_number')} required>
           <Input placeholder={t('phone_number_placeholder')} type="number" />
         </Form.Item>
         <Form.Item name="postal_code" label={t('postal_code')}>
@@ -199,7 +199,7 @@ export default function ShippingForm() {
           />
         </Form.Item>
         <div id="daumPostcodeEmbed" className="mb-24" />
-        <Form.Item name="address" label={t('detail_address')}>
+        <Form.Item name="address" label={t('detail_address')} required>
           <Input.TextArea />
         </Form.Item>
         <Form.Item

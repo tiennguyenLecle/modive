@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { notification } from 'antd';
 import { useAtomValue } from 'jotai';
 import { useTranslations } from 'next-intl';
@@ -33,6 +33,7 @@ export default function Ordering() {
   const isAgreement = useAtomValue<boolean>(isAgreementAtom);
   const shippingForm = useAtomValue(shippingFormAtom);
   const paymentWidget = useAtomValue(paymentWidgetAtom);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
   useEffect(() => {
     if (!myCartValue) {
@@ -53,37 +54,50 @@ export default function Ordering() {
   const paymentAmount = productAmount + deliveryFee;
 
   const onFinishShippingForm = async () => {
-    const response: any = await createOrder({
-      items: myCartValue?.items,
-      shipping_info: {
-        address: shippingForm,
-      },
-      payment_method: paymentMethod || '',
-    });
-    if (!response?.data) {
+    setIsPaymentLoading(true);
+    try {
+      const response: any = await createOrder({
+        items: myCartValue?.items,
+        shipping_info: {
+          address: shippingForm,
+        },
+        payment_method: paymentMethod || '',
+      });
+      if (!response?.data) {
+        notification.error({
+          message: response?.error,
+        });
+        return;
+      }
+      const order = response?.data;
+
+      if (order) {
+        setIsPaymentLoading(false);
+        await paymentWidget.requestPayment({
+          orderId: order?.id,
+          orderName: order?.id,
+          successUrl:
+            window.location.origin + '/ordering/success?order_id=' + order?.id,
+          failUrl: window.location.origin + '/ordering/failed',
+          customerEmail: order?.shipping_info?.email,
+          customerName: order?.shipping_info?.receiver_name,
+        });
+      }
+    } catch (error) {
+      setIsPaymentLoading(false);
       notification.error({
-        message: response?.error,
+        message: '결제 중 오류가 발생했습니다.',
       });
       return;
-    }
-    const order = response?.data;
-
-    if (order) {
-      await paymentWidget.requestPayment({
-        orderId: order?.id,
-        orderName: order?.id,
-        successUrl:
-          window.location.origin + '/ordering/success?order_id=' + order?.id,
-        failUrl: window.location.origin + '/ordering/failed',
-        customerEmail: order?.shipping_info?.email,
-        customerName: order?.shipping_info?.receiver_name,
-      });
     }
   };
 
   const hasEmptyShippingForm = () => {
     return (
-      !shippingForm || !shippingForm.receiver_name || !shippingForm.address
+      !shippingForm ||
+      !shippingForm.receiver_name ||
+      !shippingForm.address ||
+      !shippingForm.phone_number
     );
   };
 
@@ -139,8 +153,10 @@ export default function Ordering() {
             className="w-full"
             disabled={isDisabledOrderBtn()}
             onClick={onFinishShippingForm}
+            loading={isPaymentLoading}
           >
-            {paymentAmount} {t('won')} {t('payment')}
+            {paymentAmount?.toLocaleString()}
+            {t('won')} {t('payment')}
           </Button>
         </div>
       </div>

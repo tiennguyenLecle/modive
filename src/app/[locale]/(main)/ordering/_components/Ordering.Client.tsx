@@ -76,8 +76,7 @@ export default function Ordering() {
         await paymentWidget.requestPayment({
           orderId: order?.id,
           orderName: order?.id,
-          successUrl:
-            window.location.origin + '/ordering/success?order_id=' + order?.id,
+          successUrl: window.location.origin + '/ordering/success',
           failUrl: window.location.origin + '/ordering/failed',
           customerEmail: order?.shipping_info?.email,
           customerName: order?.shipping_info?.receiver_name,

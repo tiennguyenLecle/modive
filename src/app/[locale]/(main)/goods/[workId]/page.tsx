@@ -3,7 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import GoodsGrid from '@/app/[locale]/(main)/goods/[workId]/_components/GoodsGrid';
 import { Header } from '@/components';
 import { createServerSupabase } from '@/lib/supabase/factory.server';
-import { fetchWorkGoods } from '@/lib/supabase/swr/goods';
+import { fetchWorkGoods, fetchWorksWithGoods } from '@/lib/supabase/swr/goods';
 
 export async function generateMetadata({
   params,
@@ -25,22 +25,23 @@ type ListGoodsWithWorkIdProps = {
 };
 
 const ListGoodsWithWorkId = async (props: ListGoodsWithWorkIdProps) => {
-  const { params } = props;
-  const { workId } = params;
+  const {
+    params: { workId },
+  } = props;
   const supabase = createServerSupabase('user');
   const workGoods = await fetchWorkGoods(supabase, workId);
 
   return (
     <>
       <Header
-        pageTitle={workGoods.work_title}
+        pageTitle={workGoods?.work_title}
         showSearchIcon
         showCartIcon
         showBackButton
         className="border-b border-gray-80"
       />
       <main>
-        <GoodsGrid workId={workId} goods={workGoods.goods} />
+        <GoodsGrid workId={workId} />
       </main>
     </>
   );

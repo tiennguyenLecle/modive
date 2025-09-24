@@ -1,41 +1,45 @@
 'use client';
 
 import React, { useMemo, useRef } from 'react';
-import dayjs from 'dayjs';
 import { useSetAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import useSWRMutation from 'swr/mutation';
 
 import AlertSignUpModal from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/modals/AlertSignUp';
 import CompleteShoppingCartModal from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/modals/CompleteShoppingCart';
 import DetailTab from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/tabs/DetailTab';
 import PurchaseInfoTab from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/tabs/PurchaseInfoTab';
-import { AddCart, Heart, Info } from '@/assets/icons';
+import { AddCart, Heart } from '@/assets/icons';
 import { myCartAtom } from '@/atoms/goodsAtom';
 import { Button, ChangeQuantity, MenuTab, PreOrderInfo } from '@/components';
+import { useGoodDetail, useGoodLike } from '@/hooks/useGoods';
 import { useHashRoute } from '@/hooks/useHashRoute';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { useRouter } from '@/lib/navigation';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { getMyCart, updateMyCart } from '@/lib/supabase/swr/cart';
-import { GoodType } from '@/types/goods';
 import { ROUTES } from '@/utils/constants';
-import { cx } from '@/utils/method';
+import { cx, getPublicUrl } from '@/utils/method';
 
 type Props = {
-  goodDetail: GoodType & { is_liked: boolean };
+  goodId: string;
   workId: string;
 };
 
-const GoodDetail = ({ goodDetail, workId }: Props) => {
+const GoodDetail = ({ goodId }: Props) => {
   const { user } = useAuth();
   const router = useRouter();
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
   const [activeTab, setActiveTab] = useHashRoute('detail');
   const [quantity, setQuantity] = React.useState(1);
-  const { delivery_fee, free_shipping_threshold, id } = goodDetail;
   const setMyCartValue = useSetAtom(myCartAtom);
+  const { data: goodDetail, mutate: mutateGoodDetail } = useGoodDetail(
+    supabase,
+    goodId
+  );
 
+  const { delivery_fee, free_shipping_threshold, price, id } = goodDetail || {};
   const addToCart = useSWRMutation(
     'addToCart',
     async () => {
@@ -78,6 +82,7 @@ const GoodDetail = ({ goodDetail, workId }: Props) => {
     });
     router.push(ROUTES.ORDERING);
   });
+  const { trigger: toggleGoodLike } = useGoodLike(supabase, user?.id || '');
 
   const t = useTranslations('goods_page.good_detail');
 
@@ -87,18 +92,19 @@ const GoodDetail = ({ goodDetail, workId }: Props) => {
   const alertSignUpModalRef =
     useRef<React.ElementRef<typeof AlertSignUpModal>>(null);
 
-  const itemDeliveryFee = useMemo(() => {
-    const subtotal = goodDetail.price * quantity;
-
-    if (subtotal > (goodDetail?.free_shipping_threshold ?? Infinity)) {
-      return 0;
-    }
-
-    return goodDetail?.delivery_fee ?? 0;
-  }, [goodDetail, quantity]);
+  if (!goodDetail) return null;
 
   return (
     <>
+      <div className="relative aspect-[360/232] w-full">
+        <Image
+          src={getPublicUrl(goodDetail?.thumbnail_key || '')}
+          alt={goodDetail?.title || 'Good Detail'}
+          priority
+          className="object-cover"
+          fill
+        />
+      </div>
       <div className="flex flex-col gap-16 p-16">
         <div className="flex w-full items-start justify-between gap-8 py-8">
           <h1 className="text-16 font-semibold -tracking-0.6 text-gray-00">
@@ -106,13 +112,19 @@ const GoodDetail = ({ goodDetail, workId }: Props) => {
           </h1>
           <Heart
             className={cx(
-              'shrink-0',
+              'shrink-0 cursor-pointer',
               goodDetail.is_liked
                 ? 'stroke-primary text-primary'
                 : 'stroke-gray-30 text-white'
             )}
             width={32}
             height={32}
+            onClick={() => {
+              toggleGoodLike({
+                isLiked: goodDetail.is_liked,
+                goodId: goodDetail.id,
+              }).then(() => mutateGoodDetail());
+            }}
           />
         </div>
         <div className="flex w-full items-start justify-between">

@@ -35,10 +35,6 @@ export const fetchWorksWithGoods = async (
   offset: number;
   limit: number;
 }> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const { count, data, error } = await supabase
     .from('work_goods')
     .select('*', { count: 'exact' })

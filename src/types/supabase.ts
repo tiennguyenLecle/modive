@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: '13.0.4';
   };
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       _migrations: {
@@ -164,6 +189,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'users';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'cart_items_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
           },
           {
             foreignKeyName: 'cart_items_work_id_works_id_fk';
@@ -323,6 +355,13 @@ export type Database = {
             foreignKeyName: 'chapter_characters_character_id_works_id_fk';
             columns: ['character_id'];
             isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
+          },
+          {
+            foreignKeyName: 'chapter_characters_character_id_works_id_fk';
+            columns: ['character_id'];
+            isOneToOne: false;
             referencedRelation: 'works';
             referencedColumns: ['id'];
           },
@@ -390,6 +429,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'medias';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'chapters_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
           },
           {
             foreignKeyName: 'chapters_work_id_works_id_fk';
@@ -539,6 +585,13 @@ export type Database = {
             foreignKeyName: 'characters_work_id_works_id_fk';
             columns: ['work_id'];
             isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
+          },
+          {
+            foreignKeyName: 'characters_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
             referencedRelation: 'works';
             referencedColumns: ['id'];
           },
@@ -645,6 +698,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'users';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'chat_rooms_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
           },
           {
             foreignKeyName: 'chat_rooms_work_id_works_id_fk';
@@ -800,6 +860,13 @@ export type Database = {
             foreignKeyName: 'comments_work_id_works_id_fk';
             columns: ['work_id'];
             isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
+          },
+          {
+            foreignKeyName: 'comments_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
             referencedRelation: 'works';
             referencedColumns: ['id'];
           },
@@ -861,6 +928,13 @@ export type Database = {
           work_id?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: 'episodes_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
+          },
           {
             foreignKeyName: 'episodes_work_id_works_id_fk';
             columns: ['work_id'];
@@ -1069,6 +1143,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'medias';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'goods_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
           },
           {
             foreignKeyName: 'goods_work_id_works_id_fk';
@@ -1365,6 +1446,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'users';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'order_items_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
           },
           {
             foreignKeyName: 'order_items_work_id_works_id_fk';
@@ -1976,6 +2064,13 @@ export type Database = {
             foreignKeyName: 'work_categories_work_id_works_id_fk';
             columns: ['work_id'];
             isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
+          },
+          {
+            foreignKeyName: 'work_categories_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
             referencedRelation: 'works';
             referencedColumns: ['id'];
           },
@@ -2001,6 +2096,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'users';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'work_likes_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
           },
           {
             foreignKeyName: 'work_likes_work_id_works_id_fk';
@@ -2036,6 +2138,13 @@ export type Database = {
             foreignKeyName: 'work_medias_work_id_works_id_fk';
             columns: ['work_id'];
             isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
+          },
+          {
+            foreignKeyName: 'work_medias_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
             referencedRelation: 'works';
             referencedColumns: ['id'];
           },
@@ -2055,6 +2164,13 @@ export type Database = {
           work_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'work_storage_objects_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
+          },
           {
             foreignKeyName: 'work_storage_objects_work_id_works_id_fk';
             columns: ['work_id'];
@@ -2210,8 +2326,41 @@ export type Database = {
         };
         Relationships: [];
       };
+      work_goods: {
+        Row: {
+          goods: Json | null;
+          total_goods: number | null;
+          work_id: string | null;
+          work_title: string | null;
+        };
+        Insert: {
+          goods?: never;
+          total_goods?: never;
+          work_id?: string | null;
+          work_title?: string | null;
+        };
+        Update: {
+          goods?: never;
+          total_goods?: never;
+          work_id?: string | null;
+          work_title?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
+      get_latest_interface: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      get_my_cart: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      get_work_details_by_id: {
+        Args: { p_work_id: string };
+        Returns: Json;
+      };
       is_admin: {
         Args: { uid: string };
         Returns: boolean;
@@ -2219,6 +2368,10 @@ export type Database = {
       is_sys_admin: {
         Args: { uid: string };
         Returns: boolean;
+      };
+      update_my_cart: {
+        Args: { p_payload: Json };
+        Returns: Json;
       };
       update_subscription_status: {
         Args: Record<PropertyKey, never>;

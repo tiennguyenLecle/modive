@@ -2,9 +2,11 @@
 
 import { useMemo } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { ArrowRight, Heart } from '@/assets/icons';
-import { useWorksWithGoods } from '@/hooks/useGoods';
+import { useGoodLike, useWorksWithGoods } from '@/hooks/useGoods';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { Link } from '@/lib/navigation';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { cx } from '@/utils/method';
@@ -13,7 +15,11 @@ type Props = {};
 
 const GoodsClient = (props: Props) => {
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
-  const { data: works } = useWorksWithGoods(supabase);
+  const { data: works, mutate: mutateWorks } = useWorksWithGoods(supabase);
+  const router = useRouter();
+
+  const { user } = useAuth();
+  const { trigger: toggleGoodLike } = useGoodLike(supabase, user?.id || '');
 
   return (
     <>
@@ -52,7 +58,7 @@ const GoodsClient = (props: Props) => {
                 >
                   <div
                     className={
-                      'rounded as relative aspect-square w-120 cursor-pointer overflow-hidden rounded-4 border border-gray-80 bg-gray-100'
+                      'rounded relative aspect-square w-120 overflow-hidden rounded-4 border border-gray-80 bg-gray-100'
                     }
                   >
                     {good.thumbnail_key ? (
@@ -81,13 +87,21 @@ const GoodsClient = (props: Props) => {
                     </p>
                     <Heart
                       className={cx(
-                        'shrink-0',
+                        'shrink-0 transition-colors duration-200 hover:stroke-primary hover:text-primary',
                         good.is_liked
                           ? 'stroke-primary text-primary'
                           : 'stroke-gray-30 text-white'
                       )}
                       width={24}
                       height={24}
+                      onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        toggleGoodLike({
+                          isLiked: good.is_liked,
+                          goodId: good.id,
+                        }).then(() => mutateWorks());
+                      }}
                     />
                   </div>
                 </Link>

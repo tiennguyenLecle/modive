@@ -4,6 +4,8 @@ import { useTranslations } from 'next-intl';
 
 import { CheckFill } from '@/assets/icons';
 import { Modal } from '@/components';
+import { useRouter } from '@/lib/navigation';
+import { ROUTES } from '@/utils/constants';
 
 const { Text } = Typography;
 
@@ -19,6 +21,7 @@ const CompleteShoppingCartModal = React.forwardRef<
   CompleteShoppingCartProps
 >((_, ref) => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const t = useTranslations('goods_page.good_detail.complete_shopping_cart');
 
@@ -51,7 +54,7 @@ const CompleteShoppingCartModal = React.forwardRef<
           <button
             className="flex h-40 w-full items-center justify-center gap-8 overflow-hidden whitespace-nowrap rounded-4 border border-gray-70 bg-gray-100 p-12 text-gray-00"
             onClick={() => {
-              alert('Open Shopping Cart');
+              router.push(ROUTES.SHOPPING_CART);
             }}
           >
             {t('shopping_cart')}

@@ -12,7 +12,6 @@ type NavItemProps = ComponentProps<typeof Link> & {
   activeIcon?: React.ReactNode;
   text: string;
   activePaths?: string[];
-  disabled?: boolean;
 };
 
 export default function NavItem({
@@ -21,7 +20,6 @@ export default function NavItem({
   activeIcon,
   text,
   activePaths = [],
-  disabled = false,
   ...rest
 }: NavItemProps) {
   const pathname = usePathname();
@@ -32,7 +30,6 @@ export default function NavItem({
     : pathname === href || activePaths.some(path => pathname.startsWith(path));
 
   const handleClick = () => {
-    if (disabled) return;
     NProgress.start();
   };
 
@@ -42,19 +39,12 @@ export default function NavItem({
       {...rest}
       className={cx(
         isActive && 'active',
-        'leading-none group flex flex-1 flex-col items-center justify-center text-11 font-normal text-gray-50 transition-colors duration-300',
-        !disabled && 'hover:text-primary active:text-primary',
-        disabled && 'cursor-not-allowed'
+        'leading-none group flex flex-1 flex-col items-center justify-center text-11 font-normal text-gray-50 transition-colors duration-300 hover:text-primary active:text-primary'
       )}
       onClick={handleClick}
       prefetch={true}
     >
-      <span
-        className={cx(
-          'mb-2 transition-all duration-300',
-          !disabled && 'group-hover:-translate-y-2'
-        )}
-      >
+      <span className="mb-2 transition-all duration-300 group-hover:-translate-y-2">
         {isActive && activeIcon ? activeIcon : icon}
       </span>
       <span>{text}</span>

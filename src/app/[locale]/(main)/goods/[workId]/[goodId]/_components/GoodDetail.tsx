@@ -2,21 +2,24 @@
 
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
+import { useSetAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
 import useSWRMutation from 'swr/mutation';
 
-import ChangeQuantity from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/ChangeQuantity';
 import AlertSignUpModal from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/modals/AlertSignUp';
 import CompleteShoppingCartModal from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/modals/CompleteShoppingCart';
 import DetailTab from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/tabs/DetailTab';
 import PurchaseInfoTab from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/tabs/PurchaseInfoTab';
 import { AddCart, Heart, Info } from '@/assets/icons';
-import { Button, MenuTab } from '@/components';
+import { myCartAtom } from '@/atoms/goodsAtom';
+import { Button, ChangeQuantity, MenuTab, PreOrderInfo } from '@/components';
 import { useHashRoute } from '@/hooks/useHashRoute';
 import { useAuth } from '@/lib/authentication/auth-context';
+import { useRouter } from '@/lib/navigation';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { getMyCart, updateMyCart } from '@/lib/supabase/swr/cart';
 import { GoodType } from '@/types/goods';
+import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
 type Props = {
@@ -26,35 +29,26 @@ type Props = {
 
 const GoodDetail = ({ goodDetail, workId }: Props) => {
   const { user } = useAuth();
+  const router = useRouter();
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
   const [activeTab, setActiveTab] = useHashRoute('detail');
   const [quantity, setQuantity] = React.useState(1);
-  const { delivery_fee, free_shipping_threshold, price, id } = goodDetail;
+  const { delivery_fee, free_shipping_threshold, id } = goodDetail;
+  const setMyCartValue = useSetAtom(myCartAtom);
+
   const addToCart = useSWRMutation(
     'addToCart',
     async () => {
       if (!user?.id) return;
-
       const cart = await getMyCart(supabase, user?.id);
-
-      const totalPrice = price * quantity;
-      const deliveryFee =
-        free_shipping_threshold && totalPrice > free_shipping_threshold
-          ? 0
-          : delivery_fee;
-
       const newItem = {
         cart_id: cart.id,
         item_type: 'good',
         good_id: id,
         quantity,
-        unit_price: price,
-        delivery_fee: deliveryFee,
-        total_price: totalPrice,
-        free_shipping_threshold: free_shipping_threshold,
-        is_selected: true,
+        is_selected: false,
       };
-      const newCartItems = [{ ...newItem }, ...cart.items];
+      const newCartItems = [newItem, ...cart.items];
       await updateMyCart(supabase, newCartItems);
     },
     {
@@ -63,6 +57,27 @@ const GoodDetail = ({ goodDetail, workId }: Props) => {
       },
     }
   );
+
+  const purchaseNow = useSWRMutation('purchaseNow', async () => {
+    if (!user?.id) return;
+
+    const cart = await getMyCart(supabase, user?.id);
+
+    setMyCartValue({
+      ...cart,
+      items: [
+        {
+          cart_id: cart.id,
+          item_type: 'good',
+          good_id: id,
+          quantity,
+          is_selected: true,
+          good: goodDetail,
+        },
+      ],
+    });
+    router.push(ROUTES.ORDERING);
+  });
 
   const t = useTranslations('goods_page.good_detail');
 
@@ -134,20 +149,10 @@ const GoodDetail = ({ goodDetail, workId }: Props) => {
           })}
         </p>
 
-        {goodDetail.is_pre_sale && (
-          <div className="flex-start mt-16 flex gap-4 rounded-4 border border-gray-80 bg-gray-90 px-8 py-12">
-            <Info className="text-gray-60" width={18} height={18} />
-            <p className="">
-              {t('pre_sale_badge')}
-              <br />
-              {t('pre_sale_description', {
-                release_date: dayjs(goodDetail.release_date).format(
-                  'MMMM D, YYYY'
-                ),
-              })}
-            </p>
-          </div>
-        )}
+        <PreOrderInfo
+          isPreSale={goodDetail.is_pre_sale}
+          releaseDate={goodDetail.release_date}
+        />
       </div>
 
       <div className="mx-16 h-1 bg-gray-80" />
@@ -175,11 +180,14 @@ const GoodDetail = ({ goodDetail, workId }: Props) => {
         <Button
           variant="secondary"
           className="h-48 !w-48"
-          onClick={() => {
-            addToCart.trigger();
+          onClick={async () => {
+            if (!user) {
+              alertSignUpModalRef.current?.open();
+            } else {
+              await addToCart.trigger();
+            }
           }}
-          loading={addToCart.isMutating}
-          disabled={addToCart.isMutating}
+          disabled={addToCart.isMutating || purchaseNow.isMutating}
         >
           <AddCart width={24} height={24} />
         </Button>
@@ -187,12 +195,14 @@ const GoodDetail = ({ goodDetail, workId }: Props) => {
         <Button
           variant="primary"
           className="h-48"
-          onClick={() => {
+          onClick={async () => {
             if (!user) {
               alertSignUpModalRef.current?.open();
+            } else {
+              await purchaseNow.trigger();
             }
           }}
-          disabled={addToCart.isMutating}
+          disabled={addToCart.isMutating || purchaseNow.isMutating}
         >
           {t('purchase_button')}
         </Button>

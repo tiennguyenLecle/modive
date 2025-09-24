@@ -26,7 +26,7 @@ const GoodDetailPage = async (props: Props) => {
       <div className="no-scrollbar h-[calc(100vh-56px)] overflow-auto">
         <div className="relative aspect-[360/232] w-full">
           <Image
-            src={getPublicUrl(goodDetail.thumbnail_key || '')}
+            src={getPublicUrl(goodDetail.thumbnail_key)}
             alt={goodDetail.title}
             priority
             className="object-cover"

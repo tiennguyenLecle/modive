@@ -102,14 +102,11 @@ const Header = ({
 
     const paddingLeft = showLogoText ? 80 : 0 + (showBackButton ? 24 : 0);
 
-    if (paddingLeft === 0) {
+    if (paddingLeft === 0 || paddingLeft < paddingRight) {
       return [paddingRight, paddingRight];
-    }
-    if (paddingRight === 0) {
+    } else {
       return [paddingLeft, paddingLeft];
     }
-
-    return [paddingRight, paddingLeft];
   }, [
     showSearchIcon,
     showAlarmIcon,
@@ -180,7 +177,7 @@ const Header = ({
             </Link>
           )}
           {showCartIcon && (
-            <Link href="#">
+            <Link href={ROUTES.SHOPPING_CART}>
               <Cart width={24} height={24} className="text-gray-00" />
             </Link>
           )}

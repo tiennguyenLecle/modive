@@ -1,0 +1,12 @@
+.purchaseInfoTab {
+  @apply bg-gray-90 p-24 text-12 font-normal leading-1.66 text-gray-30;
+  letter-spacing: -0.048rem;
+
+  h3 {
+    @apply font-semibold;
+  }
+
+  ul {
+    @apply list-disc pl-20;
+  }
+}

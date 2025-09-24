@@ -18,7 +18,7 @@ type GoodsGridProps = {
 const GoodsGrid = (props: GoodsGridProps) => {
   const { workId } = props;
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
-
+  const { checkAvailableUser } = useAuth();
   const t = useTranslations('goods_page');
   const router = useRouter();
 
@@ -47,7 +47,7 @@ const GoodsGrid = (props: GoodsGridProps) => {
                 t('good_detail.good_thumbnail_alt', { title: good.title })
               }
               fill
-              className="rounded-4 bg-gray-90"
+              className="rounded-4 bg-gray-90 object-cover"
             />
           </div>
           <div className="mb-4 flex items-center justify-between gap-4">
@@ -65,10 +65,14 @@ const GoodsGrid = (props: GoodsGridProps) => {
               height={24}
               onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
-                toggleGoodLike({
-                  isLiked: good.is_liked,
-                  goodId: good.id,
-                }).then(() => mutateGoods?.());
+                checkAvailableUser({
+                  description: t('good_detail.alert_sign_up.like'),
+                }).then(() => {
+                  toggleGoodLike({
+                    isLiked: good.is_liked,
+                    goodId: good.id,
+                  }).then(() => mutateGoods?.());
+                });
               }}
             />
           </div>

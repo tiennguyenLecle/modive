@@ -4,12 +4,14 @@ import { useTranslations } from 'next-intl';
 
 import { Check, Close, Direction } from '@/assets/icons';
 import CheckboxComponent from '@/components/Checkbox';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { cx } from '@/utils/method';
 
 import { useEpisodeContext } from './EpisodeProvider';
 
 const EpisodeHeader: React.FC = () => {
   const t = useTranslations('introduction');
+  const { checkAvailableUser } = useAuth();
   const {
     sortOption,
     setSortOption,
@@ -62,7 +64,13 @@ const EpisodeHeader: React.FC = () => {
       ) : (
         <button
           className="flex items-center gap-4 text-14 font-normal text-gray-00 disabled:text-gray-50"
-          onClick={() => setIsSelectionMode(true)}
+          onClick={() => {
+            checkAvailableUser({
+              description: t('episodes.alert_sign_up.select_episode'),
+            }).then(() => {
+              setIsSelectionMode(true);
+            });
+          }}
           disabled={episodes.length === 0 || unOrderedEpisodes.length === 0}
         >
           <span>{t('episodes.selection')}</span>

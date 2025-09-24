@@ -26,14 +26,14 @@ export function useEpisodes(
     previousPageData: CommentsResponseType | null
   ) => {
     if (
-      (previousPageData &&
-        previousPageData.metadata.currentPage >=
-          previousPageData.metadata.totalPages) ||
-      !user?.id
-    )
+      previousPageData &&
+      previousPageData.metadata.currentPage >=
+        previousPageData.metadata.totalPages
+    ) {
       return null;
+    }
     const page = pageIndex + 1;
-    return ['episodes', page, workId, sort, pageSize, user?.id] as const;
+    return ['episodes', page, workId, sort, pageSize] as const;
   };
 
   const infiniteEpisodes = useSWRInfinite(
@@ -44,7 +44,7 @@ export function useEpisodes(
         page,
         sort,
         limit,
-        is_ordered_user_id: user!.id,
+        is_ordered_user_id: user?.id,
       }),
     {
       revalidateAll: true,

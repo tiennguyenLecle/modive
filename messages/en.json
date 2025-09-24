@@ -80,7 +80,15 @@
     }
   },
   "navigation": {
-    "back_home": "Back Home"
+    "back_home": "Back Home",
+    "alert_sign_up": {
+      "login_to_use": "You can use this feature after logging in."
+    }
+  },
+  "header": {
+    "alert_sign_up": {
+      "login_to_use": "You can use this feature after logging in."
+    }
   },
   "default": {
     "metadata": {
@@ -164,7 +172,9 @@
         "title": "alarm",
         "non_member_search": "Non-member search",
         "join_membership": "Join the membership",
-        "description": "You can purchase after signing up."
+        "like": "You can like after signing up.",
+        "purchase": "You can purchase after signing up.",
+        "add_to_cart": "You can add to cart after signing up."
       },
       "complete_shopping_cart": {
         "title": "Completion of shopping cart",
@@ -217,7 +227,11 @@
         "latest_soon": "Latest Soon",
         "episode": "Episode"
       },
-      "empty": "There are no episodes."
+      "empty": "There are no episodes.",
+      "alert_sign_up": {
+        "read_episode": "You can read episode after signing up.",
+        "select_episode": "You can select episode after signing up."
+      }
     },
     "characters": {
       "empty": "There are no characters."
@@ -256,7 +270,10 @@
       "portrait": "Portrait",
       "selectWhenEntering": "Select when entering",
       "round": "{ value } round",
-      "introduction": "Introduction"
+      "introduction": "Introduction",
+      "alert_sign_up": {
+        "start_conversation": "You can start conversation after signing up."
+      }
     },
     "modal_guide_to_use": {
       "title": "Guide to use rules",
@@ -288,7 +305,10 @@
       "edit_comment": "Community posts modification",
       "new_comment": "Write a community article",
       "completion": "Completion",
-      "no_posts": "No posts"
+      "no_posts": "No posts",
+      "alert_sign_up": {
+        "new_comment": "You can write a comment after signing up."
+      }
     },
     "error": {
       "title": "Sorry, an error occurred!",
@@ -436,7 +456,7 @@
       },
       "page_title": "Cash charging",
       "title": "I failed to charge it.",
-      "description": "Payment was not processed normally. Please try again."
+      "description": "Payment was not processed normally.Please try again."
     },
     "success": {
       "button": {
@@ -449,5 +469,10 @@
       "cash_amount": "{value} Cash",
       "charging": "Charging"
     }
+  },
+  "modal_check_user": {
+    "alarm": "Alarm",
+    "join_the_membership": "Join the membership",
+    "non_member_search": "Non-member search"
   }
 }

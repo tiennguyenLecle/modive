@@ -8,9 +8,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 
-import { useRouter } from '@/lib/navigation';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { STORAGE } from '@/utils/constants';
 
 import { ExtendedEpisodeType } from '../../_actions/episode';
@@ -67,9 +68,10 @@ type EpisodeProviderProps = {
 export const EpisodeProvider: React.FC<EpisodeProviderProps> = ({
   children,
 }) => {
+  const t = useTranslations('introduction.episodes');
   const searchParams = useSearchParams();
   const workId = searchParams.get('workId');
-  const router = useRouter();
+  const { checkAvailableUser } = useAuth();
 
   // State
   const [sortOption, setSortOption] = useState<SortOption>('episode');
@@ -130,20 +132,30 @@ export const EpisodeProvider: React.FC<EpisodeProviderProps> = ({
   // Episode actions
   const handleEpisodeClick = useCallback(
     (episode: ExtendedEpisodeType) => {
-      if (isSelectionMode) {
-        if (!episode.is_ordered) {
-          _toggleEpisodeSelection(episode);
+      checkAvailableUser({
+        description: t('alert_sign_up.read_episode'),
+      }).then(() => {
+        if (isSelectionMode) {
+          if (!episode.is_ordered) {
+            _toggleEpisodeSelection(episode);
+          }
+          return;
         }
-        return;
-      }
 
-      if (episode.is_ordered) {
-        _showEpisodeViewer(episode);
-      } else {
-        modalPurchaseRef.current?.open([episode]);
-      }
+        if (episode.is_ordered) {
+          _showEpisodeViewer(episode);
+        } else {
+          modalPurchaseRef.current?.open([episode]);
+        }
+      });
     },
-    [isSelectionMode, _showEpisodeViewer, _toggleEpisodeSelection]
+    [
+      checkAvailableUser,
+      t,
+      isSelectionMode,
+      _toggleEpisodeSelection,
+      _showEpisodeViewer,
+    ]
   );
 
   const handleLongPressStart = useCallback((episode: ExtendedEpisodeType) => {

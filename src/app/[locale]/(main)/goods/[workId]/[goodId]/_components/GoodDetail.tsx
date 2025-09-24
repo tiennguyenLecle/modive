@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import useSWRMutation from 'swr/mutation';
 
-import AlertSignUpModal from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/modals/AlertSignUp';
 import CompleteShoppingCartModal from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/modals/CompleteShoppingCart';
 import DetailTab from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/tabs/DetailTab';
 import PurchaseInfoTab from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/tabs/PurchaseInfoTab';
@@ -28,18 +27,21 @@ type Props = {
 };
 
 const GoodDetail = ({ goodId }: Props) => {
-  const { user } = useAuth();
+  const t = useTranslations('goods_page.good_detail');
+  const { user, checkAvailableUser } = useAuth();
   const router = useRouter();
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
   const [activeTab, setActiveTab] = useHashRoute('detail');
   const [quantity, setQuantity] = React.useState(1);
+  const completeShoppingCartModalRef =
+    useRef<React.ElementRef<typeof CompleteShoppingCartModal>>(null);
   const setMyCartValue = useSetAtom(myCartAtom);
   const { data: goodDetail, mutate: mutateGoodDetail } = useGoodDetail(
     supabase,
     goodId
   );
 
-  const { delivery_fee, free_shipping_threshold, price, id } = goodDetail || {};
+  const { delivery_fee, free_shipping_threshold, id } = goodDetail || {};
   const addToCart = useSWRMutation(
     'addToCart',
     async () => {
@@ -84,14 +86,6 @@ const GoodDetail = ({ goodId }: Props) => {
   });
   const { trigger: toggleGoodLike } = useGoodLike(supabase, user?.id || '');
 
-  const t = useTranslations('goods_page.good_detail');
-
-  const completeShoppingCartModalRef =
-    useRef<React.ElementRef<typeof CompleteShoppingCartModal>>(null);
-
-  const alertSignUpModalRef =
-    useRef<React.ElementRef<typeof AlertSignUpModal>>(null);
-
   if (!goodDetail) return null;
 
   return (
@@ -120,10 +114,14 @@ const GoodDetail = ({ goodId }: Props) => {
             width={32}
             height={32}
             onClick={() => {
-              toggleGoodLike({
-                isLiked: goodDetail.is_liked,
-                goodId: goodDetail.id,
-              }).then(() => mutateGoodDetail());
+              checkAvailableUser({
+                description: t('alert_sign_up.like'),
+              }).then(() => {
+                toggleGoodLike({
+                  isLiked: goodDetail.is_liked,
+                  goodId: goodDetail.id,
+                }).then(() => mutateGoodDetail());
+              });
             }}
           />
         </div>
@@ -192,12 +190,12 @@ const GoodDetail = ({ goodId }: Props) => {
         <Button
           variant="secondary"
           className="h-48 !w-48"
-          onClick={async () => {
-            if (!user) {
-              alertSignUpModalRef.current?.open();
-            } else {
-              await addToCart.trigger();
-            }
+          onClick={() => {
+            checkAvailableUser({
+              description: t('alert_sign_up.add_to_cart'),
+            }).then(() => {
+              addToCart.trigger();
+            });
           }}
           disabled={addToCart.isMutating || purchaseNow.isMutating}
         >
@@ -207,12 +205,12 @@ const GoodDetail = ({ goodId }: Props) => {
         <Button
           variant="primary"
           className="h-48"
-          onClick={async () => {
-            if (!user) {
-              alertSignUpModalRef.current?.open();
-            } else {
-              await purchaseNow.trigger();
-            }
+          onClick={() => {
+            checkAvailableUser({
+              description: t('alert_sign_up.purchase'),
+            }).then(() => {
+              purchaseNow.trigger();
+            });
           }}
           disabled={addToCart.isMutating || purchaseNow.isMutating}
         >
@@ -221,7 +219,6 @@ const GoodDetail = ({ goodId }: Props) => {
       </div>
 
       <CompleteShoppingCartModal ref={completeShoppingCartModalRef} />
-      <AlertSignUpModal ref={alertSignUpModalRef} />
     </>
   );
 };

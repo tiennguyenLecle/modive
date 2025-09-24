@@ -1,7 +1,8 @@
 'use client';
 
-import { ComponentProps, useEffect, useMemo } from 'react';
+import { ComponentProps, useCallback, useEffect, useMemo } from 'react';
 import { useAtom } from 'jotai';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 import {
@@ -52,7 +53,8 @@ const Header = ({
   ...rest
 }: HomeHeaderProps) => {
   const router = useRouter();
-  const { user } = useAuth();
+  const t = useTranslations('header.alert_sign_up');
+  const { user, checkAvailableUser } = useAuth();
   const { data: userData } = useMeExtraData(!!user, user?.id || '');
   const [messageCount, setMessageCount] = useAtom(messageCountAtom);
   const [roomsAtom, setRoomsAtom] = useAtom(roomListAtom);
@@ -116,6 +118,19 @@ const Header = ({
     showBackButton,
   ]);
 
+  const checkDirectable = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      if (!user) {
+        event.stopPropagation();
+        event.preventDefault();
+        checkAvailableUser({
+          description: t('login_to_use'),
+        });
+      }
+    },
+    [user, checkAvailableUser, t]
+  );
+
   return (
     <header
       className={cx(
@@ -165,19 +180,19 @@ const Header = ({
             </Link>
           )}
           {showAlarmIcon && (
-            <Link href="#" className="h-24">
+            <Link href="#" className="h-24" onClick={checkDirectable}>
               <Badge.Wrapper count={messageCount || 0} showZero>
                 <Alarm width={24} height={24} className="text-gray-00" />
               </Badge.Wrapper>
             </Link>
           )}
           {showCashIcon && (
-            <Link href={ROUTES.MANAGEMENT.MY_CASH}>
+            <Link href={ROUTES.MANAGEMENT.MY_CASH} onClick={checkDirectable}>
               <Cash width={24} height={24} />
             </Link>
           )}
           {showCartIcon && (
-            <Link href={ROUTES.SHOPPING_CART}>
+            <Link href={ROUTES.SHOPPING_CART} onClick={checkDirectable}>
               <Cart width={24} height={24} className="text-gray-00" />
             </Link>
           )}

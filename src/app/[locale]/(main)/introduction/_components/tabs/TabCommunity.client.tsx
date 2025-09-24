@@ -20,7 +20,7 @@ import { useWork } from '../WorkProvider';
 
 export default function TabCommunity() {
   const t = useTranslations('introduction.community');
-  const { user } = useAuth();
+  const { user, checkAvailableUser } = useAuth();
   const searchParams = useSearchParams();
   const workId = searchParams.get('workId') as string;
   const [sortAscending, setSortAscending] = useState(false);
@@ -126,7 +126,11 @@ export default function TabCommunity() {
       )}
       <button
         onClick={() => {
-          commentFormRef.current?.open();
+          checkAvailableUser({
+            description: t('alert_sign_up.new_comment'),
+          }).then(() => {
+            commentFormRef.current?.open();
+          });
         }}
         className="absolute bottom-16 right-16 flex h-40 w-40 items-center justify-center rounded-8 border border-secondary bg-white text-primary transition-all duration-300 hover:shadow-custom-1"
       >

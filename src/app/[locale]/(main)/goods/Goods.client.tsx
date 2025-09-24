@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import { ArrowRight, Heart } from '@/assets/icons';
 import { useGoodLike, useWorksWithGoods } from '@/hooks/useGoods';
@@ -14,11 +14,11 @@ import { cx } from '@/utils/method';
 type Props = {};
 
 const GoodsClient = (props: Props) => {
+  const t = useTranslations();
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
   const { data: works, mutate: mutateWorks } = useWorksWithGoods(supabase);
-  const router = useRouter();
 
-  const { user } = useAuth();
+  const { user, checkAvailableUser } = useAuth();
   const { trigger: toggleGoodLike } = useGoodLike(supabase, user?.id || '');
 
   return (
@@ -35,7 +35,7 @@ const GoodsClient = (props: Props) => {
               href={`/goods/${work.work_id}`}
             >
               <h2
-                className="text-20 font-medium text-gray-00"
+                className="line-clamp-1 text-20 font-medium text-gray-00"
                 title={work.work_title}
               >
                 {work.work_title}
@@ -97,10 +97,16 @@ const GoodsClient = (props: Props) => {
                       onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        toggleGoodLike({
-                          isLiked: good.is_liked,
-                          goodId: good.id,
-                        }).then(() => mutateWorks());
+                        checkAvailableUser({
+                          description: t(
+                            'goods_page.good_detail.alert_sign_up.like'
+                          ),
+                        }).then(() => {
+                          toggleGoodLike({
+                            isLiked: good.is_liked,
+                            goodId: good.id,
+                          }).then(() => mutateWorks());
+                        });
                       }}
                     />
                   </div>

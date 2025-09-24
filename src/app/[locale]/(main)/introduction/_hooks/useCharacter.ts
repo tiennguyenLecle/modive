@@ -14,7 +14,7 @@ export function useCharacter(characterId: string | null) {
   const swrKey = characterId ? ['character-detail', characterId] : null;
 
   const characterDetail = useSWR(swrKey, () =>
-    fetchCharacterDetail(supabase, characterId as string, user!.id)
+    fetchCharacterDetail(supabase, characterId as string, user?.id)
   );
 
   const toggleLike = useSWRMutation(

@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Heart } from '@/assets/icons';
 import { Button, Modal, ProgressBar, Slider, Spinner } from '@/components';
 import { useCreateChat } from '@/hooks/useChat';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { useRouter } from '@/lib/navigation';
 import { ExtendedCharacterType } from '@/lib/supabase/swr/character';
 import { CharacterType } from '@/types/character';
@@ -25,6 +26,7 @@ type ModalCharacterRef = {
 const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
   const t = useTranslations('introduction.modal_character');
   const router = useRouter();
+  const { checkAvailableUser } = useAuth();
 
   const modalGuideToUseRef =
     useRef<React.ElementRef<typeof ModalGuideToUse>>(null);
@@ -72,6 +74,9 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
 
   const handleConfirm = async () => {
     closeHandler();
+    await checkAvailableUser({
+      description: t('alert_sign_up.start_conversation'),
+    });
     try {
       if (!localStorage.getItem(STORAGE.HIDE_GUIDE_TO_USE)) {
         await modalGuideToUseRef.current?.open();
@@ -99,9 +104,8 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
     }
   };
 
-  const handleLike = async () => {
-    await toggleLike.trigger();
-  };
+  const handleLike = () =>
+    checkAvailableUser().then(() => toggleLike.trigger());
 
   return (
     <>

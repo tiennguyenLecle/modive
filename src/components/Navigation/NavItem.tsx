@@ -1,8 +1,10 @@
 'use client';
 
 import { ComponentProps } from 'react';
+import { useTranslations } from 'next-intl';
 import NProgress from 'nprogress';
 
+import { useAuth } from '@/lib/authentication/auth-context';
 import { Link, usePathname } from '@/lib/navigation';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
@@ -23,13 +25,22 @@ export default function NavItem({
   ...rest
 }: NavItemProps) {
   const pathname = usePathname();
+  const t = useTranslations('navigation.alert_sign_up');
+  const { user, checkAvailableUser } = useAuth();
 
   const isHome = href === ROUTES.HOME;
   const isActive = isHome
     ? pathname === ROUTES.HOME || activePaths.some(path => pathname === path)
     : pathname === href || activePaths.some(path => pathname.startsWith(path));
 
-  const handleClick = () => {
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!user && (href === ROUTES.CHAT || href === ROUTES.MANAGEMENT.INDEX)) {
+      event.stopPropagation();
+      event.preventDefault();
+      checkAvailableUser({
+        description: t('login_to_use'),
+      });
+    }
     NProgress.start();
   };
 

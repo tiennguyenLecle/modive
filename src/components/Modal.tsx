@@ -25,6 +25,7 @@ type ModalProps = {
   modalParentClassName?: string;
   onCancel?: () => void;
   onConfirm?: () => void;
+  zIndex?: number;
 };
 
 const Modal = ({
@@ -44,6 +45,7 @@ const Modal = ({
   modalParentClassName = '',
   onCancel,
   onConfirm,
+  zIndex,
 }: ModalProps) => {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -64,6 +66,7 @@ const Modal = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            style={{ zIndex }}
           />
           <motion.div
             className={cx(
@@ -73,6 +76,7 @@ const Modal = ({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
+            style={{ zIndex }}
             onClick={() => {
               onCancel?.();
             }}

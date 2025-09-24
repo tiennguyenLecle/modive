@@ -1,10 +1,22 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { User } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
+import { Info } from '@/assets/icons';
+import { Button, Modal } from '@/components';
 import { type Role } from '@/lib/authentication/auth.types';
+import { usePathname, useRouter } from '@/lib/navigation';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import {
   backgroundRegisterSW,
@@ -12,8 +24,6 @@ import {
   requestNotificationPermission,
 } from '@/notifications';
 import { ROUTES } from '@/utils/constants';
-
-import { NextApi } from '../api';
 
 type AuthContextValue = {
   user: User | null;
@@ -28,6 +38,10 @@ type AuthContextValue = {
   ) => Promise<void>;
   signOut: () => Promise<void>;
   signInWithKakao: () => Promise<void>;
+  checkAvailableUser: (props?: {
+    description?: string;
+    loginDirection?: string;
+  }) => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -39,8 +53,11 @@ type AuthProviderProps = {
 
 export function AuthProvider({ children, role }: AuthProviderProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const supabase = useMemo(() => createBrowserSupabase(role), [role]);
   const [user, setUser] = useState<User | null>(null);
+  const [isModalCheckUserOpen, setIsModalCheckUserOpen] = useState(false);
+  const modalCheckUserRef = useRef<ModalCheckUserRef>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -147,15 +164,26 @@ export function AuthProvider({ children, role }: AuthProviderProps) {
     });
   };
 
+  const checkAvailableUser = (props?: {
+    description?: string;
+    loginDirection?: string;
+  }) => modalCheckUserRef.current!.open(props);
+
   const value: AuthContextValue = {
     user,
     signInWithProvider,
     signInWithCredential,
     signOut,
     signInWithKakao,
+    checkAvailableUser,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      <ModalCheckUser ref={modalCheckUserRef} />
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
@@ -163,3 +191,97 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
 }
+
+type ModalCheckUserRef = {
+  open: (props?: {
+    description?: string;
+    loginDirection?: string;
+  }) => Promise<boolean>;
+  close: () => void;
+};
+
+const ModalCheckUser = forwardRef<ModalCheckUserRef>((_, ref) => {
+  const t = useTranslations('modal_check_user');
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
+  const [description, setDescription] = useState<string | undefined>(undefined);
+  const [loginDirection, setLoginDirection] = useState<string | undefined>(
+    undefined
+  );
+
+  const promiseActions = useRef<{
+    resolve: (value: boolean) => void;
+    reject: (reason?: any) => void;
+  } | null>(null);
+
+  const closeHandler = (reason?: any) => {
+    promiseActions.current?.reject(reason);
+    setIsOpen(false);
+    setDescription(undefined);
+    setLoginDirection(undefined);
+  };
+
+  useImperativeHandle(ref, () => ({
+    open: props => {
+      if (props?.description) {
+        setDescription(props.description);
+      }
+      if (props?.loginDirection) {
+        setLoginDirection(props.loginDirection);
+      }
+      if (user) {
+        return Promise.resolve(true);
+      } else {
+        setIsOpen(true);
+        return new Promise<boolean>((resolve, reject) => {
+          promiseActions.current = { resolve, reject };
+        });
+      }
+    },
+    close: () => closeHandler('User closed the modal'),
+  }));
+
+  return (
+    <Modal
+      open={isOpen}
+      header={
+        <div className="space-x-4">
+          <Info className="inline-block size-18 text-primary" />
+          <span>{t('alarm')}</span>
+        </div>
+      }
+      onCancel={() => closeHandler('User closed the modal')}
+      footer={
+        <div className="flex gap-8">
+          <Button
+            variant="secondary"
+            onClick={() => {
+              closeHandler('User closed the modal');
+            }}
+          >
+            {t('non_member_search')}
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              closeHandler('User confirmed to login');
+              const returnUrl = loginDirection || pathname;
+              router.push(
+                `${ROUTES.LOGIN}?returnUrl=${encodeURIComponent(returnUrl)}`
+              );
+            }}
+          >
+            {t('join_the_membership')}
+          </Button>
+        </div>
+      }
+      zIndex={100}
+    >
+      <div className="px-16 text-center">{description}</div>
+    </Modal>
+  );
+});
+
+ModalCheckUser.displayName = 'ModalCheckUser';

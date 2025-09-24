@@ -17,7 +17,13 @@ import {
 // Define different types of routes for authentication logic
 
 // Public routes - accessible to everyone, regardless of authentication status
-const PUBLIC_ROUTES = [ROUTES.LOGIN, ROUTES.CMS.LOGIN];
+const PUBLIC_ROUTES = [
+  ROUTES.HOME,
+  ROUTES.INTRODUCTION,
+  ROUTES.GOODS,
+  ROUTES.LOGIN,
+  ROUTES.CMS.LOGIN,
+];
 
 // Auth routes - only for unauthenticated users (redirected if already logged in)
 const AUTH_ROUTES = [ROUTES.LOGIN, ROUTES.CMS.LOGIN];

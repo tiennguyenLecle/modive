@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ANONYMOUS, loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtom, useSetAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
@@ -25,6 +25,8 @@ export default function PaymentMethod({
   const [widgets, setWidgets] = useAtom<any>(paymentWidgetAtom);
   const setIsAgreement = useSetAtom(isAgreementAtom);
   const setPaymentMethod = useSetAtom(paymentMethodAtom);
+  const [paymentWidget, setPaymentWidget] = useState<any>(null);
+  const [agreementWidget, setAgreementWidget] = useState<any>(null);
 
   const initTossPayments = async () => {
     try {
@@ -53,7 +55,6 @@ export default function PaymentMethod({
       }
 
       setWidgets(widgets);
-
       const amount = Math.max(totalAmount);
       await widgets.setAmount({
         currency: 'KRW',
@@ -71,6 +72,8 @@ export default function PaymentMethod({
           variantKey: 'AGREEMENT',
         }),
       ]);
+      setPaymentWidget(paymentWidget);
+      setAgreementWidget(agreementWidget);
 
       if (paymentWidget) {
         const paymentMethod = await paymentWidget.getSelectedPaymentMethod();
@@ -92,10 +95,25 @@ export default function PaymentMethod({
       console.error('Error initializing TossPayments:', error);
     }
   };
+
   useEffect(() => {
     if (!widgets) {
       initTossPayments();
     }
+    return () => {
+      if (!widgets) return;
+
+      if (paymentWidget) {
+        paymentWidget.destroy();
+        setPaymentWidget(null);
+      }
+
+      if (agreementWidget) {
+        agreementWidget.destroy();
+        setAgreementWidget(null);
+      }
+      setWidgets(null);
+    };
   }, [widgets]);
 
   return (

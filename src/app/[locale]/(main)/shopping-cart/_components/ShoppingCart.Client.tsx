@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { notification } from 'antd';
 import { useAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
@@ -26,73 +27,17 @@ import { mappedCartItems } from './utils';
 export default function ShoppingCart() {
   const router = useRouter();
   const t = useTranslations('shopping_cart');
-  const [totalCount, setTotalCount] = useState(0);
   const [isFullSelected, setIsFullSelected] = useState(false);
-
-  const { data } = useSWR(CART_KEY.all, fetchMyCart);
-  const myCart = useMemo(() => data || null, [data]);
-
   const [myCartValue, setMyCartValue] = useAtom(myCartAtom);
   const [isLoadingSelectionOrder, setIsLoadingSelectionOrder] = useState(false);
   const [isLoadingFullOrder, setIsLoadingFullOrder] = useState(false);
 
-  // Update atom only when myCart data actually changes
-  // useEffect(() => {
-  //   updateMyCartByBrowser({
-  //     items: [
-  //       {
-  //         "id": "5aa69242-3b9c-4b78-b2b0-9b7cb4f50b7c",
-  //         "work": null,
-  //         "good": {
-  //           "id": "2b3242c2-36fe-4699-8519-399d33859f99",
-  //           "url": null,
-  //           "price": 30000,
-  //           "title": "New Good",
-  //           "status": "published",
-  //           "work_id": "5d0125d3-3f53-4fa1-9223-1c1eeb8a3651",
-  //           "currency": "krw",
-  //           "metadata": {},
-  //           "quantity": 3,
-  //           "created_at": "2025-09-10T15:26:17.61895+00:00",
-  //           "deleted_at": null,
-  //           "updated_at": "2025-09-10T15:26:17.61895+00:00",
-  //           "description": "Description",
-  //           "is_pre_sale": false,
-  //           "delivery_fee": 0,
-  //           "release_date": null,
-  //           "thumbnail_id": null,
-  //           "purchase_link": "google.com",
-  //           "thumbnail_key": "",
-  //           "shipping_provider": "modive",
-  //           "free_shipping_threshold": 60000
-  //         },
-  //         "cart_id": "7e638541-df9a-4f48-a058-cf201b2f1d61",
-  //         "chapter": null,
-  //         "episode": null,
-  //         "good_id": "2b3242c2-36fe-4699-8519-399d33859f99",
-  //         "item_id": "good:2b3242c2-36fe-4699-8519-399d33859f99",
-  //         "user_id": "709e3d21-c81a-45f5-8516-bc185d6f6c81",
-  //         "work_id": null,
-  //         "currency": "krw",
-  //         "quantity": 1,
-  //         "item_type": "good",
-  //         "chapter_id": null,
-  //         "created_at": "2025-09-19T09:17:40.878365+00:00",
-  //         "deleted_at": null,
-  //         "episode_id": null,
-  //         "unit_price": 30000,
-  //         "updated_at": "2025-09-19T09:17:40.878365+00:00",
-  //         "is_selected": true,
-  //         "total_price": 30000,
-  //         "delivery_fee": 0
-  //       }
+  const { data, error } = useSWR(CART_KEY.all, fetchMyCart, {
+    revalidateOnFocus: false,
+  });
 
-  //     ],
-  //     total_items: 1,
-  //     total_delivery_fee: 0,
-  //     total: 30000,
-  //   });
-  // }, []);
+  const myCart = useMemo(() => data || null, [data]);
+
   useEffect(() => {
     setMyCartValue(myCart);
   }, [myCart, setMyCartValue]);
@@ -103,6 +48,13 @@ export default function ShoppingCart() {
         false
     );
   }, [myCartValue]);
+
+  if (error) {
+    notification.error({
+      message: '장바구니 데이터를 불러오는데 실패했습니다.',
+    });
+    return null;
+  }
 
   if (!myCartValue) return null;
 

@@ -38,6 +38,7 @@ export default function ShippingForm() {
       const defaultAddress = addressList.find(
         (address: ShippingAddressType) => address.is_default
       );
+
       if (defaultAddress) {
         setShippingForm(defaultAddress);
       }
@@ -107,7 +108,7 @@ export default function ShippingForm() {
         shorthand: true,
         pleaseReadGuide: 0,
         pleaseReadGuideTimer: 1.5,
-      }).embed(document.getElementById('daumPostcodeEmbed') as HTMLElement, {
+      }).open({
         q: searchTerm,
       });
     } catch (error) {

@@ -54,12 +54,15 @@ export default function Ordering() {
   const paymentAmount = productAmount + deliveryFee;
 
   const onFinishShippingForm = async () => {
-    setIsPaymentLoading(true);
     try {
+      setIsPaymentLoading(true);
+      const addressId = shippingForm?.id;
+
       const response: any = await createOrder({
         items: myCartValue?.items,
         shipping_info: {
-          address: shippingForm,
+          address_id: addressId,
+          address: addressId ? null : shippingForm,
         },
         payment_method: paymentMethod || '',
       });

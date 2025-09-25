@@ -1041,14 +1041,17 @@ export type Database = {
         Row: {
           good_id: string;
           key: string;
+          type: Database['public']['Enums']['good_storage_object_type'] | null;
         };
         Insert: {
           good_id: string;
           key: string;
+          type?: Database['public']['Enums']['good_storage_object_type'] | null;
         };
         Update: {
           good_id?: string;
           key?: string;
+          type?: Database['public']['Enums']['good_storage_object_type'] | null;
         };
         Relationships: [
           {
@@ -1156,6 +1159,38 @@ export type Database = {
             columns: ['work_id'];
             isOneToOne: false;
             referencedRelation: 'works';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      interface_storage_objects: {
+        Row: {
+          interface_id: string;
+          key: string;
+          type:
+            | Database['public']['Enums']['interface_storage_object_type']
+            | null;
+        };
+        Insert: {
+          interface_id: string;
+          key: string;
+          type?:
+            | Database['public']['Enums']['interface_storage_object_type']
+            | null;
+        };
+        Update: {
+          interface_id?: string;
+          key?: string;
+          type?:
+            | Database['public']['Enums']['interface_storage_object_type']
+            | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'interface_storage_objects_interface_id_interfaces_id_fk';
+            columns: ['interface_id'];
+            isOneToOne: false;
+            referencedRelation: 'interfaces';
             referencedColumns: ['id'];
           },
         ];
@@ -1470,6 +1505,7 @@ export type Database = {
           currency: Database['public']['Enums']['currency'] | null;
           deleted_at: string | null;
           id: string;
+          metadata: Json | null;
           paid_at: string | null;
           payment_method: string | null;
           refunded_at: string | null;
@@ -1480,6 +1516,7 @@ export type Database = {
           total_delivery_fee: number | null;
           total_items: number | null;
           total_price: number | null;
+          type: Database['public']['Enums']['order_type'] | null;
           updated_at: string | null;
           user_id: string | null;
         };
@@ -1489,6 +1526,7 @@ export type Database = {
           currency?: Database['public']['Enums']['currency'] | null;
           deleted_at?: string | null;
           id?: string;
+          metadata?: Json | null;
           paid_at?: string | null;
           payment_method?: string | null;
           refunded_at?: string | null;
@@ -1499,6 +1537,7 @@ export type Database = {
           total_delivery_fee?: number | null;
           total_items?: number | null;
           total_price?: number | null;
+          type?: Database['public']['Enums']['order_type'] | null;
           updated_at?: string | null;
           user_id?: string | null;
         };
@@ -1508,6 +1547,7 @@ export type Database = {
           currency?: Database['public']['Enums']['currency'] | null;
           deleted_at?: string | null;
           id?: string;
+          metadata?: Json | null;
           paid_at?: string | null;
           payment_method?: string | null;
           refunded_at?: string | null;
@@ -1518,6 +1558,7 @@ export type Database = {
           total_delivery_fee?: number | null;
           total_items?: number | null;
           total_price?: number | null;
+          type?: Database['public']['Enums']['order_type'] | null;
           updated_at?: string | null;
           user_id?: string | null;
         };
@@ -2331,24 +2372,36 @@ export type Database = {
           goods: Json | null;
           total_goods: number | null;
           work_id: string | null;
+          work_status: Database['public']['Enums']['work_status'] | null;
           work_title: string | null;
         };
         Insert: {
           goods?: never;
           total_goods?: never;
           work_id?: string | null;
+          work_status?: Database['public']['Enums']['work_status'] | null;
           work_title?: string | null;
         };
         Update: {
           goods?: never;
           total_goods?: never;
           work_id?: string | null;
+          work_status?: Database['public']['Enums']['work_status'] | null;
           work_title?: string | null;
         };
         Relationships: [];
       };
     };
     Functions: {
+      get_good_details_by_id: {
+        Args:
+          | { p_good_id: string }
+          | {
+              p_good_id: string;
+              p_status?: Database['public']['Enums']['good_status'];
+            };
+        Returns: Json;
+      };
       get_latest_interface: {
         Args: Record<PropertyKey, never>;
         Returns: Json;
@@ -2357,8 +2410,23 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Json;
       };
+      get_my_orders_grouped_by_day: {
+        Args: {
+          p_limit?: number;
+          p_page?: number;
+          p_status?: Database['public']['Enums']['order_status'];
+          p_type?: Database['public']['Enums']['order_type'];
+          p_tz?: string;
+        };
+        Returns: Json;
+      };
       get_work_details_by_id: {
-        Args: { p_work_id: string };
+        Args:
+          | {
+              p_status?: Database['public']['Enums']['work_status'];
+              p_work_id: string;
+            }
+          | { p_work_id: string };
         Returns: Json;
       };
       is_admin: {
@@ -2393,6 +2461,8 @@ export type Database = {
       faq_status: 'draft' | 'published' | 'archived';
       gender: 'unknown' | 'male' | 'female';
       good_status: 'draft' | 'published' | 'archived';
+      good_storage_object_type: 'thumbnail' | 'detail';
+      interface_storage_object_type: 'banner';
       notification_os: 'ios' | 'android' | 'web';
       notification_type: 'new_message' | 'event' | 'chapter_published';
       order_item_type: 'chapter' | 'good' | 'work' | 'episode';
@@ -2403,6 +2473,7 @@ export type Database = {
         | 'refunded'
         | 'cancelled'
         | 'payment_failed';
+      order_type: 'normal_items' | 'purchase_coins';
       plan_status: 'active' | 'inactive';
       shipping_provider: 'modive' | 'external';
       subscription_status: 'active' | 'cancelled' | 'expired';
@@ -2410,7 +2481,9 @@ export type Database = {
         | 'subscription_payment'
         | 'regular_charge'
         | 'goods_purchase'
-        | 'work_purchase';
+        | 'works_purchase'
+        | 'chapters_purchase'
+        | 'episodes_purchase';
       transaction_status: 'pending' | 'completed' | 'failed';
       transaction_type: 'payment' | 'purchase';
       user_role: 'user' | 'admin';
@@ -2555,6 +2628,8 @@ export const Constants = {
       faq_status: ['draft', 'published', 'archived'],
       gender: ['unknown', 'male', 'female'],
       good_status: ['draft', 'published', 'archived'],
+      good_storage_object_type: ['thumbnail', 'detail'],
+      interface_storage_object_type: ['banner'],
       notification_os: ['ios', 'android', 'web'],
       notification_type: ['new_message', 'event', 'chapter_published'],
       order_item_type: ['chapter', 'good', 'work', 'episode'],
@@ -2566,6 +2641,7 @@ export const Constants = {
         'cancelled',
         'payment_failed',
       ],
+      order_type: ['normal_items', 'purchase_coins'],
       plan_status: ['active', 'inactive'],
       shipping_provider: ['modive', 'external'],
       subscription_status: ['active', 'cancelled', 'expired'],
@@ -2573,7 +2649,9 @@ export const Constants = {
         'subscription_payment',
         'regular_charge',
         'goods_purchase',
-        'work_purchase',
+        'works_purchase',
+        'chapters_purchase',
+        'episodes_purchase',
       ],
       transaction_status: ['pending', 'completed', 'failed'],
       transaction_type: ['payment', 'purchase'],

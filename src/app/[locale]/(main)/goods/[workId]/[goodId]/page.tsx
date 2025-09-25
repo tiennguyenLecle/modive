@@ -10,17 +10,17 @@ const GoodDetailPage = (props: Props) => {
   const { workId, goodId } = params;
 
   return (
-    <div data-no-navigation>
+    <main data-no-navigation className="flex flex-col">
       <Header
         title="Good Detail"
         showBackButton
         showCartIcon
         className="border-b border-gray-80"
       />
-      <div className="no-scrollbar h-[calc(100vh-56px)] overflow-auto">
+      <div className="no-scrollbar min-h-0 flex-1 overflow-auto">
         <GoodDetail goodId={goodId} workId={workId} />
       </div>
-    </div>
+    </main>
   );
 };
 

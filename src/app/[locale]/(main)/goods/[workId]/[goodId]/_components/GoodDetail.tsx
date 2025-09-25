@@ -175,17 +175,23 @@ const GoodDetail = ({ goodId }: Props) => {
           {
             key: 'detail',
             label: t('tabs.detail.title'),
-            children: <DetailTab good={goodDetail} />,
           },
           {
             key: 'purchase_info',
             label: t('tabs.purchase_info.title'),
-            children: <PurchaseInfoTab />,
           },
         ]}
         activeTab={activeTab}
+        className="sticky top-0 z-50"
       />
-
+      <DetailTab
+        good={goodDetail}
+        className={cx(activeTab !== 'detail' && 'hidden')}
+      />
+      <PurchaseInfoTab
+        good={goodDetail}
+        className={cx(activeTab !== 'purchase_info' && 'hidden')}
+      />
       <div className="sticky bottom-0 z-10 flex gap-12 bg-white p-16">
         <Button
           variant="secondary"

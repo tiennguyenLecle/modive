@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
+
+import { GoodPlusType } from '@/types/goods';
+import { cx } from '@/utils/method';
 
 import styles from './PurChaseInfoTab.module.scss';
 
-const PurchaseInfoTab = () => {
+type PurchaseInfoTabProps = ComponentProps<'div'> & {
+  good: GoodPlusType;
+};
+
+const PurchaseInfoTab = ({
+  className,
+  good: { delivery_fee },
+  ...props
+}: PurchaseInfoTabProps) => {
   return (
-    <div className={styles.purchaseInfoTab}>
+    <div className={cx(styles.purchaseInfoTab, className)} {...props}>
       <h3>결제정보</h3>
       <p>
         결제수단 : 신용카드, 카카오페이, 토스페이(토스페이먼츠 제공) 타인 명의의
@@ -18,7 +29,12 @@ const PurchaseInfoTab = () => {
         <br />
         배송 지역 : 전국 (일부 도서·산간 지역 제외)
         <br />
-        배송 비용 : 0,000원 <br />
+        {delivery_fee && (
+          <>
+            배송 비용 : {delivery_fee.toLocaleString()}원
+            <br />
+          </>
+        )}
         배송 기간 : 결제일로부터 3일 ~ 7일 이내 발송
         <br />
         배송 안내 : 일부 도서·산간 지역은 추가 배송비가 부과될 수 있으며, 주문서

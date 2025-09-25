@@ -1,5 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
+import { GoodPlusType } from '@/types/goods';
 import { Database } from '@/types/supabase';
 
 type GoodType = Database['public']['Tables']['goods']['Row'];
@@ -52,35 +53,13 @@ export const fetchGoodDetail = async (
   supabase: SupabaseClient<Database>,
   goodId: string,
   userId?: string
-): Promise<GoodType & { is_liked: boolean }> => {
-  const goodPromise = supabase
-    .from('goods')
-    .select('*')
-    .eq('id', goodId)
-    .is('deleted_at', null)
-    .single();
+): Promise<GoodPlusType> => {
+  const { data, error } = await supabase.rpc('get_good_details_by_id', {
+    p_good_id: goodId,
+    p_status: 'published',
+  });
 
-  const likePromise = userId
-    ? supabase
-        .from('good_likes')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('good_id', goodId)
-        .limit(1)
-    : Promise.resolve({ data: [], error: null });
+  if (error) throw error;
 
-  const [goodResult, likeResult] = await Promise.all([
-    goodPromise,
-    likePromise,
-  ]);
-
-  const { data: good, error: goodError } = goodResult;
-  if (goodError) throw goodError;
-
-  const { data: likeRows, error: likeError } = likeResult;
-  if (likeError) throw likeError;
-
-  const isLiked = (likeRows?.length ?? 0) > 0;
-
-  return { ...(good as GoodType), is_liked: isLiked };
+  return data as GoodPlusType;
 };

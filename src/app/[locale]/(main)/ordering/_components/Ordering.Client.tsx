@@ -20,6 +20,7 @@ import { ROUTES } from '@/utils/constants';
 
 import PaymentInfo from '../../shopping-cart/_components/PaymentInfo.Client';
 import { mappedCartItems } from '../../shopping-cart/_components/utils';
+import { useCalcPaymentAmount } from '../../shopping-cart/hooks/useCalcPaymentAmount';
 import PaymentMethod from './PaymentMethod.Client';
 import ProductInformation from './ProductInformation.Client';
 import ShippingForm from './ShippingForm.Client';
@@ -35,6 +36,10 @@ export default function Ordering() {
   const paymentWidget = useAtomValue(paymentWidgetAtom);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 
+  const { productAmount, deliveryFee, paymentAmount } = useCalcPaymentAmount(
+    myCartValue?.items ?? []
+  );
+
   useEffect(() => {
     if (!myCartValue) {
       router.push(ROUTES.SHOPPING_CART);
@@ -42,16 +47,6 @@ export default function Ordering() {
   }, [myCartValue]);
 
   if (!myCartValue) return null;
-
-  const productAmount = myCartValue?.items?.reduce(
-    (acc, item) => acc + item.good.price * item.quantity,
-    0
-  );
-  const deliveryFee = myCartValue?.items?.reduce(
-    (acc, item) => acc + item.good.delivery_fee,
-    0
-  );
-  const paymentAmount = productAmount + deliveryFee;
 
   const onFinishShippingForm = async () => {
     try {
@@ -66,6 +61,7 @@ export default function Ordering() {
         },
         payment_method: paymentMethod || '',
       });
+
       if (!response?.data) {
         notification.error({
           message: response?.error,

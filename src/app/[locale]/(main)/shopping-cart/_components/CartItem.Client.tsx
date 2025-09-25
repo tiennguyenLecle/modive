@@ -32,23 +32,21 @@ export default function CartItem({
   const t = useTranslations('shopping_cart');
   const [count, setCount] = useState(quantity);
   const isDisabledAddButton = Number(count) >= Number(remainingCount);
-  const isDisabledRemoveButton = Number(count) <= 0;
+  const isDisabledRemoveButton = Number(count) <= 1;
 
   const handleAdd = () => {
     setCount(Number(count) + 1);
+    onCountChange && onCountChange(Number(count) + 1, id);
   };
 
   const handleRemove = () => {
     setCount(Number(count) - 1);
+    onCountChange && onCountChange(Number(count) - 1, id);
   };
 
   const handleCheckboxChange = (id: string) => {
     onCheckboxChange && onCheckboxChange(id);
   };
-
-  useEffect(() => {
-    onCountChange && onCountChange(count ?? 0, id);
-  }, [count, id]);
 
   return (
     <div className="flex w-full flex-col gap-12 border-b border-gray-80 border-gray-90 bg-white p-16 last:border-b-0">

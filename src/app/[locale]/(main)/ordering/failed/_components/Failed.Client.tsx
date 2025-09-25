@@ -7,14 +7,18 @@ import { Button } from '@/components';
 import { useRouter } from '@/lib/navigation';
 import { ROUTES } from '@/utils/constants';
 
-export default function FailPage() {
+export default function FailPage({ messageError }: { messageError: string }) {
   const t = useTranslations('ordering');
   const router = useRouter();
   return (
     <div className="mt-20 flex h-full w-full flex-col items-center justify-center">
       <Result
         status="404"
-        title={<h3 className="text-22 font-semibold">{t('order_failed')}</h3>}
+        title={
+          <h3 className="text-22 font-semibold">
+            {messageError || t('order_failed')}
+          </h3>
+        }
         extra={
           <Button
             variant="primary"

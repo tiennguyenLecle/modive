@@ -20,6 +20,7 @@ import {
 } from '@/lib/supabase/swr/cart';
 import { ROUTES } from '@/utils/constants';
 
+import { useCalcPaymentAmount } from '../hooks/useCalcPaymentAmount';
 import { ItemListBlock } from './ItemList.Client';
 import PaymentInfo from './PaymentInfo.Client';
 import { mappedCartItems } from './utils';
@@ -49,15 +50,6 @@ export default function ShoppingCart() {
     );
   }, [myCartValue]);
 
-  if (error) {
-    notification.error({
-      message: '장바구니 데이터를 불러오는데 실패했습니다.',
-    });
-    return null;
-  }
-
-  if (!myCartValue) return null;
-
   const myGoods = myCartValue?.items || []; // need to filter good items if apply work, chapter, episode...
 
   const myGoodsByMoitDelivery = myGoods.filter(
@@ -72,36 +64,48 @@ export default function ShoppingCart() {
     (item: CartItemType) => item.is_selected
   );
 
-  const productAmount = myGoodsBySelected.reduce(
-    (acc: number, item: CartItemType) => acc + item.good.price * item.quantity,
-    0
+  const { productAmount, deliveryFee, paymentAmount } = useCalcPaymentAmount(
+    myGoodsBySelected ?? []
   );
 
-  const deliveryFee = myGoodsBySelected.reduce(
-    (acc: number, item: CartItemType) =>
-      acc +
-      (item.good.price * item.quantity > item.good.free_shipping_threshold
-        ? 0
-        : item.good.delivery_fee),
-    0
-  );
+  if (error) {
+    notification.error({
+      message: '장바구니 데이터를 불러오는데 실패했습니다.',
+    });
+    return null;
+  }
 
-  const paymentAmount = productAmount + deliveryFee;
+  if (!myCartValue) return null;
 
   const onCheckboxChange = (id: string) => {
+    const updatedItems = myCartValue?.items?.map(item =>
+      item.id === id ? { ...item, is_selected: !item.is_selected } : item
+    );
     setMyCartValue({
       ...myCartValue,
-      items: myCartValue?.items?.map(item =>
-        item.id === id ? { ...item, is_selected: !item.is_selected } : item
-      ),
+      items: updatedItems,
+    });
+    updateMyCartByBrowser({
+      items: updatedItems ?? [],
+      total_items: null,
+      total_delivery_fee: null,
+      total: null,
     });
   };
+
   const onCountChange = (count: number, id: string) => {
+    const updatedItems = myCartValue?.items?.map(item =>
+      item.id === id ? { ...item, quantity: count } : item
+    );
     setMyCartValue({
       ...myCartValue,
-      items: myCartValue?.items?.map(item =>
-        item.id === id ? { ...item, quantity: count } : item
-      ),
+      items: updatedItems,
+    });
+    updateMyCartByBrowser({
+      items: updatedItems ?? [],
+      total_items: null,
+      total_delivery_fee: null,
+      total: null,
     });
   };
 
@@ -172,7 +176,7 @@ export default function ShoppingCart() {
                 variant="secondary"
                 className="w-auto max-w-100"
                 onClick={() => {
-                  const unSelectedItems = myCartValue.items.filter(
+                  const unSelectedItems = myCartValue?.items?.filter(
                     (item: CartItemType) => !item.is_selected
                   );
                   setMyCartValue({

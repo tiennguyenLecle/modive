@@ -50,8 +50,10 @@ type RawDataType = {
 
 type ConfirmPaymentPayload = {
   order_id: string;
-  payment_key: string;
-  amount: string;
+  payment_key?: string;
+  amount?: string;
+  code?: string;
+  message?: string;
 };
 
 type ConfirmPaymentResponseType = {

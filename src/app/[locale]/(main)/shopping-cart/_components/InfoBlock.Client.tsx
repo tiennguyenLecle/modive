@@ -18,6 +18,7 @@ export default function InfoBlock({
   children,
 }: InfoBlockProps) {
   const t = useTranslations('shopping_cart');
+
   return (
     <div
       className={cn(
@@ -31,7 +32,13 @@ export default function InfoBlock({
           <p>
             {title ? `${title}` : t('pre_sale_product')}
             <br />
-            {t('scheduled_date')} {scheduledDate}.
+            {scheduledDate && (
+              <>
+                {t('scheduled_date', {
+                  date: scheduledDate,
+                })}
+              </>
+            )}
           </p>
         </>
       )}

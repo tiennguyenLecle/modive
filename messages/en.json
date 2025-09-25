@@ -363,7 +363,7 @@
   "shopping_cart": {
     "shipping_fee": "Shipping fee",
     "pre_sale_product": "Pre-sale product.",
-    "scheduled_date": "The scheduled delivery date is",
+    "scheduled_date": "The scheduled delivery date is {date}.",
     "remaining_count": "The remaining quantity",
     "shopping_cart": "Shopping Cart",
     "payment_amount": "Payment amount",

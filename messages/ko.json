@@ -363,7 +363,7 @@
   "shopping_cart": {
     "shipping_fee": "배송비",
     "pre_sale_product": "예약 판매 상품입니다.",
-    "scheduled_date": "배송 시작 예정일은 2025년 8월 12일입니다.",
+    "scheduled_date": "배송 시작 예정일은 {date}.",
     "remaining_count": "남은 수량",
     "shopping_cart": "장바구니",
     "payment_amount": "결제 금액",

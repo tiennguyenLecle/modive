@@ -30,6 +30,7 @@ import NavHomeFilled from './nav-home-filled.svg';
 import NavHome from './nav-home.svg';
 import NavPersonFilled from './nav-person-filled.svg';
 import NavPerson from './nav-person.svg';
+import NavVaseMagic from './nav-vase-magic.svg';
 import NavVase from './nav-vase.svg';
 import Pencil from './pencil.svg';
 import Pin from './pin.svg';
@@ -77,6 +78,7 @@ export {
   NavHomeFilled,
   NavPerson,
   NavPersonFilled,
+  NavVaseMagic,
   NavVase,
   Pencil,
   Pin,

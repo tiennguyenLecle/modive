@@ -8,6 +8,7 @@ import {
   NavPerson,
   NavPersonFilled,
   NavVase,
+  NavVaseMagic,
 } from '@/assets/icons';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
@@ -48,6 +49,7 @@ export default function Navigation({ className, ...rest }: NavigationProps) {
         href={ROUTES.GOODS}
         icon={<NavVase />}
         text={t('goods')}
+        activeIcon={<NavVaseMagic />}
         activePaths={activePaths[ROUTES.GOODS]}
       />
       <NavItem

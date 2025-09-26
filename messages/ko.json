@@ -330,7 +330,8 @@
     "terms_conditions": "서비스 이용약관",
     "privacy_policy": "개인정보 처리 방침",
     "copyright_policy": "저작권 및 지식 재산권 관리 정책",
-    "my_page": "주문/배송 조회"
+    "my_page": "마이페이지",
+    "order_shipping_inquiry": "주문/배송 조회"
   },
   "my_information": {
     "nickname": "닉네임",

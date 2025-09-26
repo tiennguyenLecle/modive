@@ -28,6 +28,8 @@ export default function CartItem({
   showAddItem = false,
   onCheckboxChange,
   onCountChange,
+  children,
+  orderStatus,
 }: CartItemProps) {
   const t = useTranslations('shopping_cart');
   const [count, setCount] = useState(quantity);
@@ -61,7 +63,7 @@ export default function CartItem({
         )}
         {image ? (
           <Image
-            className="min-h-100 rounded-8"
+            className="h-100 w-100 rounded-8 object-cover"
             width={100}
             height={100}
             src={image}
@@ -84,7 +86,13 @@ export default function CartItem({
             )}
           </p>
           <p className="line-clamp-1 text-12 font-normal">
-            {t('shipping_fee')} {shippingFee?.toLocaleString()} {t('won')}
+            {shippingFee && (
+              <>
+                {shippingFee}
+                {t('shipping_fee')} {shippingFee?.toLocaleString()} {t('won')}
+              </>
+            )}
+            {orderStatus && <>{orderStatus}</>}
           </p>
         </div>
       </div>
@@ -103,6 +111,7 @@ export default function CartItem({
           />
         </div>
       )}
+      {children}
     </div>
   );
 }

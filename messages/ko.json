@@ -330,7 +330,7 @@
     "terms_conditions": "서비스 이용약관",
     "privacy_policy": "개인정보 처리 방침",
     "copyright_policy": "저작권 및 지식 재산권 관리 정책",
-    "my_page": "마이페이지"
+    "my_page": "주문/배송 조회"
   },
   "my_information": {
     "nickname": "닉네임",
@@ -409,7 +409,7 @@
     "look": "보기",
     "order_completion": "주문 완료",
     "order_successfully": "주문이 성공적으로",
-    "completed": "완료되었습니다",
+    "completed": "배송완료",
     "order_number": "주문번호",
     "pre_sale_product": "예약 판매 상품이 포함되어 있어요.",
     "order_product_information": "주문 상품 정보",
@@ -431,7 +431,23 @@
     "payment_agency_service_link": "(주)토스페이먼츠",
     "order_failed": "주문 실패 관리자에게 문의해주세요.",
     "order_not_found": "주문을 찾을 수 없습니다.",
-    "back_to_goods": "굿즈로 돌아가기"
+    "back_to_goods": "굿즈로 돌아가기",
+    "cancel_reception_btn": "취소 접수",
+    "order_delivery_inquiry": "주문/배송 조회",
+    "order_detail_title": "주문 상세",
+    "faq_title": "자주 묻는 질문",
+    "customer_service_btn": "1:1 문의",
+    "no_orders_found": "주문이 없어요",
+    "view_detail_btn": "상세보기",
+    "pending": "대기중",
+    "paid": "결제완료",
+    "confirmed": "배송준비중",
+    "shipping": "배송중",
+    "cancelled": "취소",
+    "refunded": "환불",
+    "refund_request_btn": "반품 접수",
+    "exchange_request_btn": "교환 접수",
+    "delivery_tracking_btn": "배송 조회"
   },
   "my-cash": {
     "cash_amount": "{value} 캐시",

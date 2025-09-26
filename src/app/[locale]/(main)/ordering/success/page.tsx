@@ -10,8 +10,11 @@ import useSWR from 'swr';
 
 import { CartItemProps } from '@/atoms/goodsAtom';
 import Empty from '@/components/Empty';
-import { useAuth } from '@/lib/authentication/auth-context';
-import { fetchOrderById } from '@/lib/supabase/swr/order';
+import {
+  fetchOrderById,
+  OrderResponseType,
+  ShippingAddressType,
+} from '@/lib/supabase/swr/order';
 import { confirmPayment } from '@/lib/supabase/swr/payment';
 import { ROUTES } from '@/utils/constants';
 
@@ -20,6 +23,60 @@ import Success from './_components/Success.Client';
 
 const ORDER_KEY = {
   detail: (orderId: string) => ['order', orderId],
+};
+
+export const paymentInfoList = (data: OrderResponseType, t: any) => {
+  return [
+    {
+      label: t('payment_method'),
+      value: data?.payment_method,
+    },
+    {
+      label: t('order_status'),
+      value: data?.status,
+    },
+    {
+      label: t('order'),
+      value: data?.created_at
+        ? dayjs(data?.created_at).format('YYYY-MM-DD hh:mm')
+        : '',
+    },
+    {
+      label: t('payment_date'),
+      value: data?.paid_at
+        ? dayjs(data?.paid_at).format('YYYY-MM-DD hh:mm')
+        : '',
+    },
+    {
+      label: t('delivery_fee'),
+      value: `${data?.total_delivery_fee ? (data?.total_delivery_fee as number)?.toLocaleString() : ''}${t('won')}`,
+    },
+    {
+      label: t('payment_amount'),
+      value: `${data?.total ? (data?.total as number)?.toLocaleString() : ''}${t('won')}`,
+    },
+  ];
+};
+
+export const shippingInfoList = (data: ShippingAddressType, t: any) => {
+  return [
+    {
+      label: t('conferee'),
+      value: data?.receiver_name,
+    },
+    {
+      label: t('phone_number'),
+      value: data?.phone_number,
+    },
+    {
+      label: t('address'),
+      value: data?.address,
+    },
+    {
+      label: t('delivery_request'),
+      value: data?.note,
+    },
+  ];
 };
 
 export default function SuccessPage() {
@@ -87,64 +144,14 @@ export default function SuccessPage() {
     false
   ) as CartItemProps[];
 
-  const paymentInfoList = [
-    {
-      label: t('payment_method'),
-      value: data?.payment_method,
-    },
-    {
-      label: t('order_status'),
-      value: data?.status,
-    },
-    {
-      label: t('order'),
-      value: data?.created_at
-        ? dayjs(data?.created_at).format('YYYY-MM-DD hh:mm')
-        : '',
-    },
-    {
-      label: t('payment_date'),
-      value: data?.paid_at
-        ? dayjs(data?.paid_at).format('YYYY-MM-DD hh:mm')
-        : '',
-    },
-    {
-      label: t('delivery_fee'),
-      value: `${data?.total_delivery_fee ? (data?.total_delivery_fee as number)?.toLocaleString() : ''}${t('won')}`,
-    },
-    {
-      label: t('payment_amount'),
-      value: `${data?.total ? (data?.total as number)?.toLocaleString() : ''}${t('won')}`,
-    },
-  ];
-
-  const shippingInfoList = [
-    {
-      label: t('conferee'),
-      value: shipping_info?.receiver_name,
-    },
-    {
-      label: t('phone_number'),
-      value: shipping_info?.phone_number,
-    },
-    {
-      label: t('address'),
-      value: shipping_info?.address,
-    },
-    {
-      label: t('delivery_request'),
-      value: shipping_info?.note,
-    },
-  ];
-
   console.log('status:', status);
 
   return (
     <div data-no-navigation>
       <Success
         orderItems={orderItems as CartItemProps[]}
-        paymentInfoList={paymentInfoList}
-        shippingInfoList={shippingInfoList}
+        paymentInfoList={paymentInfoList(data, t)}
+        shippingInfoList={shippingInfoList(shipping_info, t)}
         orderId={orderId}
         status={status}
         scheduledDateInfo={items

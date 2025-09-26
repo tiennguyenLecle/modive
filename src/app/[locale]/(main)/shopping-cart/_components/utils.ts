@@ -9,18 +9,24 @@ export const mappedCartItems = (
 ) => {
   if (!items || items?.length === 0) return [];
   return items.map((item: CartItemType) => {
-    const { good, quantity, is_selected, id } = item || {};
+    const { good, quantity, is_selected, id, item_snapshot } = item || {};
+
+    const goodInfo = good || item_snapshot || {};
 
     return {
       id,
-      image: good?.thumbnail_key ? getPublicUrl(good?.thumbnail_key) : '',
-      title: good?.title,
-      price: good?.price,
-      shippingFee: good?.delivery_fee,
-      scheduledDate: good?.is_pre_sale ? (good?.release_date ?? '') : '',
+      image: goodInfo?.thumbnail_key
+        ? getPublicUrl(goodInfo?.thumbnail_key)
+        : '',
+      title: goodInfo?.title,
+      price: goodInfo?.price,
+      shippingFee: goodInfo?.delivery_fee,
+      scheduledDate: goodInfo?.is_pre_sale
+        ? (goodInfo?.release_date ?? '')
+        : '',
       // need to ask
       quantity: quantity,
-      remainingCount: good?.quantity,
+      remainingCount: goodInfo?.quantity,
       // need to ask
       showCheckbox: showCheckbox,
       checked: is_selected,

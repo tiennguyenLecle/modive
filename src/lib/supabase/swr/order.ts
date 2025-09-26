@@ -5,6 +5,7 @@ export const ORDER_KEY = {
   all: ['order'] as const,
 };
 
+// Create Order
 type ShippingAddressType = {
   receiver_name: string;
   phone_number: string;
@@ -61,6 +62,7 @@ const createOrder = async (payload: CreateOrderPayload) => {
   return data as CreateOrderResponseType;
 };
 
+// Get Order By Id
 type OrderResponseType = CreateOrderResponseType & {
   id: string;
   created_at: string;
@@ -101,15 +103,15 @@ const fetchOrderById = async (orderId: string) => {
     .from('orders')
     .select(
       `
-          *,
-          items:order_items (
             *,
-            good:goods (*),
-            work:works (*),
-            episode:episodes (*),
-            chapter:chapters (*)
-          )
-          `
+            items:order_items (
+              *,
+              good:goods (*),
+              work:works (*),
+              episode:episodes (*),
+              chapter:chapters (*)
+            )
+            `
     )
     .eq('id', orderId)
     .is('deleted_at', null)
@@ -119,10 +121,56 @@ const fetchOrderById = async (orderId: string) => {
   return data as OrderResponseType;
 };
 
-export { createOrder, fetchOrderById };
+// Get My Orders Grouped By Day
+type MyOrdersPayloadType = {
+  p_limit: number;
+  p_page: number;
+  p_tz: string; // must be a valid IANA timezone 'Asia/Seoul',
+  p_type: 'normal_items' | 'purchase_coins' | null; // 'normal_items' | 'purchase_coins' | null(all)
+  p_status:
+    | 'pending'
+    | 'paid'
+    | 'shipping'
+    | 'completed'
+    | 'cancelled'
+    | 'refunded'
+    | null; // 'pending' | 'paid' | 'shipping' | 'completed' | 'cancelled' | 'refunded' | null(all)
+  p_sort_by: 'created_at' | 'updated_at' | 'total' | 'total_items' | 'paid_at'; // 'created_at' | 'updated_at' | 'total' | 'total_items' | 'paid_at'
+  p_sort_dir: 'asc' | 'desc';
+};
+
+type MyOrdersGroupedItemType = {
+  day: number;
+  year: number;
+  month: number;
+  orders: OrderResponseType[];
+};
+
+type MyOrdersGroupedByDayResponseType = {
+  current_page: number;
+  groups: MyOrdersGroupedItemType[];
+  limit: number;
+  total: number;
+  total_pages: number;
+};
+
+const fetchMyOrders = async (params: MyOrdersPayloadType) => {
+  const supabase = createBrowserSupabase('user');
+  const { data, error } = await supabase.rpc(
+    'get_my_orders_grouped_by_day',
+    params
+  );
+  if (error) throw error;
+  return data as MyOrdersGroupedByDayResponseType[];
+};
+
+export { createOrder, fetchOrderById, fetchMyOrders };
 export type {
   CreateOrderPayload,
   OrderResponseType,
   CreateOrderResponseType,
   ShippingAddressType,
+  MyOrdersPayloadType,
+  MyOrdersGroupedByDayResponseType,
+  MyOrdersGroupedItemType,
 };

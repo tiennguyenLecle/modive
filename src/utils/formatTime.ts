@@ -27,3 +27,18 @@ export const formatDateOrTime = (time: string, mode: Mode = 'date') => {
   }
   return date.locale(locale).format(formatStr);
 };
+
+export const formatDateByLocale = (
+  day: number,
+  month: number,
+  year: number
+) => {
+  if (!day || !month || !year) return '';
+  const locale = getCookie('NEXT_LOCALE') ?? 'ko';
+
+  const date = dayjs(new Date(year, month - 1, day));
+  if (locale === 'ko') {
+    return date.locale('ko').format('YYYY년 MM월 DD일');
+  }
+  return date.locale(locale).format('MMMM D, YYYY');
+};

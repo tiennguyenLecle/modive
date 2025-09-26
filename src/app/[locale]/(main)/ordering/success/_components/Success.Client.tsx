@@ -86,7 +86,11 @@ export default function SuccessPage({
             >
               {t('continue_shopping_btn')}
             </Button>
-            <Button variant="primary" className="w-full">
+            <Button
+              variant="primary"
+              className="w-full"
+              onClick={() => router.push(ROUTES.ORDERING + '/' + orderId)}
+            >
               {t('order_detail_btn')}
             </Button>
           </div>

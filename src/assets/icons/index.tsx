@@ -11,6 +11,7 @@ import CheckFill from './check-fill.svg';
 import Check from './check.svg';
 import CheckBoxFilled from './checkbox-filled.svg';
 import CheckBox from './checkbox.svg';
+import ChevronDown from './chevron-down.svg';
 import Chevron from './chevron.svg';
 import Close from './close.svg';
 import DefaultImage from './default-image.svg';
@@ -96,4 +97,5 @@ export {
   Trash,
   Minus,
   DefaultImage,
+  ChevronDown,
 };

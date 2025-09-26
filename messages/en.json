@@ -330,7 +330,8 @@
     "terms_conditions": "Service Terms and Conditions",
     "privacy_policy": "privacy policy",
     "copyright_policy": "Copyright and intellectual property management policy",
-    "my_page": "My page"
+    "my_page": "My page",
+    "order_shipping_inquiry": "Order/Shipping Inquiry"
   },
   "my_information": {
     "nickname": "Nickname",
@@ -433,7 +434,23 @@
     "order_not_found": "Order not found",
     "payment_amount_column": "Payment amount",
     "no_charging_history": "There is no cash charging history",
-    "back_to_goods": "Back to goods"
+    "back_to_goods": "Back to goods",
+    "cancel_reception_btn": "Cancel reception",
+    "order_delivery_inquiry": "Order/Delivery inquiry",
+    "faq_title": "FAQ",
+    "order_detail_title": "Order detail",
+    "customer_service_btn": "Customer service",
+    "no_orders_found": "No orders found",
+    "view_detail_btn": "View detail",
+    "pending": "Pending",
+    "paid": "Paid",
+    "confirmed": "Confirmed",
+    "shipping": "Shipping",
+    "cancelled": "Cancelled",
+    "refunded": "Refunded",
+    "refund_request_btn": "Refund request",
+    "exchange_request_btn": "Exchange request",
+    "delivery_tracking_btn": "Delivery tracking"
   },
   "my-cash": {
     "cash_amount": "{value} cash",

@@ -17,6 +17,8 @@ export type CartItemProps = {
   showAddItem?: boolean;
   onCheckboxChange?: (id: string) => void;
   onCountChange?: (count: number, id: string) => void;
+  children?: React.ReactNode;
+  orderStatus?: string;
 };
 
 export const shoppingCartAtom = atom<CartItemProps[]>([]);

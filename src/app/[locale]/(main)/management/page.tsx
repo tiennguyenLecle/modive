@@ -30,6 +30,14 @@ export default function ManagementPage() {
               <ArrowRight className="h-18 w-18 text-gray-00" />
             </div>
           </Link>
+          <Link href={ROUTES.MANAGEMENT.MY_ORDER_INQUIRY}>
+            <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
+              <p className="text-16 font-normal text-gray-00">
+                {t('order_shipping_inquiry')}
+              </p>
+              <ArrowRight className="h-18 w-18 text-gray-00" />
+            </div>
+          </Link>
 
           <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
             <p className="text-16 font-normal text-gray-00">

@@ -23,6 +23,7 @@ export const ROUTES = {
     INDEX: '/management',
     MY_INFORMATION: '/management/my-information',
     MY_CASH: '/management/my-cash',
+    MY_ORDER_INQUIRY: '/order-inquiry',
     // MY_MONEY: '/management/my-money',
     // NOTI_SETTINGS: '/management/noti-settings',
     // ANNOUNCEMENT: '/management/announcement',

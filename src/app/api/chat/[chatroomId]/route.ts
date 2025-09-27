@@ -10,6 +10,7 @@ import {
 } from '@/lib/api';
 import { withAuth } from '@/lib/api/middleware/auth';
 import { ChatApi } from '@/lib/api/server';
+import { createServerSupabase } from '@/lib/supabase/factory.server';
 
 // --- Common definitions ---
 
@@ -80,15 +81,31 @@ async function createMessageHandler(
     const { chatroomId } = context.validatedParams;
     const { sessionId, text } = context.validatedBody as CreateMessageBody;
     const { id: userId, user_metadata } = context.user!;
-    const newMessage = await ChatApi.createMessage(
+
+    // Get bot_name from chat_rooms table
+    const supabase = createServerSupabase('user');
+    const { data: chatRoom, error } = await supabase
+      .from('chat_rooms')
+      .select('bot_name')
+      .eq('room_id', chatroomId)
+      .single();
+
+    if (error || !chatRoom) {
+      throw new Error('Chat room not found');
+    }
+
+    const botName = chatRoom.bot_name;
+
+    const newMessage = await ChatApi.createMessage({
       sessionId,
       chatroomId,
-      userId!,
+      chatbotName: botName,
+      userId,
       text,
-      user_metadata.name || '',
-      'male',
-      '2000-01-01'
-    );
+      userName: user_metadata.name || '',
+      gender: 'male',
+      dateOfBirth: '2000-01-01',
+    });
 
     return NextResponse.json(newMessage, { status: 201 });
   } catch (error: any) {

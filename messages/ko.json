@@ -212,10 +212,10 @@
   },
   "introduction": {
     "tabs": {
-      "chat": "채팅하기",
+      "chat": "채팅",
       "personal_relationship": "인물관계도",
       "community": "커뮤니티",
-      "episodes": "소설 보러가기",
+      "episodes": "소설",
       "cash": "캐시 충전",
       "charging": "충전 내역"
     },
@@ -244,7 +244,7 @@
       "payment": "결제",
       "currency": "원",
       "auto_charging_at_a_cheaper": "더 저렴하게 자동충전하기",
-      "general_charging": "일반 충전하기",
+      "general_charging": "결제",
       "insufficient_balance": "잔액이 부족함",
       "collect items": "{count}개 회차 소장하기",
       "purchase_multiple_items": "{workName} (총 {count}회)"
@@ -387,7 +387,7 @@
     "shipping_information": "배송 정보",
     "conferee": "받는 사람",
     "phone_number": "휴대폰 번호",
-    "postal_code": "우편번호",
+    "postal_code": "주소",
     "detail_address": "상세주소",
     "set_default_shipping": "기본 배송지로 설정",
     "please_place_it_in_front_of_the_door_in_case_of_absence": "부재 시 문 앞에 놓아 주세요.",
@@ -488,6 +488,6 @@
   "modal_check_user": {
     "alarm": "알림",
     "join_the_membership": "회원가입",
-    "non_member_search": "비회원 탐색"
+    "non_member_search": "확인"
   }
 }

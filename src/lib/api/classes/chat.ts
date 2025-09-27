@@ -109,32 +109,26 @@ export class ChatApiClient extends BaseApiClient {
     );
   }
 
-  public createMessage(
-    sessionId: string,
-    chatroomId: string,
-    userId: string,
-    text: string,
-    userName: string,
-    gender: string,
-    dateOfBirth: string
-  ) {
-    // console.log('Send message payload: ', {
-    //   userId: this.chatApiId,
-    //   command: {
-    //     type: 'SEND_MESSAGE_TO_CHATROOM',
-    //     messages: [text],
-    //     metadata: {},
-    //     senderId: userId,
-    //     chatroomId: `${this.chatbotName}-${userId}`,
-    //     senderType: 'user',
-    //     appContext: {
-    //       username: userName,
-    //       gender,
-    //       dob: dateOfBirth,
-    //     },
-    //   },
-    // });
-
+  public createMessage(params: {
+    sessionId: string;
+    chatroomId: string;
+    chatbotName: string;
+    userId: string;
+    text: string;
+    userName: string;
+    gender: string;
+    dateOfBirth: string;
+  }) {
+    const {
+      sessionId,
+      chatroomId,
+      chatbotName,
+      userId,
+      text,
+      userName,
+      gender,
+      dateOfBirth,
+    } = params;
     return this.post(`/v3/universe/session/${sessionId}`, {
       body: {
         userId: this.chatApiId,
@@ -143,7 +137,7 @@ export class ChatApiClient extends BaseApiClient {
           messages: [text],
           metadata: {},
           senderId: userId,
-          chatroomId: `${this.chatbotName}-${userId}`,
+          chatroomId: `${chatbotName}-${userId}`,
           senderType: 'user',
           appContext: {
             username: userName,

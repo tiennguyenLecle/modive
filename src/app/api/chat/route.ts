@@ -1,13 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { validate as isUUID } from 'uuid';
 import { z } from 'zod';
 
-import {
-  pipe,
-  withValidatedBody,
-  withValidatedParams,
-  withValidatedQuery,
-  type HandlerContext,
-} from '@/lib/api';
+import { pipe, withValidatedBody, type HandlerContext } from '@/lib/api';
 import { withAuth } from '@/lib/api/middleware/auth';
 import { ChatApi } from '@/lib/api/server';
 import { createServerSupabase } from '@/lib/supabase/factory.server';
@@ -45,9 +40,21 @@ async function createChatHandler(
         }),
     ]);
 
+    let botFriendlyName = botId;
+
+    if (isUUID(botId)) {
+      botFriendlyName = Object.values(data.snapshot.config.chatbots).find(
+        botData => botData.dbId === botId
+      )?.id;
+    }
+
     const sessionId = data.sessionId;
-    const chatroomId =
-      data.snapshot.state.chatroomStates[`${botId}-${userId}`].db.chatroomId;
+
+    const chatroomState =
+      data.snapshot.state.chatroomStates[`${botFriendlyName}-${userId}`];
+
+    if (!chatroomState) throw new Error('Create chatroom failed');
+    const chatroomId = chatroomState.db.chatroomId;
 
     const createRes = await supabase
       .from('chat_rooms')
@@ -61,9 +68,15 @@ async function createChatHandler(
       .select('*')
       .single();
 
+    if (createRes.error) throw createRes.error;
+
     return NextResponse.json(createRes.data);
   } catch (error) {
-    return NextResponse.json(error);
+    console.log('error: ', error);
+    return NextResponse.json(
+      { error: 'Failed to create chat room' },
+      { status: 500 }
+    );
   }
 }
 

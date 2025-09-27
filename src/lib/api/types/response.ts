@@ -1,4 +1,5 @@
 import { Message } from './chat.types';
+import { Chatbot } from './chatbot';
 import { ChatRoomState } from './chatroom';
 
 export type CreateSessionResponse = {
@@ -7,6 +8,9 @@ export type CreateSessionResponse = {
     snapshot: {
       state: {
         chatroomStates: Record<string, ChatRoomState>;
+      };
+      config: {
+        chatbots: Record<string, Chatbot>;
       };
     };
     sessionId: string;

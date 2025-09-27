@@ -73,18 +73,19 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
       });
 
   const handleConfirm = async () => {
-    closeHandler();
     await checkAvailableUser({
       description: t('alert_sign_up.start_conversation'),
     });
     try {
       if (!localStorage.getItem(STORAGE.HIDE_GUIDE_TO_USE)) {
+        closeHandler();
         await modalGuideToUseRef.current?.open();
       }
 
       if (character?.chat_rooms && character.chat_rooms.length > 0) {
         const { chat_rooms } = character;
         modalGuideToUseRef.current?.close();
+        closeHandler();
         const decision = await modalExistChatRoomRef.current?.open();
 
         if (decision === 'existing') {
@@ -122,7 +123,8 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
               variant="primary"
               className="flex-1"
               onClick={handleConfirm}
-              disabled={characterDetail.isLoading}
+              disabled={characterDetail.isLoading || createChat.isMutating}
+              loading={createChat.isMutating}
             >
               {t('start_conversation')}
             </Button>

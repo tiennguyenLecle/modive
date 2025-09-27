@@ -6,27 +6,14 @@ import {
 import { BaseApiClient } from './base';
 
 export class ChatApiClient extends BaseApiClient {
-  private universeId: string;
-  private chatbotName: string;
   private chatApiId: string;
-  private bundleId: string;
 
   constructor() {
     const CHAT_API_BASE_URL = process.env.DIT_API_BASE_URL;
     const CHAT_API_KEY = process.env.X_API_KEY;
     const CHAT_API_ID = process.env.X_API_ID;
-    const CHAT_UNIVERSE_ID = process.env.DIT_CHATBOT_UNIVERSE_ID;
-    const CHAT_BOT_NAME = process.env.DIT_CHATBOT_NAME;
-    const CHAT_BUNDLE_ID = process.env.DIT_CHATBOT_BUNDLE_ID;
 
-    if (
-      !CHAT_API_BASE_URL ||
-      !CHAT_API_KEY ||
-      !CHAT_API_ID ||
-      !CHAT_UNIVERSE_ID ||
-      !CHAT_BOT_NAME ||
-      !CHAT_BUNDLE_ID
-    ) {
+    if (!CHAT_API_BASE_URL || !CHAT_API_KEY || !CHAT_API_ID) {
       throw new Error('Missing required Chat API environment variables.');
     }
 
@@ -35,10 +22,7 @@ export class ChatApiClient extends BaseApiClient {
       Accept: 'application/json',
     });
 
-    this.universeId = CHAT_UNIVERSE_ID;
-    this.chatbotName = CHAT_BOT_NAME;
     this.chatApiId = CHAT_API_ID;
-    this.bundleId = CHAT_BUNDLE_ID;
   }
 
   // --- Utility Methods for Chat API ---
@@ -61,8 +45,13 @@ export class ChatApiClient extends BaseApiClient {
     return this.post('/auth/logout');
   }
 
-  public addMemberShip(userId: string, role: string) {
-    return this.post(`/universe/${this.universeId}/memberships`, {
+  public addMemberShip(params: {
+    userId: string;
+    role: string;
+    universeId: string;
+  }) {
+    const { userId, role, universeId } = params;
+    return this.post(`/universe/${universeId}/memberships`, {
       body: {
         userId,
         role,
@@ -70,21 +59,22 @@ export class ChatApiClient extends BaseApiClient {
     });
   }
 
-  public searchSessionsByUserId(userId: string) {
-    const url = `/sessions/search?universeId=${this.universeId}&endUserId=${userId}`;
+  public searchSessionsByUserId(params: {
+    universeId: string;
+    userId: string;
+  }) {
+    const { universeId, userId } = params;
+    const url = `/sessions/search?universeId=${universeId}&endUserId=${userId}`;
     return this.get(url);
   }
 
   public createSession(userId: string, bundleId?: string) {
-    return this.post<CreateSessionResponse>(
-      `/v3/universe/${bundleId || this.bundleId}`,
-      {
-        body: {
-          endUserId: userId,
-          endUserMetadata: '',
-        },
-      }
-    );
+    return this.post<CreateSessionResponse>(`/v3/universe/${bundleId}`, {
+      body: {
+        endUserId: userId,
+        endUserMetadata: '',
+      },
+    });
   }
 
   /**
@@ -149,12 +139,14 @@ export class ChatApiClient extends BaseApiClient {
     });
   }
 
-  public getChatbots() {
+  public getChatbots(params: { universeId?: string }) {
+    const { universeId } = params;
     // If not provide universeId, it will return all chatbots from all universes
-    return this.get(`/chatbots?universeId=${this.universeId}`);
+    return this.get(`/chatbots?universeId=${universeId}`);
   }
 
-  public getChatbotDetails(chatbotId: string) {
+  public getChatbotDetails(params: { chatbotId: string }) {
+    const { chatbotId } = params;
     return this.get(`/chatbots/${chatbotId}`);
   }
 }

@@ -34,6 +34,7 @@ type MenuTabProps = ComponentProps<'div'> & {
    * - false: Cache inactive tabs for faster switching
    */
   destroyInactiveTabPane?: boolean;
+  sticky?: boolean;
 };
 
 // Individual tab panel component optimized with memo
@@ -63,6 +64,7 @@ const MenuTab: React.FC<MenuTabProps> = ({
   onTabChange,
   className,
   destroyInactiveTabPane = false,
+  sticky = false,
   ...props
 }) => {
   // Determine if component is controlled or uncontrolled
@@ -125,6 +127,51 @@ const MenuTab: React.FC<MenuTabProps> = ({
     [isControlled, onTabChange]
   );
 
+  const [showStartGradient, setShowStartGradient] = useState(false);
+  const [showEndGradient, setShowEndGradient] = useState(false);
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const startSentinelRef = useRef<HTMLDivElement>(null);
+  const endSentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    const startSentinel = startSentinelRef.current;
+    const endSentinel = endSentinelRef.current;
+
+    if (!scrollContainer || !startSentinel || !endSentinel) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.target === startSentinel) {
+            setShowStartGradient(!entry.isIntersecting);
+          } else if (entry.target === endSentinel) {
+            setShowEndGradient(!entry.isIntersecting);
+          }
+        });
+      },
+      {
+        root: scrollContainer,
+        threshold: 1.0,
+      }
+    );
+
+    observer.observe(startSentinel);
+    observer.observe(endSentinel);
+
+    // Initial check for non-scrollable content
+    if (scrollContainer.scrollWidth <= scrollContainer.clientWidth) {
+      setShowEndGradient(false);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [tabs]);
+
   // Validate tabs array after all hooks
   if (!tabs || tabs.length === 0) {
     console.warn('MenuTab: tabs array is empty or undefined');
@@ -134,35 +181,67 @@ const MenuTab: React.FC<MenuTabProps> = ({
   return (
     <div className={cx('w-full bg-white', className)} {...props}>
       <div
-        className="container relative flex h-48 items-center gap-12 border-b border-gray-90"
-        role="tablist"
-        aria-label="Menu tabs"
+        className={cx(
+          'top-56 z-20 w-full border-b border-gray-90 bg-gray-100',
+          sticky && 'sticky'
+        )}
       >
-        {tabs.map(tab => (
-          <button
-            key={tab.key}
-            role="tab"
-            aria-selected={activeTab === tab.key}
-            aria-controls={`panel-${tab.key}`}
-            id={`tab-${tab.key}`}
-            className={cx(
-              'relative line-clamp-1 flex-1 cursor-pointer text-ellipsis whitespace-nowrap px-16 py-12 text-16 font-semibold transition-colors',
-              activeTab === tab.key
-                ? 'text-primary'
-                : 'hover:text-gray-600 text-gray-00'
-            )}
-            onClick={() => handleTabClick(tab.key)}
+        <div className="container relative">
+          <div
+            ref={scrollContainerRef}
+            className="no-scrollbar flex h-48 items-center gap-12 overflow-auto"
+            role="tablist"
+            aria-label="Menu tabs"
           >
-            {tab.label}
-            {activeTab === tab.key && (
-              <motion.div
-                className="absolute bottom-0 left-0 right-0 h-2 bg-primary"
-                layoutId="indicator"
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
-              />
+            <div ref={startSentinelRef} className="h-px w-px flex-shrink-0" />
+            {tabs.map(tab => (
+              <button
+                key={tab.key}
+                role="tab"
+                aria-selected={activeTab === tab.key}
+                aria-controls={`panel-${tab.key}`}
+                id={`tab-${tab.key}`}
+                className={cx(
+                  'relative flex-1 whitespace-nowrap px-16 py-12 text-16 font-semibold transition-colors',
+                  activeTab === tab.key
+                    ? 'text-primary'
+                    : 'hover:text-gray-600 text-gray-00'
+                )}
+                onClick={() => handleTabClick(tab.key)}
+              >
+                {tab.label}
+                {activeTab === tab.key && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-2 bg-primary"
+                    layoutId="indicator"
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  />
+                )}
+              </button>
+            ))}
+            <div ref={endSentinelRef} className="h-px w-px flex-shrink-0" />
+          </div>
+          <div
+            className={cx(
+              'bg-gradient-to-r pointer-events-none absolute left-0 top-0 h-full w-80 transition-opacity',
+              showStartGradient ? 'opacity-100' : 'opacity-0'
             )}
-          </button>
-        ))}
+            style={{
+              background: 'linear-gradient(to right, #fff, transparent)',
+              // background: 'red',
+            }}
+          />
+          <div
+            className={cx(
+              'pointer-events-none absolute right-0 top-0 h-full w-80 transition-opacity',
+              showEndGradient ? 'opacity-100' : 'opacity-0'
+            )}
+            style={{
+              background: 'linear-gradient(to left, #fff, transparent)',
+              // background: 'blue',
+            }}
+          />
+        </div>
       </div>
       <div className="group-tabpanel">
         {tabs.map(tab => {

@@ -8,6 +8,7 @@ export type Message = {
   speaker_id?: string;
   message_embedding?: null;
   metadata?: {
+    invisible?: boolean;
     variables: {
       current: {
         affection_score: number;

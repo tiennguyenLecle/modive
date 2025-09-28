@@ -26,7 +26,7 @@ import {
 } from '@/lib/supabase/swr/chatroom';
 import { updateNewMsgCountUser } from '@/lib/supabase/swr/users';
 import { ROUTES } from '@/utils/constants';
-import { cx } from '@/utils/method';
+import { cx, filterMessageConditions } from '@/utils/method';
 
 type HomeHeaderProps = ComponentProps<'header'> & {
   className?: string;
@@ -63,6 +63,23 @@ const Header = ({
 
   // Handle new message from service worker - update user metadata and room metadata
   const handleNewMessage = async (data: any) => {
+    // If user is on the same page, return
+    if (window?.location?.href === data.url) {
+      return;
+    }
+
+    // If message is invisible, return
+    if (
+      filterMessageConditions(
+        data?.message?.content,
+        data?.message?.id,
+        new Set(),
+        data?.message?.metadata?.invisible || false
+      )
+    ) {
+      return;
+    }
+
     const currentCount = messageCount || userData?.metadata?.new_msg_count;
     const newCount = currentCount + 1;
 

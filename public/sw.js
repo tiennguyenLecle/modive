@@ -28,19 +28,76 @@ self.addEventListener('push', event => {
             badge: '/favicon.ico',
           };
 
-          clients.matchAll({ type: 'window' }).then(clientList => {
-            if (clientList?.length > 0) {
-              for (const client of clientList) {
-                if (!client?.url?.includes(url)) {
-                  client.postMessage({
-                    type: 'NEW_MESSAGE',
-                    data: { ...eventData, url },
-                  });
+          // Try to get clients with a small delay to ensure they're registered
+          const handleClients = async () => {
+            try {
+              // First try immediately
+              let clientList = await clients.matchAll({ type: 'window' });
+
+              // If no clients found, wait a bit and try again
+              if (clientList.length === 0) {
+                await new Promise(resolve => setTimeout(resolve, 200));
+                clientList = await clients.matchAll({ type: 'window' });
+              }
+
+              // Always wait a bit more to ensure all clients are registered
+              if (clientList.length > 0) {
+                await new Promise(resolve => setTimeout(resolve, 50));
+                clientList = await clients.matchAll({ type: 'window' });
+              }
+
+              let messageSent = false;
+
+              if (clientList?.length > 0) {
+                let hasActiveTab = false;
+
+                for (const client of clientList) {
+                  // Check if this client is exactly the same URL (same tab)
+                  if (client.url === url) {
+                    hasActiveTab = true;
+                    break;
+                  }
+
+                  // Check if both are in the same chatroom (extract chatroomId)
+                  const targetChatroomMatch = url.match(/\/chat\/([a-f0-9-]+)/);
+                  const clientChatroomMatch =
+                    client.url.match(/\/chat\/([a-f0-9-]+)/);
+
+                  if (targetChatroomMatch && clientChatroomMatch) {
+                    const targetChatroomId = targetChatroomMatch[1];
+                    const clientChatroomId = clientChatroomMatch[1];
+
+                    if (targetChatroomId === clientChatroomId) {
+                      hasActiveTab = true;
+                      break;
+                    }
+                  }
+                }
+
+                // Only send postMessage and show notification if user is NOT on the target tab
+                if (!hasActiveTab) {
+                  for (const client of clientList) {
+                    client.postMessage({
+                      type: 'NEW_MESSAGE',
+                      data: { ...eventData, url },
+                    });
+                    messageSent = true;
+                  }
+
                   return self.registration.showNotification(title, options);
+                } else {
+                  return Promise.resolve();
                 }
               }
+
+              // If no clients found, show notification
+              return self.registration.showNotification(title, options);
+            } catch (error) {
+              return self.registration.showNotification(title, options);
             }
-          });
+          };
+
+          handleClients();
         }
 
         default:
@@ -76,9 +133,27 @@ self.addEventListener('notificationclick', event => {
 
 // Listen for messages from the main thread
 self.addEventListener('message', event => {
-  console.log('Service worker received message:', event.data);
-
   if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+// Service Worker activation
+self.addEventListener('activate', event => {
+  event.waitUntil(self.clients.claim());
+});
+
+// Service Worker installation - v2.0
+self.addEventListener('install', event => {
+  self.skipWaiting();
+});
+
+// Force update Service Worker
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  if (event.data && event.data.type === 'FORCE_UPDATE') {
     self.skipWaiting();
   }
 });

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { useAtom } from 'jotai';
 
@@ -23,16 +23,22 @@ const POLLING_INTERVAL = 1000;
 const TIMEOUT_DURATION = 30000;
 const MESSAGE_LIMIT = 20;
 
-let newMesssageChatbotIds: string[] = [];
-
 /**
  * Hook for managing message polling and updates
  */
-let itemsOfNewMessagesIds: string[] = [];
-
 export const useMessagePolling = (chatroomId: string) => {
   const [messages, setMessages] = useAtom(messagesAtom);
   const messagesRef = useRef<Message[]>([]);
+  const newMessageChatbotIdsRef = useRef<string[]>([]);
+  const itemsOfNewMessagesIdsRef = useRef<string[]>([]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      newMessageChatbotIdsRef.current = [];
+      itemsOfNewMessagesIdsRef.current = [];
+    };
+  }, []);
 
   function mergeMessages(
     current: Message[],
@@ -79,12 +85,14 @@ export const useMessagePolling = (chatroomId: string) => {
         msg?.id?.startsWith('newMessageUserItemId')
       );
 
-      itemsOfNewMessagesIds = [
-        ...itemsOfNewMessagesIds,
-        ...itemsOfNewMessages?.map(msg => msg.id),
-      ]?.filter((id, index, self) => self.indexOf(id) === index);
+      // Efficient deduplication using Set
+      const newIds = itemsOfNewMessages?.map(msg => msg.id) || [];
+      const uniqueIds = Array.from(
+        new Set([...itemsOfNewMessagesIdsRef.current, ...newIds])
+      );
+      itemsOfNewMessagesIdsRef.current = uniqueIds;
 
-      const startTime = Date.now();
+      let startTime = Date.now();
       let stopped = false;
 
       const poll = async (): Promise<boolean> => {
@@ -112,9 +120,9 @@ export const useMessagePolling = (chatroomId: string) => {
             newMessages.forEach((m: Message) => {
               if (
                 m.speaker_type === 'chatbot' &&
-                !newMesssageChatbotIds.find(id => id === m?.id)
+                !newMessageChatbotIdsRef.current.find(id => id === m?.id)
               ) {
-                newMesssageChatbotIds.push(m.id);
+                newMessageChatbotIdsRef.current.push(m.id);
               }
             });
 
@@ -123,16 +131,17 @@ export const useMessagePolling = (chatroomId: string) => {
           }
 
           if (
-            Date.now() - startTime >= TIMEOUT_DURATION ||
-            newMesssageChatbotIds?.length === itemsOfNewMessagesIds?.length
+            newMessageChatbotIdsRef.current?.length ===
+              itemsOfNewMessagesIdsRef.current?.length ||
+            Date.now() - startTime >= TIMEOUT_DURATION
           ) {
             messagesRef.current = messagesRef.current?.filter(
               msg => !msg?.id?.startsWith('temparareryChatbotItemId')
             );
             setMessages(messagesRef.current);
 
-            newMesssageChatbotIds = [];
-            itemsOfNewMessagesIds = [];
+            newMessageChatbotIdsRef.current = [];
+            itemsOfNewMessagesIdsRef.current = [];
             return true;
           }
 

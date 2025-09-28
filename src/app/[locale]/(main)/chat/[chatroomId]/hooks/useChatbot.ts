@@ -121,7 +121,7 @@ export const useLoadMoreMessages = (
 /**
  * Hook for sending messages
  */
-export const useSendMessage = () => {
+export const useSendMessage = ({ botName }: { botName: string }) => {
   const { chatroomId } = useParams();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('sessionId');
@@ -141,6 +141,7 @@ export const useSendMessage = () => {
           body: {
             sessionId,
             text,
+            botName,
           },
         });
       } catch (error) {

@@ -512,6 +512,7 @@ export type Database = {
           avatar_id: string | null;
           avatar_key: string | null;
           bot_id: string | null;
+          bot_name: string | null;
           created_at: string | null;
           date_of_birth: string | null;
           deleted_at: string | null;
@@ -534,6 +535,7 @@ export type Database = {
           avatar_id?: string | null;
           avatar_key?: string | null;
           bot_id?: string | null;
+          bot_name?: string | null;
           created_at?: string | null;
           date_of_birth?: string | null;
           deleted_at?: string | null;
@@ -556,6 +558,7 @@ export type Database = {
           avatar_id?: string | null;
           avatar_key?: string | null;
           bot_id?: string | null;
+          bot_name?: string | null;
           created_at?: string | null;
           date_of_birth?: string | null;
           deleted_at?: string | null;
@@ -2371,23 +2374,29 @@ export type Database = {
         Row: {
           goods: Json | null;
           total_goods: number | null;
+          work_created_at: string | null;
           work_id: string | null;
           work_status: Database['public']['Enums']['work_status'] | null;
           work_title: string | null;
+          work_updated_at: string | null;
         };
         Insert: {
           goods?: never;
           total_goods?: never;
+          work_created_at?: string | null;
           work_id?: string | null;
           work_status?: Database['public']['Enums']['work_status'] | null;
           work_title?: string | null;
+          work_updated_at?: string | null;
         };
         Update: {
           goods?: never;
           total_goods?: never;
+          work_created_at?: string | null;
           work_id?: string | null;
           work_status?: Database['public']['Enums']['work_status'] | null;
           work_title?: string | null;
+          work_updated_at?: string | null;
         };
         Relationships: [];
       };
@@ -2411,13 +2420,23 @@ export type Database = {
         Returns: Json;
       };
       get_my_orders_grouped_by_day: {
-        Args: {
-          p_limit?: number;
-          p_page?: number;
-          p_status?: Database['public']['Enums']['order_status'];
-          p_type?: Database['public']['Enums']['order_type'];
-          p_tz?: string;
-        };
+        Args:
+          | {
+              p_limit?: number;
+              p_page?: number;
+              p_sort_by?: string;
+              p_sort_dir?: string;
+              p_status?: Database['public']['Enums']['order_status'];
+              p_type?: Database['public']['Enums']['order_type'];
+              p_tz?: string;
+            }
+          | {
+              p_limit?: number;
+              p_page?: number;
+              p_status?: Database['public']['Enums']['order_status'];
+              p_type?: Database['public']['Enums']['order_type'];
+              p_tz?: string;
+            };
         Returns: Json;
       };
       get_work_details_by_id: {
@@ -2436,6 +2455,34 @@ export type Database = {
       is_sys_admin: {
         Args: { uid: string };
         Returns: boolean;
+      };
+      search_work_goods: {
+        Args: {
+          p_limit?: number;
+          p_page?: number;
+          p_query: string;
+          p_sort_by?: string;
+          p_sort_dir?: string;
+          p_work_status?: Database['public']['Enums']['work_status'];
+        };
+        Returns: {
+          goods: Json;
+          rank: number;
+          total_goods: number;
+          work_created_at: string;
+          work_id: string;
+          work_status: Database['public']['Enums']['work_status'];
+          work_title: string;
+          work_updated_at: string;
+        }[];
+      };
+      unaccent: {
+        Args: { '': string };
+        Returns: string;
+      };
+      unaccent_init: {
+        Args: { '': unknown };
+        Returns: unknown;
       };
       update_my_cart: {
         Args: { p_payload: Json };

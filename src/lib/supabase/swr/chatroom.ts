@@ -169,7 +169,8 @@ export async function fetchChatRoomDetail(
         avatar_key,
         bot_id,
         id,
-        name
+        name,
+        bot_name
       )`
     )
     .eq('room_id', chatroomId || '70a63523-2221-4e60-a434-52b879ed6166')
@@ -204,6 +205,7 @@ export async function getRoomDetail(
       character:characters!chat_rooms_character_id_characters_id_fk (
         avatar_key,
         bot_id,
+        bot_name,
         id,
         name
       )`

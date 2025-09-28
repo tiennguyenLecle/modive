@@ -10,6 +10,7 @@ export type CharacterType = {
   name: string;
   quote?: string;
   bot_id: string;
+  bot_name: string;
   gender: GenderType;
   work_id: string;
   metadata: string;

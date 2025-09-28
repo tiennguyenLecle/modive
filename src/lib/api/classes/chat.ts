@@ -101,7 +101,6 @@ export class ChatApiClient extends BaseApiClient {
 
   public createMessage(params: {
     sessionId: string;
-    chatroomId: string;
     chatbotName: string;
     userId: string;
     text: string;
@@ -111,7 +110,6 @@ export class ChatApiClient extends BaseApiClient {
   }) {
     const {
       sessionId,
-      chatroomId,
       chatbotName,
       userId,
       text,

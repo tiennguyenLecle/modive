@@ -25,5 +25,8 @@ export type ChatRoomType = {
   room_id: string;
   metadata: Record<string, any>;
   work: Pick<WorkType, 'bundle_id' | 'universe_id'>;
-  character: Pick<CharacterType, 'avatar_key' | 'bot_id' | 'id' | 'name'>;
+  character: Pick<
+    CharacterType,
+    'avatar_key' | 'bot_id' | 'id' | 'name' | 'bot_name'
+  >;
 };

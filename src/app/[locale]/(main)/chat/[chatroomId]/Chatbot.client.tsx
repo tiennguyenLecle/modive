@@ -58,7 +58,9 @@ const Chatbot = memo(
       updatedMessagesRef,
       messageListRef
     );
-    const { sendMessage } = useSendMessage();
+    const { sendMessage } = useSendMessage({
+      botName: character?.bot_name ?? '',
+    });
 
     const prevLoadingComponent = useMemo(() => {
       return (

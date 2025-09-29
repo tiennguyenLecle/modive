@@ -118,7 +118,7 @@ const ModalEpisodeViewer = React.forwardRef<
           </div>
         )}
         <div className="flex-1 overflow-y-auto p-16">
-          <p className="text-14 font-normal leading-1.66 -tracking-0.5 text-gray-20">
+          <p className="whitespace-pre-wrap text-14 font-normal leading-1.66 -tracking-0.5 text-gray-20">
             {currentEpisode?.content}
           </p>
         </div>

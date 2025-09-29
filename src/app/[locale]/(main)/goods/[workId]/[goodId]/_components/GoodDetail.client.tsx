@@ -89,11 +89,11 @@ const GoodDetail: React.FC = () => {
               onChange={val => setQuantity(val)}
               max={goodQuantity || 0}
             />
-            <span className="text-12 font-normal text-primary">
+            {/* <span className="text-12 font-normal text-primary">
               {t('remaining_quantity', {
                 quantity: goodQuantity || 0,
               })}
-            </span>
+            </span> */}
           </div>
         </div>
       </div>

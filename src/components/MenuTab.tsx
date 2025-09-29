@@ -17,6 +17,7 @@ type TabItem = ComponentProps<'div'> & {
   key: string;
   label: string;
   children?: React.ReactNode;
+  hidden?: boolean;
 };
 
 type MenuTabProps = ComponentProps<'div'> & {
@@ -70,16 +71,38 @@ const MenuTab: React.FC<MenuTabProps> = ({
   // Determine if component is controlled or uncontrolled
   const isControlled = controlledActiveTab !== undefined;
 
-  // Validate defaultActiveKey exists in tabs
+  // Filter out hidden tabs
+  const visibleTabs = useMemo(
+    () => tabs?.filter(tab => !tab.hidden) || [],
+    [tabs]
+  );
+
+  // Validate defaultActiveKey exists in visible tabs
   const validDefaultKey =
-    defaultActiveKey && tabs?.some(tab => tab.key === defaultActiveKey)
+    defaultActiveKey && visibleTabs?.some(tab => tab.key === defaultActiveKey)
       ? defaultActiveKey
-      : tabs?.[0]?.key;
+      : visibleTabs?.[0]?.key;
 
   const [internalActiveTab, setInternalActiveTab] = useState(validDefaultKey);
 
   // Use controlled or internal state
   const activeTab = isControlled ? controlledActiveTab : internalActiveTab;
+
+  // Auto-switch to first visible tab if current active tab is hidden
+  useEffect(() => {
+    if (activeTab && visibleTabs.length > 0) {
+      const isActiveTabVisible = visibleTabs.some(tab => tab.key === activeTab);
+      if (!isActiveTabVisible) {
+        const firstVisibleTab = visibleTabs[0]?.key;
+        if (firstVisibleTab) {
+          if (!isControlled) {
+            setInternalActiveTab(firstVisibleTab);
+          }
+          onTabChange?.(firstVisibleTab);
+        }
+      }
+    }
+  }, [activeTab, visibleTabs, isControlled, onTabChange]);
 
   // Track which tabs have been visited for lazy loading
   const visitedTabsRef = useRef<Set<string>>(new Set());
@@ -98,7 +121,7 @@ const MenuTab: React.FC<MenuTabProps> = ({
   const tabsToRender = useMemo(() => {
     const result: Record<string, React.ReactNode> = {};
 
-    for (const tab of tabs) {
+    for (const tab of visibleTabs) {
       const hasBeenVisited = visitedTabsRef.current.has(tab.key);
       const isActive = activeTab === tab.key;
 
@@ -115,7 +138,7 @@ const MenuTab: React.FC<MenuTabProps> = ({
     }
 
     return result;
-  }, [tabs, activeTab, destroyInactiveTabPane]);
+  }, [visibleTabs, activeTab, destroyInactiveTabPane]);
 
   const handleTabClick = useCallback(
     (tab: string) => {
@@ -170,11 +193,17 @@ const MenuTab: React.FC<MenuTabProps> = ({
     return () => {
       observer.disconnect();
     };
-  }, [tabs]);
+  }, [visibleTabs]);
 
   // Validate tabs array after all hooks
   if (!tabs || tabs.length === 0) {
     console.warn('MenuTab: tabs array is empty or undefined');
+    return null;
+  }
+
+  // Check if all tabs are hidden
+  if (visibleTabs.length === 0) {
+    console.warn('MenuTab: all tabs are hidden');
     return null;
   }
 
@@ -194,7 +223,7 @@ const MenuTab: React.FC<MenuTabProps> = ({
             aria-label="Menu tabs"
           >
             <div ref={startSentinelRef} className="h-px w-px flex-shrink-0" />
-            {tabs.map(tab => (
+            {visibleTabs.map(tab => (
               <button
                 key={tab.key}
                 role="tab"
@@ -244,7 +273,7 @@ const MenuTab: React.FC<MenuTabProps> = ({
         </div>
       </div>
       <div className="group-tabpanel">
-        {tabs.map(tab => {
+        {visibleTabs.map(tab => {
           const isActive = activeTab === tab.key;
           const shouldRender = tabsToRender.hasOwnProperty(tab.key);
 

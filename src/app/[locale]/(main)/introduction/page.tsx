@@ -7,6 +7,8 @@ import { createServerSupabase } from '@/lib/supabase/factory.server';
 import { fetchWorkDetail } from '@/lib/supabase/swr/work';
 import { ROUTES } from '@/utils/constants';
 
+import { Provider } from './provider';
+
 const IntroductionClient = dynamic(() => import('./Introduction.client'), {
   ssr: false,
 });
@@ -41,7 +43,9 @@ export default async function IntroductionDetailPage({
 
   return (
     <main className="relative bg-gray-90">
-      <IntroductionClient fallbackData={safeWorkDetail} workId={workId} />
+      <Provider workDetail={safeWorkDetail}>
+        <IntroductionClient fallbackData={safeWorkDetail} workId={workId} />
+      </Provider>
     </main>
   );
 }

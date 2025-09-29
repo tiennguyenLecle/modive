@@ -17,7 +17,7 @@ const PreOrderInfo: React.FC<PreOrderInfoProps> = ({
   ...props
 }) => {
   const t = useTranslations('goods_page.good_detail');
-  if (!isPreSale || !releaseDate) return null;
+  if (!isPreSale && !releaseDate) return null;
 
   return (
     <div
@@ -28,12 +28,15 @@ const PreOrderInfo: React.FC<PreOrderInfoProps> = ({
       {...props}
     >
       <Info className="text-gray-60" width={18} height={18} />
-      <p className="">
-        {t('pre_sale_badge')}
-        <br />
-        {t('pre_sale_description', {
-          release_date: dayjs(releaseDate).format('MMMM D, YYYY'),
-        })}
+      <p>
+        {isPreSale && <div>{t('pre_sale_badge')}</div>}
+        {releaseDate && (
+          <div>
+            {t('pre_sale_description', {
+              release_date: dayjs(releaseDate).format('MMMM D, YYYY'),
+            })}
+          </div>
+        )}
       </p>
     </div>
   );

@@ -41,6 +41,7 @@ const CompleteShoppingCartModal = React.forwardRef<
   return (
     <Modal
       open={isOpen}
+      zIndex={50}
       onCancel={() => setIsOpen(false)}
       header={
         <Text className="flex items-center gap-8 text-16 font-semibold text-gray-00">

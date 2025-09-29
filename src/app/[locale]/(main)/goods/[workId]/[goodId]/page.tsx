@@ -1,5 +1,7 @@
-import GoodDetail from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/GoodDetail';
 import { Header } from '@/components';
+
+import GoodDetail from './_components/GoodDetail.client';
+import { GoodDetailProvider } from './_provider/GoodDetailProvider';
 
 type Props = {
   params: { workId: string; goodId: string };
@@ -7,7 +9,7 @@ type Props = {
 
 const GoodDetailPage = (props: Props) => {
   const { params } = props;
-  const { workId, goodId } = params;
+  const { goodId } = params;
 
   return (
     <main data-no-navigation className="flex flex-col">
@@ -18,7 +20,9 @@ const GoodDetailPage = (props: Props) => {
         className="border-b border-gray-80"
       />
       <div className="no-scrollbar min-h-0 flex-1 overflow-auto">
-        <GoodDetail goodId={goodId} workId={workId} />
+        <GoodDetailProvider goodId={goodId}>
+          <GoodDetail />
+        </GoodDetailProvider>
       </div>
     </main>
   );

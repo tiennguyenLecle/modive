@@ -3,17 +3,18 @@ import React, { ComponentProps } from 'react';
 import { GoodPlusType } from '@/types/goods';
 import { cx } from '@/utils/method';
 
+import { useGoodDetailProvider } from '../../_provider/GoodDetailProvider';
 import styles from './PurChaseInfoTab.module.scss';
 
-type PurchaseInfoTabProps = ComponentProps<'div'> & {
-  good: GoodPlusType;
-};
+type PurchaseInfoTabProps = ComponentProps<'div'> & {};
 
-const PurchaseInfoTab = ({
-  className,
-  good: { delivery_fee },
-  ...props
-}: PurchaseInfoTabProps) => {
+const PurchaseInfoTab = ({ className, ...props }: PurchaseInfoTabProps) => {
+  const { goodDetail } = useGoodDetailProvider();
+
+  if (!goodDetail.data) return null;
+
+  const { delivery_fee } = goodDetail.data;
+
   return (
     <div className={cx(styles.purchaseInfoTab, className)} {...props}>
       <h3>결제정보</h3>

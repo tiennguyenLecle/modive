@@ -2,36 +2,38 @@ import { ComponentProps, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { AutoImage, Button } from '@/components';
-import { GoodPlusType } from '@/types/goods';
 import { cx, getPublicUrl } from '@/utils/method';
 
-type DetailTabProps = ComponentProps<'div'> & {
-  good: GoodPlusType;
-};
+import { useGoodDetailProvider } from '../../_provider/GoodDetailProvider';
 
-const DetailTab = ({ good, className, ...props }: DetailTabProps) => {
+type DetailTabProps = ComponentProps<'div'> & {};
+
+const DetailTab = ({ className, ...props }: DetailTabProps) => {
+  const t = useTranslations('goods_page.good_detail.tabs.detail');
+  const { goodDetail } = useGoodDetailProvider();
   const [isShowMore, setIsShowMore] = useState(false);
 
-  const t = useTranslations('goods_page.good_detail.tabs.detail');
+  if (!goodDetail.data) return null;
+  const { detail_storage_objects, title } = goodDetail.data;
 
   return (
     <div
       className={cx(
-        'flex flex-col overflow-hidden px-16 pb-96 pt-16',
+        'flex flex-col items-center overflow-hidden px-16 pb-96 pt-16',
         className,
         !isShowMore && 'h-full'
       )}
       {...props}
     >
-      {good.detail_storage_objects.map(storageObject => (
+      {detail_storage_objects.map(storageObject => (
         <AutoImage
           key={storageObject.key}
           src={getPublicUrl(storageObject.key)}
-          alt={good.title}
+          alt={title}
         />
       ))}
       <div
-        className="fixed bottom-80 left-0 right-0 px-16 pb-16 pt-40"
+        className="fixed bottom-80 z-50 -ml-16 w-full max-w-768 self-stretch px-16 pb-16 pt-40"
         style={{
           background:
             'linear-gradient(181deg, rgba(255, 255, 255, 0.00) 2.98%, #FFF 46.02%)',

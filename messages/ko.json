@@ -181,7 +181,14 @@
         "shopping_cart": "장바구니 이동",
         "continue_shopping": "쇼핑 계속하기",
         "description": "장바구니에 상품이 정상적으로 담겼습니다."
-      }
+      },
+      "check": "확인",
+      "scheduled_product": "판매 예정 상품입니다.",
+      "scheduled_product_description": "{date} 부터 구매 가능합니다.",
+      "alarm": "알림",
+      "out_of_stock": "품절",
+      "reservation_purchase": "예약 구매하기",
+      "scheduled_to_be_sold": "판매 예정"
     }
   },
   "me_page": {

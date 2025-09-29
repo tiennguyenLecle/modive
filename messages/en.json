@@ -181,7 +181,14 @@
         "shopping_cart": "Shopping cart",
         "continue_shopping": "Continuing shopping",
         "description": "The goods are normally contained in the cart."
-      }
+      },
+      "check": "check",
+      "scheduled_product": "Scheduled product.",
+      "scheduled_product_description": "It can be purchased from {date}",
+      "alarm": "alarm",
+      "out_of_stock": "Out -of -stock",
+      "reservation_purchase": "Reservation purchase",
+      "scheduled_to_be_sold": "Scheduled to be sold"
     }
   },
   "me_page": {

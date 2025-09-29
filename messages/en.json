@@ -499,6 +499,7 @@
   "modal_check_user": {
     "alarm": "Alarm",
     "join_the_membership": "Join the membership",
-    "non_member_search": "Non-member search"
+    "non_member_search": "Non-member search",
+    "description": "You can use it after logging in."
   }
 }

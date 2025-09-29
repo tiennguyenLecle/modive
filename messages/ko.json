@@ -497,6 +497,7 @@
   "modal_check_user": {
     "alarm": "알림",
     "join_the_membership": "회원가입",
-    "non_member_search": "확인"
+    "non_member_search": "확인",
+    "description": "로그인 후 이용할 수 있습니다."
   }
 }

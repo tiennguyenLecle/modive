@@ -279,7 +279,9 @@ const ModalCheckUser = forwardRef<ModalCheckUserRef>((_, ref) => {
       }
       zIndex={100}
     >
-      <div className="px-16 text-center">{description}</div>
+      <div className="px-16 text-center">
+        {/* {description} */} {t('description')}
+      </div>
     </Modal>
   );
 });

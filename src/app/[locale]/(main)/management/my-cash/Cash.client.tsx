@@ -5,14 +5,19 @@ import dynamic from 'next/dynamic';
 
 import { Header, MenuTab } from '@/components';
 import { useHashRoute } from '@/hooks/useHashRoute';
+import { useMeExtraData } from '@/hooks/useUser';
+import { useAuth } from '@/lib/authentication/auth-context';
 import { cx } from '@/utils/method';
 
-const DynamicTabCash = dynamic(() => import('./_components/tabs/Cash.client'), {
-  ssr: false,
-});
+const DynamicTabCash = dynamic(
+  () => import('./_components/tabs/TabCash.client'),
+  {
+    ssr: false,
+  }
+);
 
 const DynamicTabCharging = dynamic(
-  () => import('./_components/tabs/Charging.client'),
+  () => import('./_components/tabs/TabCharging.client'),
   {
     ssr: false,
   }
@@ -22,6 +27,9 @@ export default function CashClient() {
   const t = useTranslations('introduction');
 
   const [activeTab, setActiveTab] = useHashRoute('cash');
+
+  const { user } = useAuth();
+  const me = useMeExtraData(!!user, user?.id ?? '');
 
   return (
     <div className={cx('flex min-h-full flex-col')}>
@@ -34,7 +42,11 @@ export default function CashClient() {
       <div className="flex flex-col gap-8 bg-gray-90 p-16">
         <div className="flex items-center justify-between rounded-8 border-gray-80 bg-white p-16">
           <span className="text-14 font-semibold">{t('holding')}</span>
-          <span className="text-20 font-medium text-primary">0</span>
+          <span className="text-20 font-medium text-primary">
+            {me?.data?.coins
+              ? `${me?.data?.coins?.toLocaleString()} ${t('currency')}`
+              : '0'}
+          </span>
         </div>
       </div>
 

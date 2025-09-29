@@ -1,12 +1,12 @@
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 import { Button, Footer } from '@/components';
-import { generateClientOrderId, openCardPayment } from '@/lib/toss/payments';
-import { CASH_CHARGING_OPTIONS } from '@/utils/constants';
+
+import { useMyCash } from '../../provider';
 
 const CashClient = () => {
   const t = useTranslations('my-cash');
-  const locale = useLocale();
+  const { coinPackages, purchaseCoins } = useMyCash();
 
   return (
     <>
@@ -17,30 +17,20 @@ const CashClient = () => {
         </div>
 
         <div className="flex flex-col">
-          {CASH_CHARGING_OPTIONS.map(option => (
+          {coinPackages?.map(option => (
             <div
-              key={option.cash}
+              key={option.id}
               className="flex items-center justify-between border-b border-gray-80 p-8 px-16 py-12 text-14 font-semibold text-gray-50"
             >
               <div className="flex-1 text-14 font-semibold text-gray-00">
-                {t('cash_amount', { value: option.cash.toLocaleString() })}
+                {t('cash_amount', {
+                  value: option.coins_credit.toLocaleString(),
+                })}
               </div>
               <Button
                 className="!w-fit min-w-120"
-                onClick={async () => {
-                  const origin = window.location.origin;
-                  const successUrl = `${origin}/${locale}/payments/success`;
-                  const failUrl = `${origin}/${locale}/payments/fail`;
-
-                  await openCardPayment({
-                    amount: option.price,
-                    orderId: generateClientOrderId('cash'),
-                    orderName: t('cash_amount', {
-                      value: option.cash.toLocaleString(),
-                    }),
-                    successUrl,
-                    failUrl,
-                  });
+                onClick={() => {
+                  purchaseCoins.trigger({ coinPackageId: option.id });
                 }}
               >
                 {t('payment_amount', { value: option.price.toLocaleString() })}

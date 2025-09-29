@@ -3,18 +3,12 @@
 import { useTranslations } from 'next-intl';
 
 import { BaselineError } from '@/assets/icons';
-import { Button, Header } from '@/components';
-import { useRouter } from '@/lib/navigation';
-import { ROUTES } from '@/utils/constants';
+import { Header } from '@/components';
 
-type FailPageProps = {
-  params: { locale: string };
-  searchParams: { code?: string; message?: string; orderId?: string };
-};
+import PaymentFailClient from './PaymentFail.client';
 
-export default function FailPage({ searchParams }: FailPageProps) {
+export default function FailPage() {
   const t = useTranslations('payments.fail');
-  const router = useRouter();
 
   return (
     <>
@@ -34,17 +28,7 @@ export default function FailPage({ searchParams }: FailPageProps) {
           </p>
         </div>
       </main>
-      <div className="flex w-full gap-12 p-16">
-        <Button
-          variant="primary"
-          className="flex-1"
-          onClick={() => {
-            router.push(ROUTES.MANAGEMENT.MY_CASH);
-          }}
-        >
-          {t('button.try_again')}
-        </Button>
-      </div>
+      <PaymentFailClient />
     </>
   );
 }

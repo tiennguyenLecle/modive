@@ -326,7 +326,8 @@
       "no_relationship_data": "인물관계도 데이터가 없습니다."
     },
     "holding": "보유 캐시",
-    "title": "나의 캐시"
+    "title": "나의 캐시",
+    "currency": "₩"
   },
   "my_page": {
     "my_infomation": "내 정보",
@@ -468,7 +469,13 @@
     "use_guide_5": "환불 요청 및 기타 문의 사항은 고객센터 또는 이용약관에서 확인하실 수 있습니다.",
     "charging_cash": "충전 캐시",
     "payment_amount_column": "결제 금액",
-    "no_charging_history": "캐시 충전 내역이 없어요"
+    "no_charging_history": "캐시 충전 내역이 없어요",
+    "charging": {
+      "cash": "{cash} 캐시",
+      "within_one_year": "* 최근 1년 이내의 내역만 조회 가능합니다.",
+      "no_charging_history": "캐시 충전 내역이 없어요",
+      "cash_charging": "캐시 충전"
+    }
   },
   "payments": {
     "fail": {

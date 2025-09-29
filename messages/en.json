@@ -326,7 +326,8 @@
       "no_relationship_data": "No relationship data"
     },
     "holding": "Holding",
-    "title": "My cash"
+    "title": "My cash",
+    "currency": "₩"
   },
   "my_page": {
     "my_infomation": "My information",
@@ -470,7 +471,13 @@
     "use_guide_5": "Refund requests and other inquiries can be found in the Customer Center or Terms of Use.",
     "charging_cash": "Charging cash",
     "payment_amount_column": "Payment amount",
-    "no_charging_history": "There is no cash charging history"
+    "no_charging_history": "There is no cash charging history",
+    "charging": {
+      "cash": "{cash} Cash",
+      "within_one_year": "* Only within the last year can be viewed.",
+      "no_charging_history": "There is no Cash charging history",
+      "cash_charging": "Cash charging"
+    }
   },
   "payments": {
     "fail": {

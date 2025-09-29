@@ -50,11 +50,3 @@ export async function openCardPayment(params: OpenPaymentParams) {
     },
   });
 }
-
-export function generateClientOrderId(prefix: string = 'order'): string {
-  const now = new Date();
-  const pad = (n: number) => n.toString().padStart(2, '0');
-  const ymd = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
-  const rand = Math.random().toString(36).slice(2, 10);
-  return `${prefix}-${ymd}-${rand}`;
-}

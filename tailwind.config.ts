@@ -144,6 +144,7 @@ const config: Config = {
       black: 'rgb(var(--black) / <alpha-value>)',
       white: '#FFFFFF',
       transparent: 'transparent',
+      'label-secondary': '#8C8C8C',
     },
     borderWidth: {
       DEFAULT: '1rem',

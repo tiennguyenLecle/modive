@@ -1,5 +1,6 @@
 'use client';
 
+import { Carousel } from 'antd';
 import Image from 'next/image';
 
 import { Work } from '@/components';
@@ -14,15 +15,26 @@ type HomeProps = {
 
 export default function HomeClient({ interfaceData }: HomeProps) {
   if (!interfaceData) return;
-  const bannerUrl = getPublicUrl(interfaceData?.data?.banner_key ?? '');
+  const bannerUrl = getPublicUrl(interfaceData?.banner_key);
+
+  console.log('interfaceData', interfaceData);
 
   return (
     <div>
-      <div className="relative aspect-[9/5]">
-        <Image src={bannerUrl} alt="Modive banner" fill />
-      </div>
+      <Carousel autoplay draggable>
+        {interfaceData.banner_storage_objects?.map(banner => (
+          <div key={banner.key} className="relative aspect-[9/5]">
+            <Image
+              src={getPublicUrl(banner.key)}
+              alt="Modive banner"
+              fill
+              className="object-cover"
+            />
+          </div>
+        ))}
+      </Carousel>
       <div className="flex flex-col gap-12 bg-gray-100 py-16">
-        {interfaceData?.data?.blocks?.map((block, index) => (
+        {interfaceData?.blocks?.map((block, index) => (
           <div key={`${block?.title}-${index}`} className="pb-12 pt-16">
             <h2 className="mb-16 flex items-center gap-8 px-16 text-20 font-medium text-gray-00">
               {/* <span className="text-20 font-bold text-primary">모다이브</span> */}

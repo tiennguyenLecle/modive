@@ -33,7 +33,7 @@ const DetailTab = ({ className, ...props }: DetailTabProps) => {
         />
       ))}
       <div
-        className="fixed bottom-80 z-50 -ml-16 w-full max-w-768 self-stretch px-16 pb-16 pt-40"
+        className="fixed bottom-72 z-50 -ml-16 w-full max-w-768 self-stretch px-16 pb-24 pt-40"
         style={{
           background:
             'linear-gradient(181deg, rgba(255, 255, 255, 0.00) 2.98%, #FFF 46.02%)',

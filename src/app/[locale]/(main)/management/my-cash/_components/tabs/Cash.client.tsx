@@ -23,7 +23,7 @@ const CashClient = () => {
               className="flex items-center justify-between border-b border-gray-80 p-8 px-16 py-12 text-14 font-semibold text-gray-50"
             >
               <div className="flex-1 text-14 font-semibold text-gray-00">
-                {t('cash_amount', { value: option.cash })}
+                {t('cash_amount', { value: option.cash.toLocaleString() })}
               </div>
               <Button
                 className="!w-fit min-w-120"
@@ -35,13 +35,15 @@ const CashClient = () => {
                   await openCardPayment({
                     amount: option.price,
                     orderId: generateClientOrderId('cash'),
-                    orderName: t('cash_amount', { value: option.cash }),
+                    orderName: t('cash_amount', {
+                      value: option.cash.toLocaleString(),
+                    }),
                     successUrl,
                     failUrl,
                   });
                 }}
               >
-                {t('payment_amount', { value: option.price })}
+                {t('payment_amount', { value: option.price.toLocaleString() })}
               </Button>
             </div>
           ))}

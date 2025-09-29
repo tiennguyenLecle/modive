@@ -244,58 +244,28 @@ const ModalPurchase = React.forwardRef<ModalPurchaseRef, ModalPurchaseProps>(
                       </span>
                     </CheckboxComponent>
 
-                    {typeof me?.data?.coins === 'number' &&
-                    me?.data?.coins >= totalPrice ? (
-                      <Button
-                        className="h-48 text-20 font-medium"
-                        onClick={async () => {
+                    {/* {typeof me?.data?.coins === 'number' &&
+                    me?.data?.coins >= totalPrice ? ( */}
+                    <Button
+                      className="h-48 text-20 font-medium"
+                      onClick={async () => {
+                        if (
+                          typeof me?.data?.coins === 'number' &&
+                          me?.data?.coins >= totalPrice
+                        ) {
                           await handlePurchase(viewImmediately).then(() => {
                             closeHandler();
                           });
-                        }}
-                        loading={
-                          orderEpisodes.isMutating ||
-                          episodeInfinite.isValidating
+                        } else {
+                          router.push(ROUTES.MANAGEMENT.MY_CASH);
                         }
-                      >
-                        {t('payment')}
-                      </Button>
-                    ) : (
-                      <>
-                        {/* <Button disabled>{t('insufficient_balance')}</Button>
-                        <Button
-                          className="mb-12 h-48"
-                          loading={
-                            orderEpisodes.isMutating ||
-                            episodeInfinite.isValidating
-                          }
-                        >
-                          {t('auto_charging_at_a_cheaper')}
-                        </Button> */}
-                        <Button
-                          variant="secondary"
-                          className="h-48"
-                          loading={
-                            orderEpisodes.isMutating ||
-                            episodeInfinite.isValidating
-                          }
-                          onClick={() => {
-                            const { pathname, search, hash } = window.location;
-                            sessionStorage.setItem(
-                              STORAGE.PAYMENT_SUCCESS_CALLBACK,
-                              `${pathname.replace(/^\/(en|ko)/, '')}${search}${hash}`
-                            );
-                            sessionStorage.setItem(
-                              STORAGE.EPISODES_PENDING_PAYMENT,
-                              JSON.stringify(selectedEpisodes)
-                            );
-                            router.push(ROUTES.MANAGEMENT.MY_CASH);
-                          }}
-                        >
-                          {t('general_charging')}
-                        </Button>
-                      </>
-                    )}
+                      }}
+                      loading={
+                        orderEpisodes.isMutating || episodeInfinite.isValidating
+                      }
+                    >
+                      {t('payment')}
+                    </Button>
                   </div>
                 </div>
               </motion.div>

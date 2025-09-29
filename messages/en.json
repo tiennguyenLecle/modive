@@ -480,7 +480,9 @@
       },
       "page_title": "Cash charging",
       "title": "I failed to charge it.",
-      "description": "Payment was not processed normally.Please try again."
+      "description": "Payment was not processed normally.Please try again.",
+      "payment_was_not_processed_normally": "Payment was not processed normally.",
+      "please_try_again": "Please try again."
     },
     "success": {
       "button": {

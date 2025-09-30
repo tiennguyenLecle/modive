@@ -1,0 +1,22 @@
+.faqCollapse {
+  border: none;
+  background: #ffffff;
+  :global {
+    .ant-collapse-header {
+      border-color: #f0eff1;
+      div.ant-collapse-expand-icon {
+        display: none !important;
+      }
+    }
+
+    .ant-collapse-item-active .ant-collapse-header {
+      background: white;
+      color: var(--color-primary, #ff627b);
+      border-bottom: 1px solid #ff627b !important;
+    }
+
+    .ant-collapse-content-box {
+      background: var(--color-gray-gray90, #f7f7f8);
+    }
+  }
+}

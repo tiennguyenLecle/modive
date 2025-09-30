@@ -51,21 +51,17 @@ export default function ManagementPage() {
         </div>
 
         <div className="flex flex-col bg-white px-16">
-          <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
-            <p className="text-16 font-normal text-gray-00">
-              {t('announcement')}
-            </p>
-            <ArrowRight className="h-18 w-18 text-gray-00" />
-          </div>
-
-          <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
-            <p className="text-16 font-normal text-gray-00">
-              {t('customer_support')}
-            </p>
-          </div>
+          <Link href={ROUTES.MANAGEMENT.ANNOUNCEMENT}>
+            <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
+              <p className="text-16 font-normal text-gray-00">
+                {t('announcement')}
+              </p>
+              <ArrowRight className="h-18 w-18 text-gray-00" />
+            </div>
+          </Link>
         </div>
 
-        <div className="flex flex-col bg-white px-16">
+        {/* <div className="flex flex-col bg-white px-16">
           <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
             <p className="text-16 font-normal text-gray-00">
               {t('terms_conditions')}
@@ -83,7 +79,7 @@ export default function ManagementPage() {
               {t('copyright_policy')}
             </p>
           </div>
-        </div>
+        </div> */}
         <Footer className="mt-auto" />
       </main>
     </>

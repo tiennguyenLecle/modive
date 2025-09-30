@@ -534,5 +534,8 @@
     "please_fill_in_all_information": "Please fill in all information",
     "limit_letters": "*Up to {limit} letters ({current}/{limit})",
     "nickname_already_exists": "Nickname already in use."
+  },
+  "announcement_page": {
+    "page_title": "announcement"
   }
 }

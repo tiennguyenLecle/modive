@@ -532,5 +532,8 @@
     "please_fill_in_all_information": "정보를 모두 기입해주세요",
     "limit_letters": "*최대 {limit}글자 ({current}/{limit})",
     "nickname_already_exists": "이미 사용중인 닉네임 입니다."
+  },
+  "announcement_page": {
+    "page_title": "공지사항"
   }
 }

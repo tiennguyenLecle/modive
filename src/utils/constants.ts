@@ -30,7 +30,7 @@ export const ROUTES = {
     MY_ORDER_INQUIRY: '/order-inquiry',
     // MY_MONEY: '/management/my-money',
     // NOTI_SETTINGS: '/management/noti-settings',
-    // ANNOUNCEMENT: '/management/announcement',
+    ANNOUNCEMENT: '/management/announcement',
   },
   JOIN_MEMBERSHIP: '/join-membership',
   ORDERING: '/ordering',

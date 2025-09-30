@@ -55,4 +55,6 @@ const ModalNotOldEnough = forwardRef<ModalNotOldEnoughRef>((_, ref) => {
   );
 });
 
+ModalNotOldEnough.displayName = 'ModalNotOldEnough';
+
 export default ModalNotOldEnough;

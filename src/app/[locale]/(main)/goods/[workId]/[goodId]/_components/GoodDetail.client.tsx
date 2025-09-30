@@ -1,14 +1,19 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import * as amplitude from '@amplitude/analytics-browser';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 
 import { AddCart, Heart } from '@/assets/icons';
 import { Button, ChangeQuantity, MenuTab, PreOrderInfo } from '@/components';
 import { useHashRoute } from '@/hooks/useHashRoute';
 import { useAuth } from '@/lib/authentication/auth-context';
+import { createBrowserSupabase } from '@/lib/supabase/factory';
+import { fetchWorkDetail } from '@/lib/supabase/swr/work';
+import { getAmplitudeLocationProperties } from '@/utils/amplitude';
 import { cx, getPublicUrl } from '@/utils/method';
 
 import { useGoodDetailProvider } from '../_provider/GoodDetailProvider';
@@ -19,9 +24,39 @@ const GoodDetail: React.FC = () => {
   const t = useTranslations('goods_page.good_detail');
   const { checkAvailableUser } = useAuth();
   const [activeTab, setActiveTab] = useHashRoute('detail');
+  const { workId } = useParams();
+  const hasTrackedView = useRef(false);
 
   const { goodDetail, toggleGoodLike, quantity, setQuantity } =
     useGoodDetailProvider();
+
+  // Amplitude: Track product details viewed event
+  useEffect(() => {
+    const trackProductDetailsViewed = async () => {
+      if (hasTrackedView.current || !goodDetail.data) return;
+      hasTrackedView.current = true;
+
+      try {
+        // Fetch work information
+        const supabase = createBrowserSupabase('user');
+        const work = await fetchWorkDetail(supabase, workId as string);
+
+        amplitude.track({
+          event_type: 'Product Details Viewed',
+          event_properties: {
+            program_name: work?.title || '',
+            product_id: goodDetail.data.id,
+            product_name: goodDetail.data.title,
+            ...getAmplitudeLocationProperties(),
+          },
+        });
+      } catch (error) {
+        console.error('Failed to track Product Details Viewed event:', error);
+      }
+    };
+
+    trackProductDetailsViewed();
+  }, [goodDetail.data, workId]);
 
   if (!goodDetail.data) return null;
 

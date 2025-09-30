@@ -1,7 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useMemo, useRef } from 'react';
+import * as amplitude from '@amplitude/analytics-browser';
 import { useSetAtom } from 'jotai';
+import { useParams } from 'next/navigation';
 import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
 
 import CompleteShoppingCartModal from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/modals/CompleteShoppingCart';
@@ -11,6 +13,8 @@ import { useAuth } from '@/lib/authentication/auth-context';
 import { useRouter } from '@/lib/navigation';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { getMyCart, updateMyCart } from '@/lib/supabase/swr/cart';
+import { fetchWorkDetail } from '@/lib/supabase/swr/work';
+import { getAmplitudeLocationProperties } from '@/utils/amplitude';
 import { ROUTES } from '@/utils/constants';
 
 import ModalScheduledProduct from '../_components/modals/ModalScheduledProduct.client';
@@ -41,6 +45,7 @@ export const GoodDetailProvider = ({
   const router = useRouter();
   const setMyCartValue = useSetAtom(myCartAtom);
   const { user } = useAuth();
+  const { workId } = useParams();
   const [quantity, setQuantity] = React.useState(1);
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
   const goodDetail = useGoodDetail(supabase, goodId);
@@ -88,8 +93,28 @@ export const GoodDetailProvider = ({
       await updateMyCart(supabase, newCartItems);
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         completeShoppingCartModalRef.current?.open();
+
+        // Amplitude: Track add to cart event
+        try {
+          const work = await fetchWorkDetail(supabase, workId as string);
+
+          amplitude.track({
+            event_type: 'Product Added',
+            event_properties: {
+              program_name: work?.title || '',
+              product_id: good?.id || '',
+              product_name: good?.title || '',
+              product_price: good?.price || 0,
+              product_quantity: quantity,
+              currency: good?.currency?.toUpperCase() || 'KRW',
+              ...getAmplitudeLocationProperties(),
+            },
+          });
+        } catch (error) {
+          console.error('Failed to track Product Added event:', error);
+        }
       },
     }
   );
@@ -112,6 +137,27 @@ export const GoodDetailProvider = ({
         },
       ],
     });
+
+    // Amplitude: Track purchase button click event
+    try {
+      const work = await fetchWorkDetail(supabase, workId as string);
+
+      amplitude.track({
+        event_type: 'Purchase Button Clicked',
+        event_properties: {
+          program_name: work?.title || '',
+          product_id: good?.id || '',
+          product_name: good?.title || '',
+          product_price: good?.price || 0,
+          product_quantity: quantity,
+          currency: good?.currency?.toUpperCase() || 'KRW',
+          ...getAmplitudeLocationProperties(),
+        },
+      });
+    } catch (error) {
+      console.error('Failed to track Purchase Button Clicked event:', error);
+    }
+
     router.push(ROUTES.ORDERING);
   });
 

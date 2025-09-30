@@ -14,6 +14,8 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.25.0",
+    "@amplitude/plugin-session-replay-browser": "^1.22.17",
     "@ant-design/cssinjs": "^1.24.0",
     "@ant-design/icons": "^5.3.7",
     "@formatjs/intl-localematcher": "^0.6.1",

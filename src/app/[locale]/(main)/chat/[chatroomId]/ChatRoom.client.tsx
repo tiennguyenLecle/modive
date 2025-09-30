@@ -1,6 +1,14 @@
 'use client';
 
-import { ComponentProps, memo, useCallback, useEffect, useRef } from 'react';
+import {
+  ComponentProps,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import * as amplitude from '@amplitude/analytics-browser';
 import { useAtom, useAtomValue } from 'jotai';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -16,7 +24,9 @@ import {
   updateChatroomField,
 } from '@/lib/supabase/swr/chatroom';
 import { updateNewMsgCountUser } from '@/lib/supabase/swr/users';
+import { fetchWorkDetail } from '@/lib/supabase/swr/work';
 import { ChatRoomType } from '@/types/chatroom';
+import { getAmplitudeLocationProperties } from '@/utils/amplitude';
 import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
@@ -40,6 +50,8 @@ const ChatRoom = memo(
     const { character } = chatRoomDetail;
     const { user } = useAuth();
     const hasInitialized = useRef(false);
+    const hasTrackedEntry = useRef(false);
+    const [programName, setProgramName] = useState<string>('');
 
     const { messages, isLoading } = useFetchMessages(
       chatroomId as string,
@@ -76,6 +88,50 @@ const ChatRoom = memo(
         updateNewMessageCount();
       }
     }, [updateNewMessageCount, messageCount]);
+
+    // Amplitude: Track chatroom entry event
+    useEffect(() => {
+      const trackChapterEntered = async () => {
+        if (hasTrackedEntry.current) return;
+        hasTrackedEntry.current = true;
+
+        try {
+          // Fetch work information
+          const supabase = createBrowserSupabase('user');
+          const work = await fetchWorkDetail(supabase, chatRoomDetail.work_id);
+
+          // Determine entry path based on referrer
+          const referrer =
+            typeof document !== 'undefined' ? document.referrer : '';
+          let entryPath = '채팅메뉴'; // Default
+          if (referrer) {
+            if (referrer.includes('/ko') || referrer.includes('/en')) {
+              entryPath = '홈';
+            } else if (referrer.includes('/chat')) {
+              entryPath = '채팅메뉴';
+            }
+          }
+
+          amplitude.track({
+            event_type: 'Chapter Entered',
+            event_properties: {
+              program_name: work?.title || '',
+              chatting_type: '일반 대화',
+              character_name: character?.name || '',
+              chapter_name: '',
+              entry_path: entryPath,
+              ...getAmplitudeLocationProperties(),
+            },
+          });
+
+          setProgramName(work?.title || '');
+        } catch (error) {
+          console.error('Failed to track Chapter Entered event:', error);
+        }
+      };
+
+      trackChapterEntered();
+    }, [chatRoomDetail.work_id, character?.name]);
 
     useEffect(() => {
       return () => {

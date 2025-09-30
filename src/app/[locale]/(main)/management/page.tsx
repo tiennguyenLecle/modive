@@ -39,7 +39,10 @@ export default function ManagementPage() {
             </div>
           </Link>
 
-          <div className="flex h-60 items-center justify-between border-b border-gray-90 px-16">
+          <div
+            className="flex h-60 items-center justify-between border-b border-gray-90 px-16"
+            style={{ display: 'none' }}
+          >
             <p className="text-16 font-normal text-gray-00">
               {t('noti-settings')}
             </p>

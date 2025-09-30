@@ -79,7 +79,10 @@ export default function MyInformation() {
               <p className="text-14 font-semibold text-gray-00">
                 {user?.user_metadata?.full_name}
               </p>
-              <div className="flex size-24 items-center justify-center rounded-8 border border-gray-70">
+              <div
+                className="flex size-24 items-center justify-center rounded-8 border border-gray-70"
+                style={{ display: 'none' }}
+              >
                 <Pencil className="size-14 text-gray-40" />
               </div>
             </div>
@@ -115,13 +118,13 @@ export default function MyInformation() {
           >
             {t('logout')}
           </button>
-          <div className="h-12 w-1 bg-gray-03" />
+          {/* <div className="h-12 w-1 bg-gray-03" />
           <button
             className="px-6 text-16 font-normal text-gray-40"
             onClick={() => withdrawalModalRef.current?.open()}
           >
             {t('withdrawal')}
-          </button>
+          </button> */}
         </div>
       </main>
       <ModalLogout ref={logOutModalRef} />

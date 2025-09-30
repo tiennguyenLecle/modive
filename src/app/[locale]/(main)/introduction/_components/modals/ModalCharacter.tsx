@@ -188,20 +188,22 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
 
           <div className="my-12 border-t border-gray-80" />
 
-          <p className="mb-12 text-14 font-semibold text-gray-00">
-            {t('selectWhenEntering')}
-          </p>
-          <Slider
-            defaultValue={1}
-            min={1}
-            max={16}
-            marks={{
-              1: t('round', { value: 1 }),
-              16: t('round', { value: 16 }),
-            }}
-            tooltip={value => (value ? t('round', { value }) : value)}
-            className="mb-16"
-          />
+          <div style={{ display: 'none' }}>
+            <p className="mb-12 text-14 font-semibold text-gray-00">
+              {t('selectWhenEntering')}
+            </p>
+            <Slider
+              defaultValue={1}
+              min={1}
+              max={16}
+              marks={{
+                1: t('round', { value: 1 }),
+                16: t('round', { value: 16 }),
+              }}
+              tooltip={value => (value ? t('round', { value }) : value)}
+              className="mb-16"
+            />
+          </div>
         </div>
       </Modal>
 

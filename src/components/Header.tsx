@@ -198,12 +198,12 @@ const Header = ({
       {(showSearchIcon || showAlarmIcon || showCashIcon || showCartIcon) && (
         <div className="absolute right-16 flex items-center gap-12">
           {showSearchIcon && (
-            <Link href="#">
+            <Link href="#" className="hidden">
               <Search width={24} height={24} />
             </Link>
           )}
           {showAlarmIcon && (
-            <Link href="#" className="h-24" onClick={checkDirectable}>
+            <Link href="#" className="hidden h-24" onClick={checkDirectable}>
               <Badge.Wrapper count={messageCount || 0} showZero>
                 <Alarm width={24} height={24} className="text-gray-00" />
               </Badge.Wrapper>

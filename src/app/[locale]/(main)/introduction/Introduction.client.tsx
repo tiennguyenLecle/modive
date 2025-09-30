@@ -88,7 +88,7 @@ export default function IntroductionClient({
               ))}
             </p>
           </div>
-          <button className="flex h-48 w-full items-center justify-center gap-8 rounded-4 bg-primary">
+          <button className="flex hidden h-48 w-full items-center justify-center gap-8 rounded-4 bg-primary">
             <p className="text-16 font-bold text-gray-100">
               {t('chapter_entrance')}
             </p>

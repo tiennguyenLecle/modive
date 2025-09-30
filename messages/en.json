@@ -508,5 +508,31 @@
     "join_the_membership": "Join the membership",
     "non_member_search": "Non-member search",
     "description": "You can use it after logging in."
+  },
+  "join_membership": {
+    "name": "name",
+    "name_placeholder": "Please input your name",
+    "nickname_placeholder": "Please write the name you want to call me",
+    "phone": "phone number",
+    "phone_placeholder": "Please input your phone number",
+    "nickname": "nickname",
+    "birthday": "birth date",
+    "agree_all_terms_and_conditions": "All Terms and Conditions",
+    "essential": "essential",
+    "service_terms_and_conditions": "Service Terms and Conditions",
+    "privacy_policy": "privacy policy",
+    "optional": "optional",
+    "third_party_personal_information_collection_and_use_agreement": "I agree to provide and receive promotional information.",
+    "submit": "complete",
+    "title": "join the membership",
+    "modal_not_old_enough": {
+      "alarm": "alarm",
+      "cancellation": "cancellation",
+      "check": "check",
+      "description": "Users under the age of 14\n cannot join the service."
+    },
+    "please_fill_in_all_information": "Please fill in all information",
+    "limit_letters": "*Up to {limit} letters ({current}/{limit})",
+    "nickname_already_exists": "Nickname already in use."
   }
 }

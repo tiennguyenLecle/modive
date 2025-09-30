@@ -28,6 +28,7 @@ export const ROUTES = {
     // NOTI_SETTINGS: '/management/noti-settings',
     // ANNOUNCEMENT: '/management/announcement',
   },
+  JOIN_MEMBERSHIP: '/join-membership',
   ORDERING: '/ordering',
   SHOPPING_CART: '/shopping-cart',
   CMS: {
@@ -54,4 +55,13 @@ export const SOCIAL_PROVIDERS = {
   KAKAO: 'kakao',
   GOOGLE: 'google',
   APPLE: 'apple',
+};
+
+export const APP_LINKS = {
+  PRIVACY_POLICY:
+    'https://comfortable-margin-430.notion.site/27a77f3875ab80edbe21cbd2467f7d1d',
+  SERVICE_TERMS_AND_CONDITIONS:
+    'https://comfortable-margin-430.notion.site/27677f3875ab8043b739e9592c06341a',
+  CONSENT_COLLECTION_AND_USE_AGREEMENT:
+    'https://comfortable-margin-430.notion.site/27a77f3875ab80b0a59bcf3145069d06',
 };

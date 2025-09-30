@@ -506,5 +506,31 @@
     "join_the_membership": "회원가입",
     "non_member_search": "확인",
     "description": "로그인 후 이용할 수 있습니다."
+  },
+  "join_membership": {
+    "name": "이름",
+    "name_placeholder": "이름을 입력해주세요",
+    "nickname_placeholder": "불러줬으면 하는 이름을 적어주세요",
+    "phone": "전화번호",
+    "phone_placeholder": "전화번호를 입력해주세요",
+    "nickname": "닉네임",
+    "birthday": "생년월일",
+    "agree_all_terms_and_conditions": "전체 약관 동의",
+    "essential": "필수",
+    "service_terms_and_conditions": "서비스 이용약관",
+    "privacy_policy": "개인정보 처리방침",
+    "optional": "선택",
+    "third_party_personal_information_collection_and_use_agreement": "프로모션 정보 제공 및 수신에 동의합니다.",
+    "submit": "완료",
+    "title": "회원가입",
+    "modal_not_old_enough": {
+      "alarm": "알림",
+      "cancellation": "취소",
+      "check": "확인",
+      "description": "만 14세 미만 사용자는\n서비스에 가입할 수 없습니다."
+    },
+    "please_fill_in_all_information": "정보를 모두 기입해주세요",
+    "limit_letters": "*최대 {limit}글자 ({current}/{limit})",
+    "nickname_already_exists": "이미 사용중인 닉네임 입니다."
   }
 }

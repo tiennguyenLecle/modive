@@ -3,13 +3,19 @@ import { headers } from 'next/headers';
 
 import { Navigation } from '@/components';
 import { AuthProvider } from '@/lib/authentication/auth-context';
+import { getServerAuth } from '@/lib/authentication/server-auth';
+import { redirect } from '@/lib/navigation';
+import { createServerSupabase } from '@/lib/supabase/factory.server';
+import { fetchMeExtraData } from '@/lib/supabase/swr/users';
+import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
 
 type Props = {
   children: React.ReactNode;
+  params: { locale: string };
 };
 
-export default function Layout({ children }: Props) {
+export default async function Layout({ children, params: { locale } }: Props) {
   const deviceClassName = (() => {
     const h = headers();
     const chMobile = h.get('sec-ch-ua-mobile');

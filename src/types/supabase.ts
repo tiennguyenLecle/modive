@@ -93,6 +93,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      campaigns: {
+        Row: {
+          created_at: string | null;
+          deleted_at: string | null;
+          description: string | null;
+          end_date: string | null;
+          id: string;
+          spec: Json | null;
+          start_date: string | null;
+          status: Database['public']['Enums']['campaign_status'] | null;
+          title: string;
+          type: Database['public']['Enums']['campaign_type'];
+          updated_at: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          deleted_at?: string | null;
+          description?: string | null;
+          end_date?: string | null;
+          id?: string;
+          spec?: Json | null;
+          start_date?: string | null;
+          status?: Database['public']['Enums']['campaign_status'] | null;
+          title: string;
+          type: Database['public']['Enums']['campaign_type'];
+          updated_at?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          deleted_at?: string | null;
+          description?: string | null;
+          end_date?: string | null;
+          id?: string;
+          spec?: Json | null;
+          start_date?: string | null;
+          status?: Database['public']['Enums']['campaign_status'] | null;
+          title?: string;
+          type?: Database['public']['Enums']['campaign_type'];
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
       cart_items: {
         Row: {
           cart_id: string;
@@ -352,17 +394,10 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'chapter_characters_character_id_works_id_fk';
+            foreignKeyName: 'chapter_characters_character_id_characters_id_fk';
             columns: ['character_id'];
             isOneToOne: false;
-            referencedRelation: 'work_goods';
-            referencedColumns: ['work_id'];
-          },
-          {
-            foreignKeyName: 'chapter_characters_character_id_works_id_fk';
-            columns: ['character_id'];
-            isOneToOne: false;
-            referencedRelation: 'works';
+            referencedRelation: 'characters';
             referencedColumns: ['id'];
           },
         ];
@@ -611,6 +646,7 @@ export type Database = {
           is_pinned: boolean | null;
           last_accessed_at: string | null;
           last_message: string | null;
+          message_count: number | null;
           metadata: Json | null;
           name: string | null;
           pinned_at: string | null;
@@ -635,6 +671,7 @@ export type Database = {
           is_pinned?: boolean | null;
           last_accessed_at?: string | null;
           last_message?: string | null;
+          message_count?: number | null;
           metadata?: Json | null;
           name?: string | null;
           pinned_at?: string | null;
@@ -659,6 +696,7 @@ export type Database = {
           is_pinned?: boolean | null;
           last_accessed_at?: string | null;
           last_message?: string | null;
+          message_count?: number | null;
           metadata?: Json | null;
           name?: string | null;
           pinned_at?: string | null;
@@ -1631,6 +1669,7 @@ export type Database = {
           address: string;
           created_at: string | null;
           deleted_at: string | null;
+          detailed_address: string | null;
           details: Json | null;
           email: string | null;
           id: string;
@@ -1646,6 +1685,7 @@ export type Database = {
           address: string;
           created_at?: string | null;
           deleted_at?: string | null;
+          detailed_address?: string | null;
           details?: Json | null;
           email?: string | null;
           id?: string;
@@ -1661,6 +1701,7 @@ export type Database = {
           address?: string;
           created_at?: string | null;
           deleted_at?: string | null;
+          detailed_address?: string | null;
           details?: Json | null;
           email?: string | null;
           id?: string;
@@ -1961,6 +2002,8 @@ export type Database = {
           email: string;
           gender: Database['public']['Enums']['gender'] | null;
           id: string;
+          is_phone_verified: boolean | null;
+          is_profile_complete: boolean | null;
           language_code: string | null;
           last_login_at: string | null;
           last_login_provider: string | null;
@@ -1972,6 +2015,7 @@ export type Database = {
           phone: string | null;
           role: Database['public']['Enums']['user_role'] | null;
           updated_at: string | null;
+          withdrawal_reason: string | null;
         };
         Insert: {
           avatar_id?: string | null;
@@ -1986,6 +2030,8 @@ export type Database = {
           email: string;
           gender?: Database['public']['Enums']['gender'] | null;
           id?: string;
+          is_phone_verified?: boolean | null;
+          is_profile_complete?: boolean | null;
           language_code?: string | null;
           last_login_at?: string | null;
           last_login_provider?: string | null;
@@ -1997,6 +2043,7 @@ export type Database = {
           phone?: string | null;
           role?: Database['public']['Enums']['user_role'] | null;
           updated_at?: string | null;
+          withdrawal_reason?: string | null;
         };
         Update: {
           avatar_id?: string | null;
@@ -2011,6 +2058,8 @@ export type Database = {
           email?: string;
           gender?: Database['public']['Enums']['gender'] | null;
           id?: string;
+          is_phone_verified?: boolean | null;
+          is_profile_complete?: boolean | null;
           language_code?: string | null;
           last_login_at?: string | null;
           last_login_provider?: string | null;
@@ -2022,6 +2071,7 @@ export type Database = {
           phone?: string | null;
           role?: Database['public']['Enums']['user_role'] | null;
           updated_at?: string | null;
+          withdrawal_reason?: string | null;
         };
         Relationships: [
           {
@@ -2304,6 +2354,88 @@ export type Database = {
       };
     };
     Views: {
+      active_campaigns: {
+        Row: {
+          created_at: string | null;
+          description: string | null;
+          end_date: string | null;
+          id: string | null;
+          spec: Json | null;
+          start_date: string | null;
+          title: string | null;
+          type: Database['public']['Enums']['campaign_type'] | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          description?: string | null;
+          end_date?: string | null;
+          id?: string | null;
+          spec?: Json | null;
+          start_date?: string | null;
+          title?: string | null;
+          type?: Database['public']['Enums']['campaign_type'] | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          description?: string | null;
+          end_date?: string | null;
+          id?: string | null;
+          spec?: Json | null;
+          start_date?: string | null;
+          title?: string | null;
+          type?: Database['public']['Enums']['campaign_type'] | null;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
+      chapter_chat_usages: {
+        Row: {
+          chapter_id: string | null;
+          message_count: number | null;
+          user_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'chat_rooms_chapter_id_chapters_id_fk';
+            columns: ['chapter_id'];
+            isOneToOne: false;
+            referencedRelation: 'chapters';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'chat_rooms_user_id_users_id_fk';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      character_chat_usages: {
+        Row: {
+          character_id: string | null;
+          message_count: number | null;
+          user_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'chat_rooms_character_id_characters_id_fk';
+            columns: ['character_id'];
+            isOneToOne: false;
+            referencedRelation: 'characters';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'chat_rooms_user_id_users_id_fk';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       items: {
         Row: {
           created_at: string | null;
@@ -2370,6 +2502,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      work_chat_usages: {
+        Row: {
+          message_count: number | null;
+          user_id: string | null;
+          work_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'chat_rooms_user_id_users_id_fk';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'chat_rooms_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'work_goods';
+            referencedColumns: ['work_id'];
+          },
+          {
+            foreignKeyName: 'chat_rooms_work_id_works_id_fk';
+            columns: ['work_id'];
+            isOneToOne: false;
+            referencedRelation: 'works';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       work_goods: {
         Row: {
           goods: Json | null;
@@ -2402,6 +2564,14 @@ export type Database = {
       };
     };
     Functions: {
+      check_duplicate_user: {
+        Args: { p_exclude_id?: string; p_name?: string; p_nickname?: string };
+        Returns: boolean;
+      };
+      deduct_my_coins: {
+        Args: { p_amount: number };
+        Returns: number;
+      };
       get_good_details_by_id: {
         Args:
           | { p_good_id: string }
@@ -2500,6 +2670,8 @@ export type Database = {
     Enums: {
       announcement_status: 'draft' | 'published' | 'archived';
       billing_cycle: 'monthly' | 'yearly';
+      campaign_status: 'pending' | 'active' | 'ended';
+      campaign_type: 'free_work_message';
       category_type: 'work' | 'good';
       chapter_action_type: 'pin' | 'bookmark';
       chat_room_type: 'general' | 'chapter';
@@ -2667,6 +2839,8 @@ export const Constants = {
     Enums: {
       announcement_status: ['draft', 'published', 'archived'],
       billing_cycle: ['monthly', 'yearly'],
+      campaign_status: ['pending', 'active', 'ended'],
+      campaign_type: ['free_work_message'],
       category_type: ['work', 'good'],
       chapter_action_type: ['pin', 'bookmark'],
       chat_room_type: ['general', 'chapter'],

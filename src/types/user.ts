@@ -20,4 +20,5 @@ export type UserType = {
   created_at?: string;
   updated_at?: string;
   deleted_at?: string;
+  is_profile_complete?: boolean;
 };

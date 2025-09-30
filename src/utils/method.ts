@@ -116,3 +116,31 @@ export const getPublicUrl = (key?: string | null) => {
  */
 export const hasFields = (obj: object, fields: string[]): boolean =>
   fields.every(field => obj?.hasOwnProperty(field));
+
+/**
+ * The `debounce` function creates a debounced version of the input function.
+ * @param func The original function that needs to be debounced.
+ * @param delay The wait time (in milliseconds).
+ * @returns A new function that has been debounced.
+ */
+export const debounce = <T extends (...args: any[]) => any>(
+  func: T,
+  delay: number
+): ((...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>>) => {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+    return new Promise<Awaited<ReturnType<T>>>((resolve, reject) => {
+      if (timeoutId) clearTimeout(timeoutId);
+
+      timeoutId = setTimeout(async () => {
+        try {
+          const result = await func.apply(this, args);
+          resolve(result as Awaited<ReturnType<T>>);
+        } catch (error) {
+          reject(error);
+        }
+      }, delay);
+    });
+  };
+};

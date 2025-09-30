@@ -6,7 +6,6 @@ import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import NProgress from 'nprogress';
 
-import useMyCart from '@/hooks/useMyCart';
 import { ThemeRegistry } from '@/lib/theme-registry';
 
 type Props = {
@@ -37,15 +36,8 @@ export const Providers = ({ children, messages, locale }: Props) => {
         messages={messages}
         timeZone="UTC"
       >
-        <JotaiProvider>
-          <ChildrenWrapper>{children}</ChildrenWrapper>
-        </JotaiProvider>
+        <JotaiProvider>{children}</JotaiProvider>
       </NextIntlClientProvider>
     </ThemeRegistry>
   );
-};
-
-const ChildrenWrapper = ({ children }: { children: React.ReactNode }) => {
-  useMyCart();
-  return children;
 };

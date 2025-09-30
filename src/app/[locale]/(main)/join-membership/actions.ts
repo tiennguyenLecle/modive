@@ -1,7 +1,10 @@
 'use server';
 
+import { cookies } from 'next/headers';
+
 import { getServerAuth } from '@/lib/authentication/server-auth';
 import { createServerSupabase } from '@/lib/supabase/factory.server';
+import { COOKIE } from '@/utils/constants';
 
 export const isUniqueNickname = async (nickname: string) => {
   const supabase = createServerSupabase('user');
@@ -53,6 +56,8 @@ export const signUpData = async (values: {
     .eq('id', userId);
 
   if (error) throw error;
+
+  cookies().delete(COOKIE.IS_PROFILE_COMPLETE);
 
   return data;
 };

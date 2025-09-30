@@ -15,7 +15,6 @@ import { useTranslations } from 'next-intl';
 
 import { Info } from '@/assets/icons';
 import { Button, Modal } from '@/components';
-import { useMeExtraData } from '@/hooks/useUser';
 import { type Role } from '@/lib/authentication/auth.types';
 import { usePathname, useRouter } from '@/lib/navigation';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
@@ -54,22 +53,9 @@ type AuthProviderProps = {
 
 export function AuthProvider({ children, role }: AuthProviderProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const supabase = useMemo(() => createBrowserSupabase(role), [role]);
   const [user, setUser] = useState<User | null>(null);
   const modalCheckUserRef = useRef<ModalCheckUserRef>(null);
-
-  const me = useMeExtraData(!!user?.id, user?.id || '');
-
-  useEffect(() => {
-    if (
-      me &&
-      !me.data?.is_profile_complete &&
-      pathname !== ROUTES.JOIN_MEMBERSHIP
-    ) {
-      router.push(ROUTES.JOIN_MEMBERSHIP);
-    }
-  }, [me]);
 
   useEffect(() => {
     let isActive = true;

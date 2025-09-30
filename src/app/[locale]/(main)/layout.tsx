@@ -3,12 +3,9 @@ import { headers } from 'next/headers';
 
 import { Navigation } from '@/components';
 import { AuthProvider } from '@/lib/authentication/auth-context';
-import { getServerAuth } from '@/lib/authentication/server-auth';
-import { redirect } from '@/lib/navigation';
-import { createServerSupabase } from '@/lib/supabase/factory.server';
-import { fetchMeExtraData } from '@/lib/supabase/swr/users';
-import { ROUTES } from '@/utils/constants';
 import { cx } from '@/utils/method';
+
+import LayoutClient from './layout.client';
 
 type Props = {
   children: React.ReactNode;
@@ -34,7 +31,9 @@ export default async function Layout({ children, params: { locale } }: Props) {
   return (
     <AuthProvider role="user">
       <div className={cx('main-layout', deviceClassName)}>
-        <div className="page-wrapper">{children}</div>
+        <div className="page-wrapper">
+          <LayoutClient>{children}</LayoutClient>
+        </div>
         <div className="navigation-wrapper">
           <Navigation />
         </div>

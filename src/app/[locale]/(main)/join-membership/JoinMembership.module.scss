@@ -83,5 +83,24 @@
         border-color: #ff627b;
       }
     }
+
+    .selection-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8rem;
+
+      .ant-checkbox-wrapper {
+        display: flex;
+
+        .ant-checkbox {
+          align-self: start;
+          margin-top: 2rem;
+        }
+
+        .ant-checkbox-label {
+          line-height: 20rem;
+        }
+      }
+    }
   }
 }

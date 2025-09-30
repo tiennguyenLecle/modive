@@ -8,6 +8,7 @@ import {
   withValidatedQuery,
 } from '@/lib/api/middleware/validators';
 import { createServerSupabase } from '@/lib/supabase/factory.server';
+import { COOKIE } from '@/utils/constants';
 
 const paramsSchema = z.object({ role: z.enum(['user', 'admin']) });
 const querySchema = z.object({
@@ -23,10 +24,9 @@ async function handler(request: NextRequest, context: any) {
   const { code, redirect } = context.validatedQuery as z.infer<
     typeof querySchema
   >;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
 
-  const response = NextResponse.redirect(
-    new URL(redirect, process.env.NEXT_PUBLIC_BASE_URL!)
-  );
+  const response = NextResponse.redirect(new URL(redirect, baseUrl));
 
   const supabase = createServerSupabase(role, {
     get(name: string) {
@@ -38,7 +38,25 @@ async function handler(request: NextRequest, context: any) {
   });
 
   try {
-    await supabase.auth.exchangeCodeForSession(code);
+    const {
+      data: { session },
+    } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (session) {
+      const { data: profile } = await supabase
+        .from('users')
+        .select('is_profile_complete')
+        .eq('id', session.user.id)
+        .single();
+
+      if (profile?.is_profile_complete === false) {
+        const locale = request.cookies.get('NEXT_LOCALE')?.value || 'en';
+        const target = new URL(`/${locale}/join-membership`, baseUrl);
+        if (redirect) target.searchParams.set('redirect', redirect);
+        response.headers.set('Location', target.toString());
+        response.cookies.set(COOKIE.IS_PROFILE_COMPLETE, 'false');
+      }
+    }
   } catch {}
 
   return response;

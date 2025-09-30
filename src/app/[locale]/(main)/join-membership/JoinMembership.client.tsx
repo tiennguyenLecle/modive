@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Checkbox, Form, Input, InputNumber } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { useSWRConfig } from 'swr';
 import useSWRMutation from 'swr/mutation';
 
@@ -10,7 +11,7 @@ import { Info } from '@/assets/icons';
 import { Button } from '@/components';
 import { Link, useRouter } from '@/lib/navigation';
 import { APP_LINKS, ROUTES } from '@/utils/constants';
-import { cx } from '@/utils/method';
+import { cx, debounce } from '@/utils/method';
 
 import ModalNotOldEnough from './_modal/ModalNotOldEnough';
 import { isUniqueNickname, signUpData } from './actions';
@@ -46,6 +47,8 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
 }) => {
   const t = useTranslations('join_membership');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextRedirect = searchParams?.get('redirect') || null;
   const [form] = Form.useForm();
   const values = Form.useWatch<FormData>([], form);
   const [submitable, setSubmitable] = useState(false);
@@ -53,45 +56,51 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
   const modalNotOldEnoughRef =
     useRef<React.ElementRef<typeof ModalNotOldEnough>>(null);
   const { mutate } = useSWRConfig();
+  const yearRef = useRef<any>(null);
+  const monthRef = useRef<any>(null);
+  const dayRef = useRef<any>(null);
 
   const handleSubmit = useSWRMutation(
     'sign-up-data',
     async (url: string, { arg }: { arg: any }) => {
-      const {
-        userId,
-        name,
-        phone,
-        nickname,
-        birthday: { year, month, day },
-        agree_service_terms_and_conditions,
-        agree_privacy_policy,
-        agree_third_party_personal_information_collection_and_use_agreement,
-      } = arg;
-
-      const userAge = new Date().getFullYear() - parseInt(year);
-      if (userAge < 14) {
-        modalNotOldEnoughRef.current?.open();
-        return;
-      }
-
-      await signUpData({
-        userId,
-        name,
-        phone,
-        nickname,
-        date_of_birth: `${year}-${month}-${day}`,
-        metadata: {
+      try {
+        const {
+          userId,
+          name,
+          phone,
+          nickname,
+          birthday: { year, month, day },
           agree_service_terms_and_conditions,
           agree_privacy_policy,
           agree_third_party_personal_information_collection_and_use_agreement,
-        },
-      });
+        } = arg;
 
-      await mutate('me');
+        const userAge = new Date().getFullYear() - parseInt(year);
+        if (userAge < 14) {
+          modalNotOldEnoughRef.current?.open();
+          throw new Error('User is not old enough');
+        }
+
+        await signUpData({
+          userId,
+          name,
+          phone,
+          nickname,
+          date_of_birth: `${year}-${month}-${day}`,
+          metadata: {
+            agree_service_terms_and_conditions,
+            agree_privacy_policy,
+            agree_third_party_personal_information_collection_and_use_agreement,
+          },
+        });
+      } catch (error) {
+        console.error('handleSubmit: ', error);
+      }
     },
     {
-      onSuccess: () => {
-        router.push(ROUTES.HOME);
+      onSuccess: async () => {
+        mutate('me');
+        router.push(nextRedirect || ROUTES.HOME);
       },
     }
   );
@@ -101,6 +110,11 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
     (url: string, { arg }: { arg: any }) => {
       return isUniqueNickname(arg);
     }
+  );
+
+  const validateNicknameDebounced = useMemo(
+    () => debounce(validateNickname.trigger, 500),
+    [validateNickname.trigger]
   );
 
   // Format Korean mobile number to 010-1234-5678 while typing
@@ -114,26 +128,16 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
     return `${head}-${mid}-${tail}`;
   };
 
-  const validatePhone = (value?: string) => {
-    if (!value) return false;
-    return /^010-\d{4}-\d{4}$/.test(value);
-  };
-
-  const updateCheckAll = () => {
+  useEffect(() => {
     const isAgreeAll =
       values?.agree_service_terms_and_conditions &&
       values?.agree_privacy_policy &&
       values?.agree_third_party_personal_information_collection_and_use_agreement;
 
-    console.log('updateCheckAll: ', isAgreeAll);
     form.setFieldsValue({
       agree_all: isAgreeAll,
     });
-  };
-
-  useEffect(() => {
-    updateCheckAll();
-  }, [values]);
+  }, [values, form]);
 
   useEffect(() => {
     form
@@ -172,15 +176,7 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
         <Form.Item
           name="phone"
           label={t('phone')}
-          rules={[
-            { required: true, message: '' },
-            {
-              validator: async (_, value) => {
-                if (!value || validatePhone(value)) return Promise.resolve();
-                return Promise.reject();
-              },
-            },
-          ]}
+          rules={[{ required: true, message: '' }]}
           className="mb-16"
           getValueFromEvent={e => formatPhone(e.target.value)}
           validateTrigger={['onChange', 'onBlur']}
@@ -204,7 +200,7 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
                 return new Promise<void>(async (resolve, reject) => {
                   if (!value) return resolve();
 
-                  const unique = await validateNickname.trigger(value);
+                  const unique = await validateNicknameDebounced(value);
                   if (!unique) {
                     setNicknameError(t('nickname_already_exists'));
                     return reject('');
@@ -258,6 +254,13 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
                 maxLength={4}
                 className="flex-1 text-center"
                 max={new Date().getFullYear()}
+                ref={yearRef}
+                onChange={value => {
+                  const str = String(value ?? '');
+                  if (str.length >= 4) {
+                    monthRef.current?.focus?.();
+                  }
+                }}
               />
             </Form.Item>
             <span className="text-14 text-gray-70">/</span>
@@ -273,6 +276,13 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
                 maxLength={2}
                 max={12}
                 className="flex-1 text-center"
+                ref={monthRef}
+                onChange={value => {
+                  const str = String(value ?? '');
+                  if (str.length >= 2) {
+                    dayRef.current?.focus?.();
+                  }
+                }}
               />
             </Form.Item>
             <span className="text-14 text-gray-70">/</span>
@@ -288,6 +298,7 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
                 maxLength={2}
                 max={31}
                 className="flex-1 text-center"
+                ref={dayRef}
               />
             </Form.Item>
           </div>
@@ -313,11 +324,11 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
             {t('agree_all_terms_and_conditions')}
           </Checkbox>
         </Form.Item>
-        <div className="rounded-4 border border-gray-70 bg-gray-90 p-8 text-12 font-semibold text-gray-40">
+        <div className="selection-container rounded-4 border border-gray-70 bg-gray-90 p-8 text-12 font-semibold text-gray-40">
           <Form.Item
             name="agree_service_terms_and_conditions"
             required
-            className="mb-12 h-20"
+            className="mb-0"
             valuePropName="checked"
             rules={[
               {
@@ -343,7 +354,7 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
           <Form.Item
             name="agree_privacy_policy"
             required
-            className="mb-12 h-20"
+            className="mb-0"
             valuePropName="checked"
             rules={[
               {
@@ -368,7 +379,7 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
           </Form.Item>
           <Form.Item
             name="agree_third_party_personal_information_collection_and_use_agreement"
-            className="mb-12 h-20"
+            className="mb-0"
             valuePropName="checked"
           >
             <Checkbox>
@@ -390,7 +401,7 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
         variant="primary"
         type="submit"
         className={cx(
-          'sticky bottom-0 mt-auto !rounded-0',
+          'sticky bottom-0 mt-auto h-56 !rounded-0 text-16 font-semibold !opacity-100',
           !submitable && '!bg-gray-02 !text-gray-50'
         )}
         disabled={!submitable}

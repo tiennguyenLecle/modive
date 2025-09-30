@@ -7,6 +7,10 @@ export const COOKIE_PREFIX_SB = 'modive.sb-auth_token';
  */
 export const COOKIE_PREFIX_SB_ADMIN = 'modive.admin-auth_token';
 
+export const COOKIE = {
+  IS_PROFILE_COMPLETE: 'modive.is_profile_complete',
+};
+
 export const STORAGE = {
   HIDE_GUIDE_TO_USE: 'hide_guide_to_use',
   PAYMENT_SUCCESS_CALLBACK: 'payment_success_callback',

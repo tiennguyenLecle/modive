@@ -8,6 +8,7 @@ import {
 } from '@/lib/supabase/middleware';
 
 import {
+  COOKIE,
   COOKIE_PREFIX_SB,
   // COOKIE_PREFIX_SB_ADMIN,
   ROUTES,
@@ -110,6 +111,31 @@ export default async function middleware(request: NextRequest) {
   // === USER PROTECTED ROUTE LOGIC ===
   if (!isLoggedIn && !isPublicRoute) {
     response = await updateSession(request, response);
+  }
+
+  // === INCOMPLETE PROFILE REDIRECT ===
+  // If the user is logged in but hasn't completed their profile,
+  // force them to the join-membership page when attempting to access other pages
+  const isProfileIncomplete =
+    request.cookies.get(COOKIE.IS_PROFILE_COMPLETE)?.value === 'false';
+
+  if (isLoggedIn && isProfileIncomplete) {
+    const isOnJoinMembership = localeFreePathname.startsWith(
+      ROUTES.JOIN_MEMBERSHIP
+    );
+    if (!isOnJoinMembership) {
+      const locale = (request as any).nextUrl.locale || DEFAULT_LOCALE;
+      const { search } = request.nextUrl;
+      let redirectTarget = localeFreePathname;
+      if (search) redirectTarget += search;
+
+      const joinUrl = new URL(
+        `/${locale}${ROUTES.JOIN_MEMBERSHIP}`,
+        request.url
+      );
+      joinUrl.searchParams.set('redirect', redirectTarget);
+      return NextResponse.redirect(joinUrl);
+    }
   }
 
   // === ADMIN AUTH ROUTE LOGIC ===

@@ -15,9 +15,6 @@ type HomeProps = {
 
 export default function HomeClient({ interfaceData }: HomeProps) {
   if (!interfaceData) return;
-  const bannerUrl = getPublicUrl(interfaceData?.banner_key);
-
-  console.log('interfaceData', interfaceData);
 
   return (
     <div>

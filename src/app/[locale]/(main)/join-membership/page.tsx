@@ -45,7 +45,7 @@ const JoinMembershipPage = async ({
   }
 
   return (
-    <main className="flex h-screen flex-col">
+    <main data-no-navigation className="flex h-screen flex-col">
       <Header
         pageTitle={t('title')}
         className="sticky top-0 z-10 border-b border-gray-80"

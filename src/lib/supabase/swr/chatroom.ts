@@ -227,12 +227,13 @@ export async function getRoomDetail(
  * Update multiple fields in a chatroom
  */
 export async function updateChatroomField(
-  supabase: SupabaseClient,
   chatroomId: string,
+  supabase: SupabaseClient,
   fields: {
     last_accessed_at?: string;
     last_message?: string;
     metadata?: Record<string, any>;
+    theme_key?: string;
   }
 ) {
   const { data, error } = await supabase

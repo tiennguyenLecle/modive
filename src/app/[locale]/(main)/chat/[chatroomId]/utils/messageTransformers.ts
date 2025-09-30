@@ -1,7 +1,11 @@
+'use client';
+
 import dayjs from 'dayjs';
 
 import { Message } from '@/lib/api/types/chat.types';
 import { MessageInfoProps } from '@/lib/chatbot-modules';
+import { createBrowserSupabase } from '@/lib/supabase/factory';
+import { updateChatroomField } from '@/lib/supabase/swr/chatroom';
 import { formatDateOrTime } from '@/utils/formatTime';
 import { filterMessageConditions } from '@/utils/method';
 
@@ -105,6 +109,10 @@ export const transformMessageToInfoProps = (
     : handleMessageText(msg.message),
 });
 
+export const isBackgroundMessage = (message: any) => {
+  return message.startsWith('::background{url=');
+};
+
 /**
  * Map messages to MessageInfoProps with date headers
  */
@@ -113,9 +121,11 @@ export const mapMessagesToInfoProps = async (
   hasMorePrevious = false
 ) => {
   const seenIds = new Set<string>();
+  const chatroomId = messages?.length > 0 ? messages[0].chatroom_id : '';
+  const supabase = createBrowserSupabase('user');
 
   // Filter and transform messages
-  const base = messages
+  let base = messages
     .filter(
       msg =>
         !filterMessageConditions(
@@ -127,6 +137,58 @@ export const mapMessagesToInfoProps = async (
     )
     .map(transformMessageToInfoProps);
 
+  base = await Promise.all(
+    base.map(async item => {
+      return {
+        ...item,
+        messageArray:
+          item.messageArray?.length > 0
+            ? await Promise.all(
+                item.messageArray?.map(async (mes: any) => {
+                  // Check if message contains ::background{url=http...} pattern
+                  if (
+                    mes.message &&
+                    typeof mes.message === 'string' &&
+                    isBackgroundMessage(mes.message)
+                  ) {
+                    // Extract URL from ::background{url=http...} pattern
+                    const backgroundUrlMatch = mes.message.match(
+                      /::background\{url=([^}]+)\}/
+                    );
+
+                    const backgroundUrl =
+                      backgroundUrlMatch?.length > 0
+                        ? backgroundUrlMatch[1]
+                        : null;
+
+                    // Call API to update chatroom theme if we have supabase and chatroomId
+                    if (backgroundUrl && chatroomId) {
+                      try {
+                        await updateChatroomField(chatroomId, supabase, {
+                          theme_key: backgroundUrl,
+                        });
+                      } catch (error) {
+                        console.error('Error updating chatroom theme:', error);
+                      }
+                    }
+
+                    // Remove the ::background{url=http...} pattern and keep only the remaining text
+                    const cleanedMessage = mes?.message
+                      ?.replace(/::background\{url=[^}]+\}/g, '')
+                      .trim();
+
+                    return {
+                      ...mes,
+                      message: cleanedMessage,
+                    };
+                  }
+                  return mes;
+                })
+              )
+            : item.messageArray,
+      };
+    })
+  );
   const result: MessageInfoProps[] = [];
 
   // Insert date headers and messages

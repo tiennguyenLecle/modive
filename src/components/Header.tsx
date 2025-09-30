@@ -98,7 +98,7 @@ const Header = ({
       last_message: data?.message?.content,
     };
 
-    updateChatroomField(supabase, data.chatroom_id as string, updatedItem);
+    updateChatroomField(data.chatroom_id as string, supabase, updatedItem);
     setRoomsAtom(
       roomsAtom.map(room =>
         room.room_id === data.chatroom_id ? { ...room, ...updatedItem } : room

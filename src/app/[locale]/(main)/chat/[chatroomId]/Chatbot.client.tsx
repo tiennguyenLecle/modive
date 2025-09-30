@@ -148,6 +148,7 @@ const Chatbot = memo(
         <ChatboxLayout
           className={styles.chatboxLayout}
           backgroundColor="var(--color-background)"
+          backgroundImage={chatRoomDetail?.theme_key ?? ''}
           layoutHeight="calc(100dvh - 56px - 48px)" // 56px + 48px: header height + 10px: padding top of composer
           messageComponent={messageComponent}
           composerComponent={

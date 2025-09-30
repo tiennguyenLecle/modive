@@ -87,7 +87,7 @@ export const filterMessageConditions = (
   seenIds: Set<string>,
   invisible?: boolean
 ): boolean => {
-  const regex = /\[SYSTEM]|<think>|[ERROR]/;
+  const regex = /(?:\[SYSTEM\]|<think>|\[ERROR\])/;
 
   if (regex.test(message)) return true; // match pattern
   if (invisible) return true;

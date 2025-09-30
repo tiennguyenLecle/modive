@@ -50,6 +50,7 @@ const ChatRoom = memo(
     const { character } = chatRoomDetail;
     const { user } = useAuth();
     const hasInitialized = useRef(false);
+    const supabase = createBrowserSupabase('user');
     const hasTrackedEntry = useRef(false);
     const [programName, setProgramName] = useState<string>('');
 
@@ -75,7 +76,7 @@ const ChatRoom = memo(
       );
       setMessageCount(newMsgCount ?? 0);
       // Update message count in chatroom
-      updateChatroomField(supabase, chatroomId as string, {
+      updateChatroomField(chatroomId as string, supabase, {
         metadata: {
           new_msg_count: 0,
         },
@@ -139,17 +140,13 @@ const ChatRoom = memo(
           const lastMessage = messages[messages.length - 1];
           if (!lastMessage) return;
 
-          updateChatroomField(
-            createBrowserSupabase('user'),
-            chatroomId as string,
-            {
-              last_accessed_at: lastMessage.created_at,
-              last_message: lastMessage.message,
-              metadata: {
-                new_msg_count: 0,
-              },
-            }
-          );
+          updateChatroomField(chatroomId as string, supabase, {
+            last_accessed_at: lastMessage.created_at,
+            last_message: lastMessage.message,
+            metadata: {
+              new_msg_count: 0,
+            },
+          });
         }
       };
     }, [chatroomId, messages]);

@@ -1,7 +1,7 @@
 {
-  "name": "Modive - Modern AI Chatbot",
-  "short_name": "Modive",
-  "description": "Start chatting with well-known people on TV shows",
+  "name": "모잇! AI 캐릭터챗 모잇",
+  "short_name": "모잇",
+  "description": "당신이 좋아하는 캐릭터를 모으고, 잇다. 모잇! AI 캐릭터챗 모잇",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FF627B",

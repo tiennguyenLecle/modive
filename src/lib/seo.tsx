@@ -9,7 +9,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
  * This is merged with page-specific metadata in the root layout.
  */
 export const defaultMetadata: Metadata = {
-  applicationName: 'Modive',
+  applicationName: 'Moit',
   authors: [{ name: 'Modive Team' }],
   creator: 'Modive Team',
   publisher: 'Modive',
@@ -30,13 +30,13 @@ export const defaultMetadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    siteName: 'Modive',
+    siteName: 'Moit',
     images: [
       {
         url: '/android-chrome-512x512.png',
         width: 512,
         height: 512,
-        alt: 'Modive Logo',
+        alt: 'Moit Logo',
       },
     ],
   },
@@ -69,7 +69,7 @@ export const defaultMetadata: Metadata = {
     'mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'default',
-    'apple-mobile-web-app-title': 'Modive',
+    'apple-mobile-web-app-title': 'Moit',
   },
 };
 
@@ -78,11 +78,9 @@ function getWebsiteSchema(locale: string, baseUrl: string) {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Modive',
+    name: 'Moit',
     description:
-      locale === 'ko'
-        ? '현대적인 AI 챗봇 애플리케이션'
-        : 'A modern AI chatbot application',
+      locale === 'ko' ? 'AI 캐릭터챗 모잇' : 'AI Character Chat Moit',
     url: baseUrl,
     inLanguage: LOCALE_TO_RFC5646[locale] || 'en-US',
     potentialAction: {
@@ -108,7 +106,7 @@ function getWebApplicationSchema(locale: string, baseUrl: string) {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'Modive',
+    name: 'Moit',
     description:
       locale === 'ko'
         ? '현대적인 AI 챗봇 애플리케이션'

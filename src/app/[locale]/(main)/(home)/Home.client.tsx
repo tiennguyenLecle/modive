@@ -23,7 +23,7 @@ export default function HomeClient({ interfaceData }: HomeProps) {
           <div key={banner.key} className="relative aspect-[9/5]">
             <Image
               src={getPublicUrl(banner.key)}
-              alt="Modive banner"
+              alt="Moit banner"
               fill
               className="object-cover"
             />

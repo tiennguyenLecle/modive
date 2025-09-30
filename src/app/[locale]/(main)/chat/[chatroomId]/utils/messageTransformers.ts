@@ -6,6 +6,7 @@ import { Message } from '@/lib/api/types/chat.types';
 import { MessageInfoProps } from '@/lib/chatbot-modules';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { updateChatroomField } from '@/lib/supabase/swr/chatroom';
+import { ChatRoomType } from '@/types/chatroom';
 import { formatDateOrTime } from '@/utils/formatTime';
 import { filterMessageConditions } from '@/utils/method';
 
@@ -118,7 +119,8 @@ export const isBackgroundMessage = (message: any) => {
  */
 export const mapMessagesToInfoProps = async (
   messages: Message[],
-  hasMorePrevious = false
+  hasMorePrevious = false,
+  onChatroomUpdate?: (updatedChatroom: Partial<ChatRoomType>) => void
 ) => {
   const seenIds = new Set<string>();
   const chatroomId = messages?.length > 0 ? messages[0].chatroom_id : '';
@@ -167,6 +169,8 @@ export const mapMessagesToInfoProps = async (
                         await updateChatroomField(chatroomId, supabase, {
                           theme_key: backgroundUrl,
                         });
+                        // Update the atom with the new theme_key
+                        onChatroomUpdate?.({ theme_key: backgroundUrl });
                       } catch (error) {
                         console.error('Error updating chatroom theme:', error);
                       }

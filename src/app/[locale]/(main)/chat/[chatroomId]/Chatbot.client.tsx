@@ -8,9 +8,11 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
+import { chatroomAtom } from '@/atoms/chatroomAtom';
 import { ThreeDotsLoading } from '@/components';
 import { Message } from '@/lib/api/types/chat.types';
 import {
@@ -44,6 +46,8 @@ const Chatbot = memo(
     const { chatroomId } = useParams();
     const { character } = chatRoomDetail;
     const avatarCharacterUrl = getPublicUrl(character?.avatar_key ?? '');
+    const [chatRoomDetailFromAtom, setChatRoomDetailFromAtom] =
+      useAtom(chatroomAtom);
     // ref to message list
     const messageListRef = useRef<any>(null);
 
@@ -70,6 +74,11 @@ const Chatbot = memo(
       );
     }, []);
 
+    // Update chat room detail from atom
+    useEffect(() => {
+      setChatRoomDetailFromAtom(chatRoomDetail);
+    }, [chatRoomDetail]);
+
     // Update messages when new ones are loaded
     useEffect(() => {
       if (updatedMessagesRef?.current?.length > 0) {
@@ -90,7 +99,12 @@ const Chatbot = memo(
         }
 
         try {
-          const transformed = (await mapMessagesToInfoProps(messages)) ?? [];
+          const transformed =
+            (await mapMessagesToInfoProps(messages, false, updatedChatroom => {
+              setChatRoomDetailFromAtom(prev =>
+                prev ? { ...prev, ...updatedChatroom } : null
+              );
+            })) ?? [];
           const transformedWithAvatar = transformed?.map(
             (msg: MessageInfoProps) => ({
               ...msg,
@@ -148,7 +162,7 @@ const Chatbot = memo(
         <ChatboxLayout
           className={styles.chatboxLayout}
           backgroundColor="var(--color-background)"
-          backgroundImage={chatRoomDetail?.theme_key ?? ''}
+          backgroundImage={chatRoomDetailFromAtom?.theme_key ?? ''}
           layoutHeight="calc(100dvh - 56px - 48px)" // 56px + 48px: header height + 10px: padding top of composer
           messageComponent={messageComponent}
           composerComponent={

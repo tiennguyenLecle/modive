@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useAtom } from 'jotai';
 import { useParams, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';

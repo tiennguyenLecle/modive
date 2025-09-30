@@ -3,7 +3,7 @@ import React, { ComponentProps } from 'react';
 import { cx } from '@/utils/method';
 
 type BadgeCountNodeProps = ComponentProps<'div'> & {
-  count?: number;
+  count?: number | string;
   showZero?: boolean;
   dot?: boolean;
   overflowCount?: number;
@@ -34,6 +34,7 @@ const BadgeCountNode = ({
         'bg-primary',
         'inline-flex items-center justify-center',
         'text-12 font-semibold text-gray-100',
+        'outline-2 outline-white',
         isPill && 'px-4'
       )}
       style={{
@@ -43,6 +44,7 @@ const BadgeCountNode = ({
         color: '#fff',
         zIndex: 1,
         borderRadius: isPill ? 9999 : '50%',
+        outlineStyle: 'solid',
       }}
       {...rest}
     >

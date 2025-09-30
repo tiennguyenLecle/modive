@@ -29,14 +29,16 @@ const PreOrderInfo: React.FC<PreOrderInfoProps> = ({
     >
       <Info className="text-gray-60" width={18} height={18} />
       <p>
-        {isPreSale && <div>{t('pre_sale_badge')}</div>}
-        {releaseDate && (
-          <div>
-            {t('pre_sale_description', {
-              release_date: dayjs(releaseDate).format('MMMM D, YYYY'),
-            })}
-          </div>
+        {isPreSale && (
+          <>
+            {t('pre_sale_badge')}
+            <br />
+          </>
         )}
+        {releaseDate &&
+          t('pre_sale_description', {
+            release_date: dayjs(releaseDate).format('MMMM D, YYYY'),
+          })}
       </p>
     </div>
   );

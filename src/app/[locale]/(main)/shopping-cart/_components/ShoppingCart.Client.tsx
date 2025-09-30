@@ -1,10 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { notification } from 'antd';
+import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
-import useSWR from 'swr';
 
 import { ArrowRight, Info } from '@/assets/icons';
 import { myCartAtom } from '@/atoms/goodsAtom';
@@ -12,12 +10,7 @@ import Button from '@/components/Button';
 import CheckboxComponent from '@/components/Checkbox';
 import Empty from '@/components/Empty';
 import { useRouter } from '@/lib/navigation';
-import {
-  CART_KEY,
-  CartItemType,
-  fetchMyCart,
-  updateMyCartByBrowser,
-} from '@/lib/supabase/swr/cart';
+import { CartItemType, updateMyCartByBrowser } from '@/lib/supabase/swr/cart';
 import { ROUTES } from '@/utils/constants';
 
 import { useCalcPaymentAmount } from '../hooks/useCalcPaymentAmount';
@@ -32,16 +25,6 @@ export default function ShoppingCart() {
   const [myCartValue, setMyCartValue] = useAtom(myCartAtom);
   const [isLoadingSelectionOrder, setIsLoadingSelectionOrder] = useState(false);
   const [isLoadingFullOrder, setIsLoadingFullOrder] = useState(false);
-
-  const { data, error } = useSWR(CART_KEY.all, fetchMyCart, {
-    revalidateOnFocus: false,
-  });
-
-  const myCart = useMemo(() => data || null, [data]);
-
-  useEffect(() => {
-    setMyCartValue(myCart);
-  }, [myCart, setMyCartValue]);
 
   useEffect(() => {
     setIsFullSelected(
@@ -67,13 +50,6 @@ export default function ShoppingCart() {
   const { productAmount, deliveryFee, paymentAmount } = useCalcPaymentAmount(
     myGoodsBySelected ?? []
   );
-
-  if (error) {
-    notification.error({
-      message: '장바구니 데이터를 불러오는데 실패했습니다.',
-    });
-    return null;
-  }
 
   if (!myCartValue) return null;
 
@@ -158,7 +134,7 @@ export default function ShoppingCart() {
           {t('shopping_cart')}
         </h1>
       </div>
-      {myCart && myCart?.items?.length > 0 ? (
+      {myCartValue && myCartValue?.items?.length > 0 ? (
         <div className="relative flex max-h-[calc(100dvh-56rem)] flex-col gap-8 overflow-y-auto overflow-x-hidden bg-gray-90">
           <div>
             <div className="flex flex-row items-center justify-between px-16 py-8 text-14 font-normal text-gray-00">

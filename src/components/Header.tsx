@@ -1,7 +1,7 @@
 'use client';
 
 import { ComponentProps, useCallback, useEffect, useMemo } from 'react';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
@@ -13,6 +13,7 @@ import {
   LogoMoit,
   Search,
 } from '@/assets/icons';
+import { myCartAtom } from '@/atoms/goodsAtom';
 import { messageCountAtom, roomListAtom } from '@/atoms/messagesAtom';
 import { Badge } from '@/components';
 import { useServiceWorkerMessages } from '@/hooks/useServiceWorkerMessages';
@@ -58,7 +59,7 @@ const Header = ({
   const { data: userData } = useMeExtraData(!!user, user?.id || '');
   const [messageCount, setMessageCount] = useAtom(messageCountAtom);
   const [roomsAtom, setRoomsAtom] = useAtom(roomListAtom);
-
+  const myCartValue = useAtomValue(myCartAtom);
   const supabase = createBrowserSupabase('user');
 
   // Handle new message from service worker - update user metadata and room metadata
@@ -135,6 +136,11 @@ const Header = ({
     showBackButton,
   ]);
 
+  const totalCartItem = useMemo(
+    () => myCartValue?.items?.length || 0,
+    [myCartValue]
+  );
+
   const checkDirectable = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       if (!user) {
@@ -209,8 +215,14 @@ const Header = ({
             </Link>
           )}
           {showCartIcon && (
-            <Link href={ROUTES.SHOPPING_CART} onClick={checkDirectable}>
-              <Cart width={24} height={24} className="text-gray-00" />
+            <Link
+              href={ROUTES.SHOPPING_CART}
+              onClick={checkDirectable}
+              className="h-24"
+            >
+              <Badge.Wrapper count={totalCartItem}>
+                <Cart width={24} height={24} className="text-gray-00" />
+              </Badge.Wrapper>
             </Link>
           )}
         </div>

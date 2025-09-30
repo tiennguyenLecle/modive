@@ -4,6 +4,7 @@ import React, { createContext, useContext, useMemo, useRef } from 'react';
 import * as amplitude from '@amplitude/analytics-browser';
 import { useSetAtom } from 'jotai';
 import { useParams } from 'next/navigation';
+import { useSWRConfig } from 'swr';
 import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
 
 import CompleteShoppingCartModal from '@/app/[locale]/(main)/goods/[workId]/[goodId]/_components/modals/CompleteShoppingCart';
@@ -12,7 +13,7 @@ import { useGoodDetail, useGoodLike } from '@/hooks/useGoods';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { useRouter } from '@/lib/navigation';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
-import { getMyCart, updateMyCart } from '@/lib/supabase/swr/cart';
+import { CART_KEY, getMyCart, updateMyCart } from '@/lib/supabase/swr/cart';
 import { fetchWorkDetail } from '@/lib/supabase/swr/work';
 import { getAmplitudeLocationProperties } from '@/utils/amplitude';
 import { ROUTES } from '@/utils/constants';
@@ -46,6 +47,7 @@ export const GoodDetailProvider = ({
   const setMyCartValue = useSetAtom(myCartAtom);
   const { user } = useAuth();
   const { workId } = useParams();
+  const { mutate } = useSWRConfig();
   const [quantity, setQuantity] = React.useState(1);
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
   const goodDetail = useGoodDetail(supabase, goodId);
@@ -80,7 +82,7 @@ export const GoodDetailProvider = ({
           {
             ...cart.items[existingIndex],
             quantity: Math.min(
-              cart.items[existingIndex].quantity + newItem.quantity + 2000,
+              cart.items[existingIndex].quantity + newItem.quantity,
               good.quantity
             ),
           },
@@ -91,10 +93,13 @@ export const GoodDetailProvider = ({
         newCartItems = [newItem, ...cart.items];
       }
       await updateMyCart(supabase, newCartItems);
+      return { ...cart, items: [{ ...newItem, good: good }, ...cart.items] };
     },
     {
-      onSuccess: async () => {
+      onSuccess: async data => {
+        setMyCartValue(data);
         completeShoppingCartModalRef.current?.open();
+        mutate(CART_KEY.all);
 
         // Amplitude: Track add to cart event
         try {

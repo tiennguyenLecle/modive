@@ -162,7 +162,7 @@
       "good_thumbnail_alt": "{title} 상품 썸네일 이미지",
       "price": "{price}원",
       "remaining_quantity": "남은 수량: {quantity}",
-      "shipping_cost": "배송비 {cost} 원",
+      "shipping_cost": "배송비 {cost}원",
       "shipping_fee_description": "({free_shipping_threshold}원 이상 구매시 무료 배송)",
       "pre_sale_badge": "예약 판매 상품입니다.",
       "pre_sale_description": "예정 배송일은 {release_date}입니다.",

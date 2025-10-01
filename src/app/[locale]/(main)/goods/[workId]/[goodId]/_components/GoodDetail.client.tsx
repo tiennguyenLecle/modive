@@ -139,10 +139,10 @@ const GoodDetail: React.FC = () => {
         <p className="px-8">
           {delivery_fee === 0
             ? t('free_shipping')
-            : t('shipping_cost', { cost: delivery_fee })}
+            : t('shipping_cost', { cost: delivery_fee?.toLocaleString() })}
           <br />
           {t('shipping_fee_description', {
-            free_shipping_threshold: free_shipping_threshold,
+            free_shipping_threshold: free_shipping_threshold?.toLocaleString(),
           })}
         </p>
 

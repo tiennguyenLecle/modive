@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import dayjs from 'dayjs';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 
 import { Info } from '@/assets/icons';
 import { cx } from '@/utils/method';
@@ -16,6 +16,7 @@ const PreOrderInfo: React.FC<PreOrderInfoProps> = ({
   className,
   ...props
 }) => {
+  const formatter = useFormatter();
   const t = useTranslations('goods_page.good_detail');
   if (!isPreSale && !releaseDate) return null;
 
@@ -37,7 +38,11 @@ const PreOrderInfo: React.FC<PreOrderInfoProps> = ({
         )}
         {releaseDate &&
           t('pre_sale_description', {
-            release_date: dayjs(releaseDate).format('MMMM D, YYYY'),
+            release_date: formatter.dateTime(new Date(releaseDate), {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            }),
           })}
       </p>
     </div>

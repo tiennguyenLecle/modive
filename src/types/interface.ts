@@ -31,6 +31,7 @@ export type InterfaceType = {
     interface_id: string;
     key: string;
     type: 'banner';
+    url: string;
   }>;
   created_at: string; // ISO
   updated_at: string; // ISO

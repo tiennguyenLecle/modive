@@ -26,7 +26,7 @@ export async function deleteChatRoomAction(chatroomId: string) {
   const supabase = createServerSupabase('user');
   const { error } = await supabase
     .from('chat_rooms')
-    .delete()
+    .update({ deleted_at: new Date() })
     .eq('id', chatroomId);
 
   if (error) {

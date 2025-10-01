@@ -31,7 +31,8 @@ export async function fetchChatRooms(
   // Step 1: Query to filter and count chat rooms
   let filterQueryBuilder = supabase
     .from('chat_rooms')
-    .select('id', { count: 'exact' });
+    .select('id', { count: 'exact' })
+    .is('deleted_at', null);
 
   if (user_id) {
     filterQueryBuilder = filterQueryBuilder.eq('user_id', user_id);

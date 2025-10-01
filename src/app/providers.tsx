@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Provider as JotaiProvider } from 'jotai';
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 import { usePathname } from 'next/navigation';
@@ -22,6 +22,12 @@ NProgress.configure({ showSpinner: false, speed: 100 });
  */
 export const Providers = ({ children, messages, locale }: Props) => {
   const pathname = usePathname();
+  const [timeZone, setTimeZone] = useState('UTC');
+
+  useEffect(() => {
+    const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setTimeZone(browserTimeZone);
+  }, []);
 
   useEffect(() => {
     if (NProgress.isStarted()) {
@@ -34,7 +40,7 @@ export const Providers = ({ children, messages, locale }: Props) => {
       <NextIntlClientProvider
         locale={locale}
         messages={messages}
-        timeZone="UTC"
+        timeZone={timeZone}
       >
         <JotaiProvider>{children}</JotaiProvider>
       </NextIntlClientProvider>

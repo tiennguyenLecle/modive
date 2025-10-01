@@ -4,7 +4,7 @@ import React, { useImperativeHandle, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button, Modal, Spinner } from '@/components';
-import CheckboxComponent from '@/components/Checkbox';
+import Checkbox from '@/components/Checkbox/Checkbox';
 import { STORAGE } from '@/utils/constants';
 
 interface ModalGuideToUseHandle {
@@ -59,7 +59,7 @@ const ModalGuideToUse = React.forwardRef<
       }
       footer={
         <div className="flex flex-col gap-12">
-          <CheckboxComponent
+          <Checkbox
             onChange={e => {
               if (e.target.checked) {
                 localStorage.setItem(STORAGE.HIDE_GUIDE_TO_USE, 'true');
@@ -69,10 +69,10 @@ const ModalGuideToUse = React.forwardRef<
             }}
             disabled={loading}
           >
-            <span className="text-12 font-semibold text-gray-30">
+            <span className="mt-2 block text-12 font-semibold text-gray-30">
               {t('do_not_see_again')}
             </span>
-          </CheckboxComponent>
+          </Checkbox>
 
           <Button
             variant="primary"

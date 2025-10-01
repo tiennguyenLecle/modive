@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Checkbox, Form, Input, InputNumber } from 'antd';
+import { Form, Input, InputNumber } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useSWRConfig } from 'swr';
@@ -9,6 +9,7 @@ import useSWRMutation from 'swr/mutation';
 
 import { Info } from '@/assets/icons';
 import { Button } from '@/components';
+import Checkbox from '@/components/Checkbox/Checkbox';
 import { Link, useRouter } from '@/lib/navigation';
 import { APP_LINKS, ROUTES } from '@/utils/constants';
 import { cx, debounce } from '@/utils/method';
@@ -321,7 +322,9 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
               });
             }}
           >
-            {t('agree_all_terms_and_conditions')}
+            <div className="leading-normal">
+              {t('agree_all_terms_and_conditions')}
+            </div>
           </Checkbox>
         </Form.Item>
         <div className="selection-container rounded-4 border border-gray-70 bg-gray-90 p-8 text-12 font-semibold text-gray-40">

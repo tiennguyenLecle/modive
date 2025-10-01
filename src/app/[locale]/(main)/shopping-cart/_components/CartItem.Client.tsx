@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 import { Info } from '@/assets/icons';
 import { CartItemProps } from '@/atoms/goodsAtom';
-import CheckboxComponent from '@/components/Checkbox';
+import Checkbox from '@/components/Checkbox/Checkbox';
 import DefaultImageComponent from '@/components/DefaultImage';
 import { formatDateOrTime } from '@/utils/formatTime';
 
@@ -54,7 +54,7 @@ export default function CartItem({
     <div className="flex w-full flex-col gap-12 border-b border-gray-80 border-gray-90 bg-white p-16 last:border-b-0">
       <div className="flex flex-row items-start gap-12">
         {showCheckbox && (
-          <CheckboxComponent
+          <Checkbox
             checked={checked}
             disabled={false}
             className="h-18 min-w-18"

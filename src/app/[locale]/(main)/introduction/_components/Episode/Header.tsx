@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import { Check, Close, Direction } from '@/assets/icons';
-import CheckboxComponent from '@/components/Checkbox';
+import Checkbox from '@/components/Checkbox/Checkbox';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { cx } from '@/utils/method';
 
@@ -39,7 +39,7 @@ const EpisodeHeader: React.FC = () => {
     >
       {isSelectionMode ? (
         <>
-          <CheckboxComponent
+          <Checkbox
             onChange={(event: any) => {
               if (event.target.checked) {
                 selectAllEpisodes(episodes);
@@ -51,7 +51,7 @@ const EpisodeHeader: React.FC = () => {
             disabled={episodes.length === 0 || unOrderedEpisodes.length === 0}
           >
             {t('episodes.full_choice')}
-          </CheckboxComponent>
+          </Checkbox>
           <button
             onClick={() => exitSelectionMode()}
             className="ml-8 mr-auto flex size-24 shrink-0 items-center justify-center transition-colors duration-300 hover:bg-gray-90 hover:text-primary"

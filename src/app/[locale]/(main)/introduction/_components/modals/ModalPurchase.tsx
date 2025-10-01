@@ -5,7 +5,7 @@ import { AnimatePresence, motion, PanInfo } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components';
-import CheckboxComponent from '@/components/Checkbox';
+import Checkbox from '@/components/Checkbox/Checkbox';
 import { useMeExtraData } from '@/hooks/useUser';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { useRouter } from '@/lib/navigation';
@@ -235,14 +235,14 @@ const ModalPurchase = React.forwardRef<ModalPurchaseRef, ModalPurchaseProps>(
 
                   {/* Footer */}
                   <div className="p-16">
-                    <CheckboxComponent
+                    <Checkbox
                       onChange={e => setViewImmediately(e.target.checked)}
                       className="mb-16"
                     >
                       <span className="text-14 font-semibold text-gray-30">
                         {t('view_immediately')}
                       </span>
-                    </CheckboxComponent>
+                    </Checkbox>
 
                     {/* {typeof me?.data?.coins === 'number' &&
                     me?.data?.coins >= totalPrice ? ( */}

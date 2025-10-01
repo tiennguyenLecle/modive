@@ -50,15 +50,7 @@ const JoinMembershipPage = async ({
         pageTitle={t('title')}
         className="sticky top-0 z-10 border-b border-gray-80"
       />
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: '#FF627B',
-          },
-        }}
-      >
-        <JoinMembershipClient initialValues={initialValues} />
-      </ConfigProvider>
+      <JoinMembershipClient initialValues={initialValues} />
     </main>
   );
 };

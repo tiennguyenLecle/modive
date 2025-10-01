@@ -4,6 +4,8 @@ export { default as Badge } from './Badge';
 export { default as Button } from './Button';
 export { default as ChangeQuantity } from './ChangeQuantity';
 export { default as Chapter } from './Chapter';
+export { default as Checkbox } from './Checkbox/Checkbox';
+export { default as Empty } from './Empty';
 export { default as Footer } from './Footer';
 export { default as Header } from './Header';
 export { default as ThreeDotsLoading } from './Loading/ThreeDotsLoading';

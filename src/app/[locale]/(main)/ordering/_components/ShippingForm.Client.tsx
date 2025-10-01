@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
 
 import { shippingFormAtom } from '@/atoms/goodsAtom';
-import CheckboxComponent from '@/components/Checkbox';
+import Checkbox from '@/components/Checkbox/Checkbox';
 import { useAuth } from '@/lib/authentication/auth-context';
 import {
   getShippingAddressList,
@@ -227,7 +227,7 @@ export default function ShippingForm() {
           className="hidden"
         />
         <div className="mb-16 flex flex-row items-center gap-8 text-14 font-semibold text-gray-00">
-          <CheckboxComponent
+          <Checkbox
             disabled={false}
             defaultChecked={isDefaultShipping}
             onChange={e => setIsDefaultShipping(e.target.checked)}

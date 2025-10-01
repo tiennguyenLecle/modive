@@ -1,7 +1,7 @@
-import { forwardRef, useMemo } from 'react';
+import { forwardRef } from 'react';
 
 import { Check, Download } from '@/assets/icons';
-import CheckboxComponent from '@/components/Checkbox';
+import Checkbox from '@/components/Checkbox/Checkbox';
 import { cx } from '@/utils/method';
 
 import { ExtendedEpisodeType } from '../../_actions/episode';
@@ -39,7 +39,7 @@ const EpisodeItem = forwardRef<HTMLDivElement, EpisodeItemProps>(
         {/* Episode content */}
 
         {isSelectionMode && (
-          <CheckboxComponent
+          <Checkbox
             checked={isSelected}
             disabled={episode.is_ordered}
             className={cx(episode.is_ordered && 'cursor-not-allowed opacity-0')}

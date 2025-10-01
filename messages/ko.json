@@ -350,13 +350,18 @@
     "my_infomation": "내 정보",
     "withdrawal_notification": "탈퇴 알림",
     "withdrawal_description": "탈퇴하시겠습니끼?",
-    "withdrawal_description2": "(*지금 탈퇴하시면 서비스를 이용할 수 없어요)",
     "cancel": "취소",
     "check": "확인",
     "log_out_notification": "로그아웃 알림",
     "log_out_description": "로그아웃 하시겠습니까?",
     "google": "Google",
-    "apple": "Apple"
+    "apple": "Apple",
+    "withdrawal_description2_1": "회원 탈퇴가 완료되면 계정은 즉시 삭제되며, 이후에는 복구할 수 없습니다.",
+    "withdrawal_description2_2": "복구할 수 없습니다.",
+    "withdrawal_description3": "탈퇴 시 회원의 채팅 기록, 저장된 콘텐츠 및 활동 이력은 모두 삭제되며, 복구할 수 없습니다.",
+    "withdrawal_description4": "보유 중인 캐시는 탈퇴와 동시에 소멸되며 환불 및 복구가 불가합니다.",
+    "withdrawal_description5": "유의사항을 모두 확인하였으며, 회원 탈퇴 시 보유한 캐시가 소멸되는 것에 동의합니다.",
+    "withdrawal_description6": "계정은 탈퇴 후 복구할 수 없으며, 이에 동의합니다."
   },
   "login_page": {
     "title": "모다이브",

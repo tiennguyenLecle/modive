@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useRef, useState } from 'react';
+import React, { useImperativeHandle, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Info } from '@/assets/icons';

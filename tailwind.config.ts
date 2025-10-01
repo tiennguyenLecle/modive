@@ -98,6 +98,7 @@ const config: Config = {
       1.72: '1.72',
     },
     letterSpacing: {
+      0.048: '0.048rem',
       0.07: '0.07rem',
       0.096: '0.096rem',
       0.4: '0.4rem',

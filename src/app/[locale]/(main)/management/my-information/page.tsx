@@ -118,13 +118,13 @@ export default function MyInformation() {
           >
             {t('logout')}
           </button>
-          {/* <div className="h-12 w-1 bg-gray-03" />
+          <div className="h-12 w-1 bg-gray-03" />
           <button
             className="px-6 text-16 font-normal text-gray-40"
             onClick={() => withdrawalModalRef.current?.open()}
           >
             {t('withdrawal')}
-          </button> */}
+          </button>
         </div>
       </main>
       <ModalLogout ref={logOutModalRef} />

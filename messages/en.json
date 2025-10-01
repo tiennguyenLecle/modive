@@ -350,13 +350,18 @@
     "my_infomation": "My information",
     "withdrawal_notification": "Withdrawal notification",
     "withdrawal_description": "Would you like to withdraw?",
-    "withdrawal_description2": "(*If you withdraw now, you can't use the service)",
     "cancel": "cancellation",
     "check": "check",
     "log_out_notification": "Log out notification",
     "log_out_description": "Would you like to log out?",
     "google": "Google",
-    "apple": "Apple"
+    "apple": "Apple",
+    "withdrawal_description2_1": "When the membership is completed, the account will be deleted immediately and ",
+    "withdrawal_description2_2": "cannot be restored afterwards.",
+    "withdrawal_description3": "When withdrawal, the members' chat records, stored content and activity history are all deleted and cannot be recovered.",
+    "withdrawal_description4": "The cash holding is destroyed at the same time as withdrawal and cannot be refunded and restored.",
+    "withdrawal_description5": "We have confirmed all the notes and agree that the cash we have when withdrawal from the member will be destroyed.",
+    "withdrawal_description6": "The account cannot be recovered after the withdrawal, and I agree with it."
   },
   "login_page": {
     "title": "Login",

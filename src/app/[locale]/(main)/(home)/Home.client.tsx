@@ -20,21 +20,32 @@ export default function HomeClient({ interfaceData }: HomeProps) {
     <div>
       <div className="aspect-[9/5] w-full overflow-hidden">
         <Carousel autoplay draggable>
-          {interfaceData.banner_storage_objects?.map(({ key, url }) => (
-            <Link
-              key={key}
-              href={url}
-              target="_blank"
-              className="relative aspect-[9/5]"
-            >
-              <Image
-                src={getPublicUrl(key)}
-                alt="Moit banner"
-                fill
-                className="object-cover"
-              />
-            </Link>
-          ))}
+          {interfaceData.banner_storage_objects?.map(({ key, url }) =>
+            url ? (
+              <Link
+                key={key}
+                href={url}
+                target="_blank"
+                className="relative aspect-[9/5]"
+              >
+                <Image
+                  src={getPublicUrl(key)}
+                  alt="Moit banner"
+                  fill
+                  className="object-cover"
+                />
+              </Link>
+            ) : (
+              <div key={key} className="relative aspect-[9/5]">
+                <Image
+                  src={getPublicUrl(key)}
+                  alt="Moit banner"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )
+          )}
         </Carousel>
       </div>
       <div className="flex flex-col gap-12 bg-gray-100 py-16">

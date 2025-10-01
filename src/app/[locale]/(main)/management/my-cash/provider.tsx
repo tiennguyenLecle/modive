@@ -5,7 +5,6 @@ import { useLocale } from 'next-intl';
 import useSWR, { useSWRConfig } from 'swr';
 import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
 
-import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { openCardPayment } from '@/lib/toss/payments';
 import { CoinPackageType } from '@/types/coins-packages';
 import { TransactionType } from '@/types/transaction';
@@ -26,18 +25,29 @@ type MyCashContextType = {
     string,
     { coinPackageId: string }
   >;
+  coinValueMapper: Record<number, number>;
 };
 
 const MyCashContext = createContext<MyCashContextType | null>(null);
 
 export const MyCashProvider = ({ children }: { children: React.ReactNode }) => {
-  const supabase = useMemo(() => createBrowserSupabase('user'), []);
   const locale = useLocale();
 
   const { mutate } = useSWRConfig();
   const [coinPackages, setCoinPackages] = useState<CoinPackageType[] | null>(
     null
   );
+
+  const coinValueMapper: Record<number, number> = useMemo(() => {
+    if (!coinPackages) return {};
+    return coinPackages.reduce(
+      (acc, coinPackage) => ({
+        ...acc,
+        [coinPackage.price]: coinPackage.coins_credit,
+      }),
+      {}
+    );
+  }, [coinPackages]);
 
   const [purchaseHistory, setPurchaseHistory] = useState<
     TransactionType[] | null
@@ -93,7 +103,7 @@ export const MyCashProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <MyCashContext.Provider
-      value={{ coinPackages, purchaseHistory, purchaseCoins }}
+      value={{ coinPackages, purchaseHistory, purchaseCoins, coinValueMapper }}
     >
       {children}
     </MyCashContext.Provider>

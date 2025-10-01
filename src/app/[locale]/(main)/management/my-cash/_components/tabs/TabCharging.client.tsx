@@ -9,7 +9,7 @@ import { useMyCash } from '../../provider';
 const ChargingClient = () => {
   const t = useTranslations('my-cash.charging');
 
-  const { purchaseHistory } = useMyCash();
+  const { purchaseHistory, coinValueMapper } = useMyCash();
 
   if (!purchaseHistory?.length) {
     return (
@@ -45,7 +45,9 @@ const ChargingClient = () => {
             </div>
             <div className="flex justify-between gap-12">
               <p className="text-14 font-semibold text-gray-00">
-                {t('cash', { cash: transaction.amount.toLocaleString() })}
+                {t('cash', {
+                  cash: coinValueMapper[transaction.amount]?.toLocaleString(),
+                })}
               </p>
               <p className="text-right text-14 font-normal text-gray-50">
                 {dayjs(transaction?.created_at).format('YYYY-MM-DD HH:mm:ss')}

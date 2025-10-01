@@ -7,13 +7,19 @@ import { sessionReplayPlugin } from '@amplitude/plugin-session-replay-browser';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 
 const AmplitudeSetup = () => {
-  const API_KEY = '6e31172ebc637e8aa9e4b73c3d84ca06';
+  const API_KEY = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY;
   const supabase = useMemo(() => createBrowserSupabase('user'), []);
 
   // Initialize Amplitude
   useEffect(() => {
     // Only run in browser environment
     if (typeof window === 'undefined') return;
+
+    // Check if API key is available
+    if (!API_KEY) {
+      console.warn('Amplitude API key is not configured');
+      return;
+    }
 
     // Check for development environment (localhost)
     const isDevelopment =

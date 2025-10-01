@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { CheckboxChangeEvent } from 'antd/es/checkbox/Checkbox';
 import { useAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
 
 import { ArrowRight, Info } from '@/assets/icons';
 import { myCartAtom } from '@/atoms/goodsAtom';
-import Button from '@/components/Button';
-import CheckboxComponent from '@/components/Checkbox';
-import Empty from '@/components/Empty';
+import { Button, Checkbox, Empty } from '@/components';
 import { useRouter } from '@/lib/navigation';
 import { CartItemType, updateMyCartByBrowser } from '@/lib/supabase/swr/cart';
 import { ROUTES } from '@/utils/constants';
@@ -119,6 +118,16 @@ export default function ShoppingCart() {
     router.push(ROUTES.ORDERING);
   };
 
+  const toggleSelectAll = (event: CheckboxChangeEvent) => {
+    setMyCartValue({
+      ...myCartValue,
+      items: myCartValue?.items?.map(item => ({
+        ...item,
+        is_selected: event.target.checked,
+      })),
+    });
+  };
+
   return (
     <>
       <div className="container flex h-56 items-center gap-12 border-b border-t border-gray-80">
@@ -138,15 +147,14 @@ export default function ShoppingCart() {
         <div className="relative flex max-h-[calc(100dvh-56rem)] flex-col gap-8 overflow-y-auto overflow-x-hidden bg-gray-90">
           <div>
             <div className="flex flex-row items-center justify-between px-16 py-8 text-14 font-normal text-gray-00">
-              <div className="flex flex-row items-center justify-between gap-8">
-                <CheckboxComponent
-                  checked={isFullSelected}
-                  disabled={true}
-                  className="h-20 min-w-20"
-                />
-                <strong>{t('full_choice')}</strong>
-                <span className="h-8 w-1 bg-gray-70" />
-                {t('total', { count: myGoodsBySelected?.length ?? 0 })}
+              <div className="flex flex-row items-center justify-between">
+                <Checkbox checked={isFullSelected} onChange={toggleSelectAll}>
+                  <strong>{t('full_choice')}</strong>
+                </Checkbox>
+                <span className="mr-8 h-8 w-1 bg-gray-70" />
+                <span>
+                  {t('total', { count: myGoodsBySelected?.length ?? 0 })}
+                </span>
               </div>
               <Button
                 variant="secondary"

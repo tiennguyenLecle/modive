@@ -122,7 +122,37 @@ export const useLoadMoreMessages = (
  * Hook for sending messages
  */
 export const useSendMessage = ({ botName }: { botName: string }) => {
-  return;
+  const { chatroomId } = useParams();
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get('sessionId');
+
+  const sendMessage = useCallback(
+    async (text: string): Promise<void> => {
+      if (!chatroomId) {
+        throw new Error('Chatroom ID is required');
+      }
+
+      if (!sessionId) {
+        throw new Error('Session ID is required');
+      }
+
+      try {
+        await NextApi.post(`/api/chat/${chatroomId}`, {
+          body: {
+            sessionId,
+            text,
+            botName,
+          },
+        });
+      } catch (error) {
+        console.error('Error sending message:', error);
+        throw error;
+      }
+    },
+    [chatroomId, sessionId]
+  );
+
+  return { sendMessage };
 };
 
 /**

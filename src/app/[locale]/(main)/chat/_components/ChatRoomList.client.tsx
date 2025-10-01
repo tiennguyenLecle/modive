@@ -180,7 +180,7 @@ const ChatListItem = React.forwardRef<HTMLDivElement, ChatListItemProps>(
   ) => {
     return (
       <div
-        className="container flex w-full cursor-pointer gap-16 rounded-8 border-b border-gray-90 bg-gray-100 py-16 transition-colors duration-300 hover:bg-gray-90"
+        className="container flex w-full cursor-pointer select-none gap-16 rounded-8 border-b border-gray-90 bg-gray-100 py-16 transition-colors duration-300 hover:bg-gray-90"
         {...rest}
         ref={ref}
       >

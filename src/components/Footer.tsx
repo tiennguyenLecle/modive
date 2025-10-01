@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
-import { Logo } from '@/assets/icons';
+import { LogoMoit } from '@/assets/icons';
 import { Link } from '@/lib/navigation';
 import { cx } from '@/utils/method';
 
@@ -59,7 +59,7 @@ export default function Footer({
           {t('copyright_policy')}
         </Link> */}
       </div>
-      <Logo width={82} height={24} className="text-gray-70" />
+      <LogoMoit className="h-24 w-82 text-gray-70" />
       <address className="mb-0 text-12 font-normal leading-1.66 text-gray-30">
         {t('info_name')}
         <br />

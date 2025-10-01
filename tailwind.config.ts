@@ -61,6 +61,7 @@ const config: Config = {
       64: '64rem',
       72: '72rem',
       80: '80rem',
+      82: '82rem',
       90: '90rem',
       96: '96rem',
       100: '100rem',

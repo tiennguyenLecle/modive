@@ -25,7 +25,6 @@ import Info from './info.svg';
 import Minus from './line.svg';
 import Lock from './lock.svg';
 import LogoMoit from './logo-moit.svg';
-import Logo from './logo.svg';
 import NavChat from './nav-chat.svg';
 import NavHomeFilled from './nav-home-filled.svg';
 import NavHome from './nav-home.svg';
@@ -72,7 +71,6 @@ export {
   Heart,
   Info,
   Lock,
-  Logo,
   LogoMoit,
   NavChat,
   NavHome,

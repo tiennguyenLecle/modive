@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button, Layout, Menu, type MenuProps } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 
-import { Logo } from '@/assets/icons';
+import { LogoMoit } from '@/assets/icons';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { Link, usePathname } from '@/lib/navigation';
 import { ROUTES } from '@/utils/constants';
@@ -106,7 +106,7 @@ export default function CmsSidebar() {
   return (
     <Layout.Sider className="!bg-white">
       <div className="flex h-56 items-center justify-center">
-        <Logo className="w-90 text-primary" />
+        <LogoMoit className="w-90 text-primary" />
       </div>
       <Menu
         mode="inline"

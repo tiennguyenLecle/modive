@@ -1,10 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Button, Form, Input, message, Spin } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { useTranslations } from 'next-intl';
 
-import { Logo } from '@/assets/icons';
+import { LogoMoit } from '@/assets/icons';
 import { useAuth } from '@/lib/authentication/auth-context';
 
 export default function CmsLoginClient() {
@@ -35,7 +35,7 @@ export default function CmsLoginClient() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-16">
-      <Logo className="w-80 text-primary" />
+      <LogoMoit className="w-80 text-primary" />
       <h1 className="text-20 font-semibold">{t('title')}</h1>
       <div className="w-full max-w-360">
         <Form

@@ -212,4 +212,11 @@
   }
 }
 
+.disabledComposer {
+  background: var(--placeholder-bg);
+  border: 1px solid var(--border);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 // -- End -- Composer styles

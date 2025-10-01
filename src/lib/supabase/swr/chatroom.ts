@@ -235,6 +235,7 @@ export async function updateChatroomField(
     last_message?: string;
     metadata?: Record<string, any>;
     theme_key?: string;
+    message_count?: number;
   }
 ) {
   const { data, error } = await supabase
@@ -244,6 +245,61 @@ export async function updateChatroomField(
     .select()
     .single();
 
+  if (error) throw error;
+  return data;
+}
+
+// get message count
+export async function getMessageCount(
+  supabase: SupabaseClient,
+  userId: string,
+  workId: string
+) {
+  const { data, error } = await supabase
+    .from('work_chat_usages')
+    .select()
+    .eq('user_id', userId)
+    .eq('work_id', workId)
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+// Get free quota in pre-open period
+export async function getFreeQuotaInPreOpenPeriod(supabase: SupabaseClient) {
+  const { data, error } = await supabase
+    .from('active_campaigns')
+    .select()
+    .eq('type', 'free_work_message');
+
+  if (error) throw error;
+  return data;
+}
+
+// Deduct coins after sending message
+export async function deductCoinsAfterSendingMessage(
+  supabase: SupabaseClient,
+  amount: number
+) {
+  const { data, error } = await supabase.rpc('deduct_my_coins', {
+    p_amount: amount,
+  });
+
+  return { data, error };
+}
+
+export async function updateMessageCount(
+  supabase: SupabaseClient,
+  chatRoomId: string,
+  increment: number
+) {
+  const { data, error } = await supabase.rpc(
+    'increase_chat_room_message_count',
+    {
+      p_chat_room_id: chatRoomId,
+      p_increment: increment,
+    }
+  );
   if (error) throw error;
   return data;
 }

@@ -24,6 +24,7 @@ type ComposerProps = {
   chatbotName: string;
   sendMessage: (text: string) => Promise<void>;
   isChapterMode: boolean;
+  disabledComposer: boolean;
 };
 
 // Main component
@@ -33,6 +34,7 @@ const Composer = memo(
     chatbotName,
     sendMessage,
     isChapterMode = false,
+    disabledComposer = false,
   }: ComposerProps) => {
     const { messages, setMessages, messagesRef, pollForNewMessages } =
       useMessagePolling(chatroomId);
@@ -99,7 +101,14 @@ const Composer = memo(
     }, [newMessage, messages]);
 
     return (
-      <div className={styles.composer}>
+      <div
+        className={
+          styles.composer +
+          ' ' +
+          (disabledComposer ? styles.disabledComposer : '')
+        }
+        data-disabled={disabledComposer}
+      >
         <ChatboxComposer
           beforeComposerOutside={
             <button

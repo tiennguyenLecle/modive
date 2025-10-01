@@ -1,11 +1,23 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAtom } from 'jotai';
 import { useParams, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 
+import {
+  coinsInfoByWorkAtom,
+  isAlertAvailableCashModalAtom,
+  isAlertModalAtom,
+} from '@/atoms/chatroomAtom';
 import { messagesAtom } from '@/atoms/messagesAtom';
 import { NextApi } from '@/lib/api';
 import { Message } from '@/lib/api/types/chat.types';
+import { useAuth } from '@/lib/authentication/auth-context';
+import { createBrowserSupabase } from '@/lib/supabase/factory';
+import {
+  deductCoinsAfterSendingMessage,
+  updateMessageCount,
+} from '@/lib/supabase/swr/chatroom';
+import { fetchWorkDetail } from '@/lib/supabase/swr/work';
 import { buildQueryString, QueryParams } from '@/utils/urlBuilder';
 
 import {
@@ -121,10 +133,25 @@ export const useLoadMoreMessages = (
 /**
  * Hook for sending messages
  */
-export const useSendMessage = ({ botName }: { botName: string }) => {
+export const useSendMessage = ({
+  botName,
+  workId,
+}: {
+  botName: string;
+  workId: string;
+}) => {
   const { chatroomId } = useParams();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('sessionId');
+  const [coinsInfoByWork] = useAtom(coinsInfoByWorkAtom);
+  const supabase = createBrowserSupabase('user');
+  const [, setAlertModalInfoAtom] = useAtom(isAlertModalAtom);
+  const [, setAlertAvailableCashModalInfoAtom] = useAtom(
+    isAlertAvailableCashModalAtom
+  );
+  const [, setCoinsInfoByWork] = useAtom(coinsInfoByWorkAtom);
+  const [showFirstAvailableCashModal, setShowFirstAvailableCashModal] =
+    useState(false);
 
   const sendMessage = useCallback(
     async (text: string): Promise<void> => {
@@ -136,7 +163,43 @@ export const useSendMessage = ({ botName }: { botName: string }) => {
         throw new Error('Session ID is required');
       }
 
+      if (coinsInfoByWork && coinsInfoByWork.is_insufficient) {
+        return;
+      }
+
       try {
+        const messageCountAfterSendingMessage = await updateMessageCount(
+          supabase,
+          chatroomId as string,
+          1
+        );
+
+        if (messageCountAfterSendingMessage >= coinsInfoByWork.free_quota) {
+          const { data: dataDeductCoins } =
+            await deductCoinsAfterSendingMessage(supabase, 1);
+          if (!dataDeductCoins) {
+            const workDetail = await fetchWorkDetail(
+              supabase,
+              workId as string
+            );
+            setAlertModalInfoAtom({
+              isOpen: true,
+              workTitle: workDetail.title as string,
+            });
+            setCoinsInfoByWork({
+              ...coinsInfoByWork,
+              message_count: messageCountAfterSendingMessage,
+              is_insufficient: true,
+            });
+            return;
+          } else {
+            if (!showFirstAvailableCashModal) {
+              setAlertAvailableCashModalInfoAtom({ isOpen: true });
+              setShowFirstAvailableCashModal(true);
+            }
+          }
+        }
+
         await NextApi.post(`/api/chat/${chatroomId}`, {
           body: {
             sessionId,
@@ -149,7 +212,15 @@ export const useSendMessage = ({ botName }: { botName: string }) => {
         throw error;
       }
     },
-    [chatroomId, sessionId]
+    [
+      chatroomId,
+      sessionId,
+      coinsInfoByWork,
+      setCoinsInfoByWork,
+      setAlertModalInfoAtom,
+      supabase,
+      workId,
+    ]
   );
 
   return { sendMessage };

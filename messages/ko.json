@@ -542,5 +542,20 @@
   },
   "announcement_page": {
     "page_title": "공지사항"
+  },
+  "modal_alert_chat_room": {
+    "alert_title": "프리오픈 혜택 종료",
+    "alert_description": "대화가 더 궁금하지 않으세요?\n{workTitle} 속 시간을 이어가보세요.",
+    "charge_cash": "캐시 충전하기"
+  },
+  "modal_confirmation_chat_room": {
+    "confirmation_title": "캐시 부족 알림",
+    "confirmation_description": "서비스 이용을 위해 캐시 충전이 필요해요.\n(*충전 후 대화를 이어할 수 있어요)",
+    "charge_cash": "충전하기"
+  },
+  "modal_alert_available_cash_chat_room": {
+    "available_cash_title": "프리오픈 혜택 종료",
+    "available_cash_description": "무료 대화는 여기까지예요 ✨\n이제부터는 보유 캐시로 이어집니다.",
+    "continue": "이어하기"
   }
 }

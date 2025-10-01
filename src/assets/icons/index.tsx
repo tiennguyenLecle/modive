@@ -7,6 +7,7 @@ import AsteristkIcon from './asterisk.svg';
 import BaselineError from './baseline-error.svg';
 import Cart from './cart.svg';
 import Cash from './cash.svg';
+import CheckActiveCircle from './check-active-circle.svg';
 import CheckFill from './check-fill.svg';
 import Check from './check.svg';
 import CheckBoxFilled from './checkbox-filled.svg';
@@ -96,4 +97,5 @@ export {
   Minus,
   DefaultImage,
   ChevronDown,
+  CheckActiveCircle,
 };

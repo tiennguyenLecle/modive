@@ -3,6 +3,7 @@
 import {
   ComponentProps,
   memo,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -12,14 +13,26 @@ import { useAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
-import { chatroomAtom } from '@/atoms/chatroomAtom';
+import {
+  chatroomAtom,
+  coinsInfoByWorkAtom,
+  isAlertModalAtom,
+} from '@/atoms/chatroomAtom';
 import { ThreeDotsLoading } from '@/components';
 import { Message } from '@/lib/api/types/chat.types';
+import { useAuth } from '@/lib/authentication/auth-context';
 import {
   ChatboxLayout,
   MessageInfoProps,
   MessageListModule,
 } from '@/lib/chatbot-modules';
+import { createBrowserSupabase } from '@/lib/supabase/factory';
+import {
+  getFreeQuotaInPreOpenPeriod,
+  getMessageCount,
+  updateChatroomField,
+} from '@/lib/supabase/swr/chatroom';
+import { fetchWorkDetail } from '@/lib/supabase/swr/work';
 import { ChatRoomType } from '@/types/chatroom';
 import { getPublicUrl } from '@/utils/method';
 
@@ -31,6 +44,9 @@ import {
   useMessageManagement,
   useSendMessage,
 } from './hooks/useChatbot';
+import ModalAlert from './modals/ModalAlert';
+import ModalAlertAvailableCash from './modals/ModalAlertAvailableCash';
+import ModalConfirmation from './modals/ModalConfirmation';
 import { mapMessagesToInfoProps } from './utils/messageTransformers';
 
 // Types
@@ -45,9 +61,35 @@ const Chatbot = memo(
     const t = useTranslations('chat_page');
     const { chatroomId } = useParams();
     const { character } = chatRoomDetail;
+    const { user } = useAuth();
     const avatarCharacterUrl = getPublicUrl(character?.avatar_key ?? '');
     const [chatRoomDetailFromAtom, setChatRoomDetailFromAtom] =
       useAtom(chatroomAtom);
+    const [coinsInfoByWork, setCoinsInfoByWork] = useAtom(coinsInfoByWorkAtom);
+    const supabase = createBrowserSupabase('user');
+
+    const _getCoinsInfoByWork = useCallback(async () => {
+      const freeQuotaInPreOpenPeriod =
+        await getFreeQuotaInPreOpenPeriod(supabase);
+      const messageCount = await getMessageCount(
+        supabase,
+        user?.id as string,
+        chatRoomDetailFromAtom?.work_id as string
+      );
+      setCoinsInfoByWork({
+        message_count: messageCount?.message_count ?? 0,
+        free_quota:
+          freeQuotaInPreOpenPeriod?.[0]?.spec?.free_message_quota ?? 0,
+        work_id: chatRoomDetailFromAtom?.work_id as string,
+        is_insufficient: false,
+      });
+    }, [supabase, user?.id, chatRoomDetailFromAtom?.work_id]);
+
+    useEffect(() => {
+      if (!chatRoomDetailFromAtom) return;
+      _getCoinsInfoByWork();
+    }, [chatRoomDetailFromAtom, _getCoinsInfoByWork]);
+
     // ref to message list
     const messageListRef = useRef<any>(null);
 
@@ -64,6 +106,7 @@ const Chatbot = memo(
     );
     const { sendMessage } = useSendMessage({
       botName: character?.bot_name ?? '',
+      workId: chatRoomDetail.work_id as string,
     });
 
     const prevLoadingComponent = useMemo(() => {
@@ -154,6 +197,10 @@ const Chatbot = memo(
     useEffect(() => {
       return () => {
         setMessages([]);
+        setCoinsInfoByWork({
+          ...coinsInfoByWork,
+          is_insufficient: false,
+        });
       };
     }, [setMessages]);
 
@@ -171,6 +218,7 @@ const Chatbot = memo(
               chatbotName={character?.name ?? ''}
               sendMessage={sendMessage}
               isChapterMode={false}
+              disabledComposer={coinsInfoByWork.is_insufficient}
             />
           }
         />
@@ -179,6 +227,9 @@ const Chatbot = memo(
           close={() => setSelectedImageItem(null)}
           characterName={character?.name ?? ''}
         />
+        <ModalAlert />
+        <ModalConfirmation />
+        <ModalAlertAvailableCash />
       </>
     );
   }

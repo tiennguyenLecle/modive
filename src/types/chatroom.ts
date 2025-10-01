@@ -14,6 +14,7 @@ export type ChatRoomType = {
   chapter_id?: string;
   user_id: string;
   last_message: string;
+  message_count: number;
   last_accessed_at?: string;
   is_pinned: boolean;
   intimacy: number;

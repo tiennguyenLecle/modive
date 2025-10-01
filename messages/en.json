@@ -544,5 +544,20 @@
   },
   "announcement_page": {
     "page_title": "announcement"
+  },
+  "modal_alert_chat_room": {
+    "alert_title": "Pre-open benefit end",
+    "alert_description": "Aren't you curious about the conversation?\nContinue reading in {workTitle}.",
+    "charge_cash": "Charge cash"
+  },
+  "modal_confirmation_chat_room": {
+    "confirmation_title": "Cash insufficient alert",
+    "confirmation_description": "Service use requires cash charging.\n(*You can continue the conversation after charging)",
+    "charge_cash": "Charging"
+  },
+  "modal_alert_available_cash_chat_room": {
+    "available_cash_title": "Pre-open benefit end",
+    "available_cash_description": "Free conversation ends here ✨\nFrom now on, it will continue with the available cash.",
+    "continue": "Continue"
   }
 }

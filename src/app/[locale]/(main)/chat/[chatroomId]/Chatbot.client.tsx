@@ -62,9 +62,9 @@ const Chatbot = memo(
       updatedMessagesRef,
       messageListRef
     );
-    const { sendMessage } = useSendMessage({
-      botName: character?.bot_name ?? '',
-    });
+    // const { sendMessage } = useSendMessage({
+    //   botName: character?.bot_name ?? '',
+    // });
 
     const prevLoadingComponent = useMemo(() => {
       return (
@@ -169,7 +169,7 @@ const Chatbot = memo(
             <Composer
               chatroomId={chatroomId as string}
               chatbotName={character?.name ?? ''}
-              sendMessage={sendMessage}
+              sendMessage={async () => {}}
               isChapterMode={false}
             />
           }

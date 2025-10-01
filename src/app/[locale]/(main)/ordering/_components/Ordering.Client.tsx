@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { ArrowRight, Cart } from '@/assets/icons';
 import {
   isAgreementAtom,
+  isTermCheckedAtom,
   myCartAtom,
   paymentMethodAtom,
   paymentWidgetAtom,
@@ -35,6 +36,7 @@ export default function Ordering() {
   const shippingForm = useAtomValue(shippingFormAtom);
   const paymentWidget = useAtomValue(paymentWidgetAtom);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const isTermChecked = useAtomValue(isTermCheckedAtom);
 
   const { productAmount, deliveryFee, paymentAmount } = useCalcPaymentAmount(
     myCartValue?.items ?? []
@@ -109,7 +111,9 @@ export default function Ordering() {
   };
 
   const isDisabledOrderBtn = () => {
-    return !paymentMethod || !isAgreement || hasEmptyShippingForm();
+    return (
+      !paymentMethod || !isAgreement || hasEmptyShippingForm() || !isTermChecked
+    );
   };
 
   return (

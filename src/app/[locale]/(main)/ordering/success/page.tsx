@@ -22,6 +22,7 @@ import { confirmPayment } from '@/lib/supabase/swr/payment';
 import { getAmplitudeLocationProperties } from '@/utils/amplitude';
 import { ROUTES } from '@/utils/constants';
 
+import { mapOrderStatus } from '../../order-inquiry/utils';
 import { mappedCartItems } from '../../shopping-cart/_components/utils';
 import Success from './_components/Success.Client';
 
@@ -37,7 +38,7 @@ export const paymentInfoList = (data: OrderResponseType, t: any) => {
     },
     {
       label: t('order_status'),
-      value: data?.status,
+      value: mapOrderStatus(data?.status, t),
     },
     {
       label: t('order'),

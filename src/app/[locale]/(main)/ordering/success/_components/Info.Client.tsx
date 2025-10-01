@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import { formatDateOrTime } from '@/utils/formatTime';
 
+import { mapOrderStatus } from '../../../order-inquiry/utils';
 import InfoBlock from '../../../shopping-cart/_components/InfoBlock.Client';
 
 type InfoProps = {
@@ -24,7 +25,7 @@ export default function Info({
       <h3 className="text-center text-20 font-medium text-gray-00">
         <span>{t('order_successfully')}</span>
         <br />
-        <span>{status}</span>
+        <span>{mapOrderStatus(status, t)}</span>
       </h3>
       <h4 className="text-center text-14 font-normal text-gray-30">
         {t('order_number')} {orderNumber}

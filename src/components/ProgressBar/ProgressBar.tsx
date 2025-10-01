@@ -56,7 +56,7 @@ export default function ProgressBar({
                 color: valueColorInside || '#fff',
               }}
             >
-              {percent}%
+              {Math.round(Number(percent) ?? 0)}%
             </span>
           )}
           showInfo={(percentage ?? 0) > innerDisplayThreshold}

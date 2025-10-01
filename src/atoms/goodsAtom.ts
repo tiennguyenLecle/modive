@@ -32,3 +32,5 @@ export const isAgreementAtom = atom<boolean>(true);
 export const shippingFormAtom = atom<any>(null);
 
 export const paymentWidgetAtom = atom<any>(null);
+
+export const isTermCheckedAtom = atom<boolean>(false);

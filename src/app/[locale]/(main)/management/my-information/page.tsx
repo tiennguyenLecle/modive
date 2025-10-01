@@ -10,6 +10,7 @@ import {
   SocialKakaoTalk2,
 } from '@/assets/icons';
 import { Header } from '@/components';
+import { useMeExtraData } from '@/hooks/useUser';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { SOCIAL_PROVIDERS } from '@/utils/constants';
 
@@ -20,6 +21,7 @@ const { GOOGLE, APPLE, KAKAO } = SOCIAL_PROVIDERS;
 export default function MyInformation() {
   const t = useTranslations('my_information');
   const { user } = useAuth();
+  const me = useMeExtraData(!!user, user?.id || '');
   const withdrawalModalRef =
     React.useRef<React.ElementRef<typeof ModalWidrawal>>(null);
   const logOutModalRef =
@@ -77,7 +79,7 @@ export default function MyInformation() {
             <p className="text-16 font-normal text-gray-00">{t('nickname')}</p>
             <div className="flex items-center gap-8">
               <p className="text-14 font-semibold text-gray-00">
-                {user?.user_metadata?.full_name}
+                {me?.data?.nickname}
               </p>
               <div
                 className="flex size-24 items-center justify-center rounded-8 border border-gray-70"

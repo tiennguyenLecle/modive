@@ -495,7 +495,7 @@
       },
       "page_title": "캐시 충전",
       "title": "충전이 완료되었습니다.",
-      "charging_amount": "{value} won",
+      "charging_amount": "{value} 원",
       "cash_holding": "충전 후 보유 캐시",
       "cash_amount": "{value} 캐시",
       "charging": "충전 금액"

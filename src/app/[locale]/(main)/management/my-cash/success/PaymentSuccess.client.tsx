@@ -82,7 +82,9 @@ export default function PaymentSuccessClient() {
               {t('charging')}
             </span>
             <span className="text-22 font-semibold text-primary">
-              {t('charging_amount', { value: amount?.toLocaleString() })}
+              {t('charging_amount', {
+                value: Number(amount)?.toLocaleString(),
+              })}
             </span>
           </div>
 

@@ -43,9 +43,7 @@ export default function CashClient() {
         <div className="flex items-center justify-between rounded-8 border-gray-80 bg-white p-16">
           <span className="text-14 font-semibold">{t('holding')}</span>
           <span className="text-20 font-medium text-primary">
-            {me?.data?.coins
-              ? `${me?.data?.coins?.toLocaleString()} ${t('currency')}`
-              : '0'}
+            {me?.data?.coins ? me?.data?.coins?.toLocaleString() : '0'}
           </span>
         </div>
       </div>

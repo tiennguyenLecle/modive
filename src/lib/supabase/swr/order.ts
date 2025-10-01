@@ -11,7 +11,8 @@ type ShippingAddressType = {
   phone_number: string;
   email: string;
   address: string;
-  postal_code: string;
+  detailed_address: string;
+  postal_code?: string;
   note?: string;
 };
 
@@ -37,9 +38,10 @@ type CreateOrderResponseType = {
     phone_number: string;
     email: string;
     address: string;
-    postal_code: string;
+    detailed_address: string;
     note: string;
     is_default: boolean;
+    postal_code?: string;
   };
   payment_method: string;
 };
@@ -89,9 +91,10 @@ type OrderResponseType = CreateOrderResponseType & {
     deleted_at: string | null;
     is_default: boolean;
     updated_at: string;
-    postal_code: string;
     phone_number: string;
     receiver_name: string;
+    detailed_address: string;
+    postal_code?: string;
   };
   payment_method: string;
   items: CartItemType[];

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 
 import { ChevronDown } from '@/assets/icons';
 import { Button } from '@/components';
+import { useRouter } from '@/lib/navigation';
 
 import styles from './FAQ.module.scss';
 
@@ -38,6 +39,7 @@ const faqData = [
 export default function FAQ() {
   const t = useTranslations('ordering');
   const [activeKeys, setActiveKeys] = useState<string[]>(['2']);
+  const router = useRouter();
 
   const handleChange = (keys: string | string[]) => {
     setActiveKeys(Array.isArray(keys) ? keys : [keys]);
@@ -84,7 +86,13 @@ export default function FAQ() {
         ))}
       </Collapse>
       <div className="mb-16 flex flex-row items-center justify-end">
-        <Button variant="secondary" className="!w-fit">
+        <Button
+          variant="secondary"
+          className="!w-fit"
+          onClick={() => {
+            router.push('http://pf.kakao.com/_xkxlgkn');
+          }}
+        >
           {t('customer_service_btn')}
         </Button>
       </div>

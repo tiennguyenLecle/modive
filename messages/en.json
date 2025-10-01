@@ -404,6 +404,7 @@
     "conferee_placeholder": "Please enter the name",
     "phone_number_placeholder": "010-1234-5678",
     "postal_code_placeholder": "Address search",
+    "address_placeholder": "Address search",
     "search": "Search",
     "loading": "Loading...",
     "address_search": "Address Search",
@@ -458,7 +459,8 @@
     "refunded": "Refunded",
     "refund_request_btn": "Refund request",
     "exchange_request_btn": "Exchange request",
-    "delivery_tracking_btn": "Delivery tracking"
+    "delivery_tracking_btn": "Delivery tracking",
+    "delivery_request_placeholder": "Please enter the delivery request"
   },
   "my-cash": {
     "cash_amount": "{value} cash",

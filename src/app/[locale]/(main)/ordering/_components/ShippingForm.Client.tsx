@@ -35,12 +35,23 @@ export default function ShippingForm() {
 
   useEffect(() => {
     if (addressList) {
-      const defaultAddress = addressList.find(
+      const defaultAddress = addressList.findLast(
         (address: ShippingAddressType) => address.is_default
       );
 
       if (defaultAddress) {
-        setShippingForm(defaultAddress);
+        const isDirectInput =
+          defaultAddress?.note !== SHIPPING_OPTIONS[0].value &&
+          defaultAddress?.note !== SHIPPING_OPTIONS[1].value;
+        const address = {
+          ...defaultAddress,
+          note: isDirectInput
+            ? SHIPPING_OPTIONS[2].value
+            : defaultAddress?.note,
+          note_custom: isDirectInput ? defaultAddress?.note : '',
+        };
+        form.setFieldsValue(address);
+        setShippingForm(address);
       }
     }
   }, [addressList]);
@@ -84,13 +95,11 @@ export default function ShippingForm() {
         oncomplete: (data: any) => {
           const updatedForm = {
             ...shippingForm,
-            postal_code: data.zonecode,
             address: data.address,
           };
 
           setShippingForm(updatedForm);
           form.setFieldsValue({
-            postal_code: data.zonecode,
             address: data.address,
           });
         },
@@ -116,27 +125,27 @@ export default function ShippingForm() {
     }
   };
 
-  const onSearch = (value: string) => {
-    const newQuery = value;
+  // const onSearch = (value: string) => {
+  //   const newQuery = value;
 
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-    }
+  //   if (typingTimeout) {
+  //     clearTimeout(typingTimeout);
+  //   }
 
-    // wait, e.g. 500ms after user stopped typing
-    const timeout = setTimeout(() => {
-      if (newQuery.trim() !== '') {
-        if (isDaumApiReady) {
-          openDaumPostcode(newQuery.trim());
-        } else {
-          console.warn('Daum Postcode API is not ready yet');
-          // Try to open anyway in case the API loaded after our check
-          openDaumPostcode(newQuery.trim());
-        }
-      }
-    }, 500);
-    setTypingTimeout(timeout);
-  };
+  //   // wait, e.g. 500ms after user stopped typing
+  //   const timeout = setTimeout(() => {
+  //     if (newQuery.trim() !== '') {
+  //       if (isDaumApiReady) {
+  //         openDaumPostcode(newQuery.trim());
+  //       } else {
+  //         console.warn('Daum Postcode API is not ready yet');
+  //         // Try to open anyway in case the API loaded after our check
+  //         openDaumPostcode(newQuery.trim());
+  //       }
+  //     }
+  //   }, 500);
+  //   setTypingTimeout(timeout);
+  // };
 
   // Listen to form field changes
   const onValuesChange = (changedValues: any, allValues: any) => {
@@ -192,15 +201,24 @@ export default function ShippingForm() {
         <Form.Item name="phone_number" label={t('phone_number')} required>
           <Input placeholder={t('phone_number_placeholder')} type="number" />
         </Form.Item>
-        <Form.Item name="postal_code" label={t('postal_code')}>
+        <Form.Item name="address" label={t('address')} required>
           <Input.Search
-            onSearch={onSearch}
-            placeholder={t('postal_code_placeholder')}
+            onClick={() => {
+              if (isDaumApiReady) {
+                openDaumPostcode('');
+              }
+            }}
+            onSearch={() => {
+              if (isDaumApiReady) {
+                openDaumPostcode('');
+              }
+            }}
+            placeholder={t('address_placeholder')}
             loading={!isDaumApiReady}
           />
         </Form.Item>
         <div id="daumPostcodeEmbed" className="mb-24" />
-        <Form.Item name="address" label={t('detail_address')} required>
+        <Form.Item name="detailed_address" label={t('detail_address')} required>
           <Input.TextArea />
         </Form.Item>
         <Form.Item
@@ -220,11 +238,28 @@ export default function ShippingForm() {
         <Form.Item name="note">
           <Select
             options={SHIPPING_OPTIONS}
-            onChange={value =>
-              setShippingForm({ ...shippingForm, note: value })
-            }
+            onChange={value => {
+              setShippingForm({
+                ...shippingForm,
+                note: value,
+                note_custom: '',
+              });
+              form.setFieldsValue({ note: value, note_custom: '' });
+            }}
           />
         </Form.Item>
+        {shippingForm?.note &&
+          shippingForm?.note !== SHIPPING_OPTIONS[0].value &&
+          shippingForm?.note !== SHIPPING_OPTIONS[1].value && (
+            <Form.Item name="note_custom">
+              <Input.TextArea
+                maxLength={80}
+                rows={2}
+                value={shippingForm?.note}
+                placeholder={t('delivery_request_placeholder')}
+              />
+            </Form.Item>
+          )}
       </Form>
     </div>
   );

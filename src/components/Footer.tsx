@@ -33,7 +33,7 @@ export default function Footer({
         <div className="h-8 w-1 bg-gray-80"></div>
         <Link
           href={
-            'https://comfortable-margin-430.notion.site/27677f3875ab8043b739e9592c06341a'
+            'https://comfortable-margin-430.notion.site/27a77f3875ab80edbe21cbd2467f7d1d'
           }
           target="_blank"
           className="text-12 font-semibold text-gray-30"
@@ -42,15 +42,13 @@ export default function Footer({
         </Link>
         <div className="h-8 w-1 bg-gray-80"></div>
         <Link
-          href={
-            'https://comfortable-margin-430.notion.site/27677f3875ab8043b739e9592c06341a'
-          }
+          href={'http://pf.kakao.com/_xkxlgkn'}
           target="_blank"
           className="text-12 font-semibold text-gray-30"
         >
           {t('customer_service')}
         </Link>
-        <div className="h-8 w-1 bg-gray-80"></div>
+        {/* <div className="h-8 w-1 bg-gray-80"></div>
         <Link
           href={
             'https://comfortable-margin-430.notion.site/27677f3875ab8043b739e9592c06341a'
@@ -59,7 +57,7 @@ export default function Footer({
           className="text-12 font-semibold text-gray-30"
         >
           {t('copyright_policy')}
-        </Link>
+        </Link> */}
       </div>
       <Logo width={82} height={24} className="text-gray-70" />
       <address className="mb-0 text-12 font-normal leading-1.66 text-gray-30">

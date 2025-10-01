@@ -404,6 +404,7 @@
     "conferee_placeholder": "이름을 입력해주세요",
     "phone_number_placeholder": "010-1234-5678",
     "postal_code_placeholder": "주소 검색",
+    "address_placeholder": "주소 검색",
     "search": "검색",
     "loading": "로딩 중...",
     "address_search": "주소 검색",
@@ -456,7 +457,8 @@
     "refunded": "환불",
     "refund_request_btn": "반품 접수",
     "exchange_request_btn": "교환 접수",
-    "delivery_tracking_btn": "배송 조회"
+    "delivery_tracking_btn": "배송 조회",
+    "delivery_request_placeholder": "배송요청사항을 입력해주세요"
   },
   "my-cash": {
     "cash_amount": "{value} 캐시",

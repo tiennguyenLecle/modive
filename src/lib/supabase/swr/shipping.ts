@@ -16,9 +16,10 @@ type ShippingAddressType = {
   phone_number: string;
   email: string;
   address: string;
-  postal_code: string;
+  detailed_address: string;
   note: string;
   is_default: boolean;
+  postal_code?: string;
 };
 
 type GetShippingAddressListResponseType = ShippingAddressType[];

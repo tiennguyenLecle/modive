@@ -57,7 +57,15 @@ export default function Ordering() {
         items: myCartValue?.items,
         shipping_info: {
           address_id: addressId,
-          address: addressId ? null : shippingForm,
+          address: addressId
+            ? null
+            : {
+                ...shippingForm,
+                note:
+                  shippingForm?.note === 'Direct input'
+                    ? shippingForm?.note_custom
+                    : shippingForm?.note,
+              },
         },
         payment_method: paymentMethod || '',
       });
@@ -95,7 +103,8 @@ export default function Ordering() {
       !shippingForm ||
       !shippingForm.receiver_name ||
       !shippingForm.address ||
-      !shippingForm.phone_number
+      !shippingForm.phone_number ||
+      !shippingForm.detailed_address
     );
   };
 

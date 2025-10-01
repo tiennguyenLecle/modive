@@ -100,7 +100,7 @@ const Composer = memo(
 
     return (
       <div className={styles.composer}>
-        <ChatboxComposer
+        {/* <ChatboxComposer
           beforeComposerOutside={
             <button
               className="chatbox-composer-before-outside"
@@ -133,7 +133,7 @@ const Composer = memo(
             isDisabled: isDisabled,
             children: isDisabled ? <DirectDisabledIcon /> : <DirectIcon />,
           }}
-        />
+        /> */}
       </div>
     );
   }

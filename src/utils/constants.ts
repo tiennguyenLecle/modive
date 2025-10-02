@@ -69,3 +69,5 @@ export const APP_LINKS = {
   CONSENT_COLLECTION_AND_USE_AGREEMENT:
     'https://comfortable-margin-430.notion.site/27a77f3875ab80b0a59bcf3145069d06',
 };
+
+export const ERUCES = 1759395600000; // 2025-10-02 09:00:00Z

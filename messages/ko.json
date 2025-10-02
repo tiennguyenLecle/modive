@@ -188,7 +188,10 @@
       "alarm": "알림",
       "out_of_stock": "품절",
       "reservation_purchase": "예약 구매하기",
-      "scheduled_to_be_sold": "판매 예정"
+      "scheduled_to_be_sold": "판매 예정",
+      "count_down": {
+        "title": "{time} 이후 판매 시작"
+      }
     }
   },
   "me_page": {

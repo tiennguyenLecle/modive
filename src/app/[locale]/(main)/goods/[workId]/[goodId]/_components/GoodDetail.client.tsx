@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as amplitude from '@amplitude/analytics-browser';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
@@ -14,11 +15,14 @@ import { useAuth } from '@/lib/authentication/auth-context';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { fetchWorkDetail } from '@/lib/supabase/swr/work';
 import { getAmplitudeLocationProperties } from '@/utils/amplitude';
+import { ERUCES } from '@/utils/constants';
 import { cx, getPublicUrl } from '@/utils/method';
 
 import { useGoodDetailProvider } from '../_provider/GoodDetailProvider';
 import DetailTab from './tabs/DetailTab';
 import PurchaseInfoTab from './tabs/PurchaseInfoTab';
+
+dayjs.extend(duration);
 
 const GoodDetail: React.FC = () => {
   const t = useTranslations('goods_page.good_detail');
@@ -141,9 +145,12 @@ const GoodDetail: React.FC = () => {
             ? t('free_shipping')
             : t('shipping_cost', { cost: delivery_fee?.toLocaleString() })}
           <br />
-          {t('shipping_fee_description', {
-            free_shipping_threshold: free_shipping_threshold?.toLocaleString(),
-          })}
+          {free_shipping_threshold &&
+            free_shipping_threshold > 0 &&
+            t('shipping_fee_description', {
+              free_shipping_threshold:
+                free_shipping_threshold?.toLocaleString(),
+            })}
         </p>
 
         <PreOrderInfo isPreSale={is_pre_sale} releaseDate={release_date} />
@@ -282,24 +289,69 @@ const ActionButtons: React.FC = () => {
 
   return (
     <div className="sticky bottom-0 z-50 flex gap-12 bg-white p-16">
-      <Button
-        variant="secondary"
-        className="h-48 !w-48 shrink-0 !p-0"
-        onClick={() => {
-          checkAvailableUser({
-            description: t('alert_sign_up.add_to_cart'),
-          }).then(() => {
-            addToCart.trigger();
-          });
-        }}
-        loading={addToCart.isMutating}
-        disabled={
-          isOutOfStock || addToCart.isMutating || purchaseNow.isMutating
-        }
-      >
-        {!addToCart.isMutating && <AddCart width={24} height={24} />}
-      </Button>
-      {PurchaseButton}
+      <CountDown countdown={ERUCES}>
+        <Button
+          variant="secondary"
+          className="h-48 !w-48 shrink-0 !p-0"
+          onClick={() => {
+            checkAvailableUser({
+              description: t('alert_sign_up.add_to_cart'),
+            }).then(() => {
+              addToCart.trigger();
+            });
+          }}
+          loading={addToCart.isMutating}
+          disabled={
+            isOutOfStock || addToCart.isMutating || purchaseNow.isMutating
+          }
+        >
+          {!addToCart.isMutating && <AddCart width={24} height={24} />}
+        </Button>
+        {PurchaseButton}
+      </CountDown>
     </div>
   );
+};
+
+const CountDown: React.FC<{
+  children: React.ReactNode;
+  countdown: number;
+}> = ({ children, countdown }) => {
+  const t = useTranslations('goods_page.good_detail.count_down');
+  const [count, setCount] = useState(() => {
+    const now = dayjs();
+    const eruces = dayjs(countdown);
+    return Math.max(0, eruces.diff(now, 'second'));
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount(prevCount => Math.max(0, prevCount - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const { days, hours, minutes, seconds } = useMemo(() => {
+    const duration = dayjs.duration(count, 'seconds');
+    return {
+      days: duration.days(),
+      hours: duration.hours(),
+      minutes: duration.minutes(),
+      seconds: duration.seconds(),
+    };
+  }, [count]);
+
+  const remaining = `${hours} : ${minutes} : ${seconds}`;
+
+  if (count > 0) {
+    return (
+      <div className="flex w-full flex-col items-center justify-center rounded-4 bg-white py-12">
+        <p className="-tracking-0.072 text-20 font-semibold text-primary">
+          {t('title', { time: remaining })}
+        </p>
+      </div>
+    );
+  } else {
+    return children;
+  }
 };

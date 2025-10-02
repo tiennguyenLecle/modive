@@ -188,7 +188,10 @@
       "alarm": "alarm",
       "out_of_stock": "Out -of -stock",
       "reservation_purchase": "Reservation purchase",
-      "scheduled_to_be_sold": "Scheduled to be sold"
+      "scheduled_to_be_sold": "Scheduled to be sold",
+      "count_down": {
+        "title": "Sales start after {time}"
+      }
     }
   },
   "me_page": {

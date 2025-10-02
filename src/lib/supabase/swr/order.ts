@@ -53,7 +53,7 @@ type CreateOrderPayload = {
     address: ShippingAddressType;
   };
   payment_method: string;
-  reserve_order_id?: string;
+  reservation_id?: string;
 };
 
 const createOrder = async (payload: CreateOrderPayload) => {

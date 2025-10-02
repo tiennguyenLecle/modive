@@ -101,7 +101,7 @@ export default function Ordering() {
 
       const response: any = await createOrder({
         items: myCartValue?.items,
-        reserve_order_id: reserveOrderId ?? '',
+        reservation_id: reserveOrderId ?? '',
         shipping_info: {
           address_id: addressId,
           address: addressId

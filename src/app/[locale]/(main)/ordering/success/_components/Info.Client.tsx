@@ -25,7 +25,7 @@ export default function Info({
       <h3 className="text-center text-20 font-medium text-gray-00">
         <span>{t('order_successfully')}</span>
         <br />
-        <span>{mapOrderStatus(status, t)}</span>
+        <span>{t('order_completed')}</span>
       </h3>
       <h4 className="text-center text-14 font-normal text-gray-30">
         {t('order_number')} {orderNumber}

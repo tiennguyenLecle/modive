@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
 import { Button, Header } from '@/components';
+import { useMeExtraData } from '@/hooks/useUser';
 import { useAuth } from '@/lib/authentication/auth-context';
 import { CommentType } from '@/types/comment';
 import { WorkType } from '@/types/work';
@@ -30,6 +31,7 @@ const CommentForm = React.forwardRef<CommentFormRef, CommentFormProps>(
     const [comment, setComment] = useState<CommentType>();
 
     const { user } = useAuth();
+    const me = useMeExtraData(!!user, user?.id || '');
 
     const closeHandler = () => {
       setComment(undefined);
@@ -117,9 +119,7 @@ const CommentForm = React.forwardRef<CommentFormRef, CommentFormProps>(
                   </h3>
                   <p className="text-14 font-semibold text-gray-50">
                     by.{' '}
-                    {comment?.id
-                      ? comment?.user.name
-                      : user?.user_metadata?.full_name}
+                    {comment?.id ? comment?.user.nickname : me?.data?.nickname}
                   </p>
 
                   <form

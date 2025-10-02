@@ -38,7 +38,7 @@ const CommentItem = forwardRef<HTMLDivElement, CommentItemProps>(
         <div className="flex flex-1 flex-col gap-12">
           <div className="flex items-center justify-between">
             <p className="text-14 font-semibold text-gray-00">
-              by. {comment?.user?.name}
+              by. {comment?.user?.nickname}
             </p>
           </div>
           <p className="text-wrap text-14 font-normal leading-1.66 -tracking-0.07 text-gray-00">

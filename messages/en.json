@@ -215,6 +215,9 @@
   "components": {
     "chapter": {
       "seeMore": "Chapter initialization"
+    },
+    "change_quantity": {
+      "max_value": "Maximum is {max}"
     }
   },
   "contentsCard": {

@@ -126,7 +126,7 @@ const GoodDetail: React.FC = () => {
             <ChangeQuantity
               defaultValue={quantity}
               onChange={val => setQuantity(val)}
-              max={goodQuantity || 0}
+              max={goodQuantity ? Math.min(goodQuantity, 3) : 0}
             />
             {/* <span className="text-12 font-normal text-primary">
               {t('remaining_quantity', {

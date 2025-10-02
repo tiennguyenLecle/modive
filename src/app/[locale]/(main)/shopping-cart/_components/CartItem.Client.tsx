@@ -1,16 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import { Info } from '@/assets/icons';
 import { CartItemProps } from '@/atoms/goodsAtom';
+import ChangeQuantity from '@/components/ChangeQuantity';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import DefaultImageComponent from '@/components/DefaultImage';
 import { formatDateOrTime } from '@/utils/formatTime';
 
-import AddItem from './AddItem.Client';
 import InfoBlock from './InfoBlock.Client';
 
 export default function CartItem({
@@ -32,26 +30,15 @@ export default function CartItem({
   orderStatus,
 }: CartItemProps) {
   const t = useTranslations('shopping_cart');
-  const [count, setCount] = useState(quantity);
-  const isDisabledAddButton = Number(count) >= Number(remainingCount);
-  const isDisabledRemoveButton = Number(count) <= 1;
-
-  const handleAdd = () => {
-    setCount(Number(count) + 1);
-    onCountChange && onCountChange(Number(count) + 1, id);
-  };
-
-  const handleRemove = () => {
-    setCount(Number(count) - 1);
-    onCountChange && onCountChange(Number(count) - 1, id);
-  };
 
   const handleCheckboxChange = (id: string) => {
     onCheckboxChange && onCheckboxChange(id);
   };
 
+  console.log('Remaining count', remainingCount);
+
   return (
-    <div className="flex w-full flex-col gap-12 border-b border-gray-80 border-gray-90 bg-white p-16 last:border-b-0">
+    <div className="flex w-full flex-col gap-12 border-b border-gray-80 bg-white p-16 last:border-b-0">
       <div className="flex flex-row items-start gap-12">
         {showCheckbox && (
           <Checkbox
@@ -100,13 +87,20 @@ export default function CartItem({
       )}
       {showAddItem && (
         <div className="flex flex-1 flex-row items-center justify-between text-12 text-primary">
-          {t('remaining_count')}: {remainingCount}
-          <AddItem
-            itemCount={count ?? 0}
-            onAdd={handleAdd}
-            onRemove={handleRemove}
-            isDisabledAddButton={isDisabledAddButton}
-            isDisabledRemoveButton={isDisabledRemoveButton}
+          <span className="mr-auto">
+            {/* {t('remaining_count')}: {remainingCount} */}
+          </span>
+
+          <ChangeQuantity
+            defaultValue={quantity}
+            onChange={(value, type) => {
+              if (type === 'increase') {
+                onCountChange && onCountChange(value + 1, id);
+              } else {
+                onCountChange && onCountChange(value - 1, id);
+              }
+            }}
+            max={remainingCount ? Math.min(remainingCount, 3) : 0}
           />
         </div>
       )}

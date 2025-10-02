@@ -215,6 +215,9 @@
   "components": {
     "chapter": {
       "seeMore": "챕터 초기화"
+    },
+    "change_quantity": {
+      "max_value": "최대 값은 {max}입니다."
     }
   },
   "contentsCard": {

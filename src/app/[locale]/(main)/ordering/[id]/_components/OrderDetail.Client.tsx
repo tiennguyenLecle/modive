@@ -12,6 +12,7 @@ import { ROUTES } from '@/utils/constants';
 import { formatDateOrTime } from '@/utils/formatTime';
 
 import ProductInformation from '../../_components/ProductInformation.Client';
+import { mapOrderStatus } from '../../../order-inquiry/utils';
 import { mappedCartItems } from '../../../shopping-cart/_components/utils';
 import InfoList from '../../success/_components/InfoList.Client';
 import { paymentInfoList, shippingInfoList } from '../../success/page';
@@ -84,7 +85,7 @@ export default function OrderDetail({ id }: { id: string }) {
                     </Button>
                   ),
                 }))}
-                title={status || ''}
+                title={mapOrderStatus(status || '', t)}
               />
             </div>
             <FAQ />

@@ -123,7 +123,7 @@ const ModalCharacter = React.forwardRef<ModalCharacterRef>((_, ref) => {
               variant="primary"
               className="flex-1"
               onClick={handleConfirm}
-              disabled={true} //characterDetail.isLoading || createChat.isMutating
+              disabled={characterDetail.isLoading || createChat.isMutating}
               loading={createChat.isMutating}
             >
               {t('start_conversation')}

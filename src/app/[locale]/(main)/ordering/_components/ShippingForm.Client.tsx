@@ -104,13 +104,16 @@ export default function ShippingForm() {
         oncomplete: (data: any) => {
           const updatedForm = {
             ...shippingForm,
+            id: null,
             address: data.address,
+            postal_code: data.zonecode,
           };
 
-          setShippingForm(updatedForm);
           form.setFieldsValue({
             address: data.address,
+            postal_code: data.zonecode,
           });
+          setShippingForm(updatedForm);
         },
         maxSuggestItems: 5,
         showMoreHName: true,
@@ -209,6 +212,9 @@ export default function ShippingForm() {
         </Form.Item>
         <Form.Item name="phone_number" label={t('phone_number')} required>
           <Input placeholder={t('phone_number_placeholder')} type="number" />
+        </Form.Item>
+        <Form.Item name="postal_code" hidden>
+          <Input />
         </Form.Item>
         <Form.Item name="address" label={t('address')} required>
           <Input.Search

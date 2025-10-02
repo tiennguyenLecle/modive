@@ -470,7 +470,8 @@
     "refund_request_btn": "반품 접수",
     "exchange_request_btn": "교환 접수",
     "delivery_tracking_btn": "배송 조회",
-    "delivery_request_placeholder": "배송요청사항을 입력해주세요"
+    "delivery_request_placeholder": "배송요청사항을 입력해주세요",
+    "order_expired": "주문 시간이 만료되었습니다."
   },
   "my-cash": {
     "cash_amount": "{value} 캐시",

@@ -176,7 +176,7 @@ export const useSendMessage = ({
 
         if (messageCountAfterSendingMessage >= coinsInfoByWork.free_quota) {
           const { data: dataDeductCoins } =
-            await deductCoinsAfterSendingMessage(supabase, 1);
+            await deductCoinsAfterSendingMessage(supabase, 50);
           if (!dataDeductCoins) {
             const workDetail = await fetchWorkDetail(
               supabase,

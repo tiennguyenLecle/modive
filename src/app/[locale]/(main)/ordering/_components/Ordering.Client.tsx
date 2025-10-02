@@ -16,7 +16,7 @@ import {
 } from '@/atoms/goodsAtom';
 import Button from '@/components/Button';
 import { useRouter } from '@/lib/navigation';
-import { createOrder } from '@/lib/supabase/swr/order';
+import { createOrder, reserveOrder } from '@/lib/supabase/swr/order';
 import { ROUTES } from '@/utils/constants';
 
 import PaymentInfo from '../../shopping-cart/_components/PaymentInfo.Client';
@@ -37,16 +37,57 @@ export default function Ordering() {
   const paymentWidget = useAtomValue(paymentWidgetAtom);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const isTermChecked = useAtomValue(isTermCheckedAtom);
+  const [expireOrderTime, setExpireOrderTime] = useState<string | null>(null);
+  const [reserveOrderId, setReserveOrderId] = useState<string | null>(null);
 
   const { productAmount, deliveryFee, paymentAmount } = useCalcPaymentAmount(
     myCartValue?.items ?? []
   );
 
+  const handleReserveOrder = async () => {
+    if (!myCartValue) return;
+    const response = await reserveOrder({
+      items: myCartValue?.items ?? [],
+      expirationMs: 1000 * 60 * 10,
+    });
+    if (response) {
+      setExpireOrderTime(response.expire_at);
+      setReserveOrderId(response.id);
+    }
+  };
+
   useEffect(() => {
     if (!myCartValue) {
       router.push(ROUTES.SHOPPING_CART);
     }
-  }, [myCartValue]);
+    handleReserveOrder();
+  }, []);
+
+  // Check if order has expired every second
+  useEffect(() => {
+    if (!expireOrderTime) return;
+
+    const checkExpiration = () => {
+      const currentTime = new Date().getTime();
+      const expireTime = new Date(expireOrderTime).getTime();
+
+      if (currentTime >= expireTime) {
+        notification.info({
+          message: t('order_expired'),
+        });
+        router.push(ROUTES.SHOPPING_CART);
+      }
+    };
+
+    // Check immediately
+    checkExpiration();
+
+    // Set up interval to check every second
+    const interval = setInterval(checkExpiration, 1000);
+
+    // Cleanup interval on component unmount or when expireOrderTime changes
+    return () => clearInterval(interval);
+  }, [expireOrderTime, router]);
 
   if (!myCartValue) return null;
 
@@ -57,6 +98,7 @@ export default function Ordering() {
 
       const response: any = await createOrder({
         items: myCartValue?.items,
+        reserve_order_id: reserveOrderId ?? '',
         shipping_info: {
           address_id: addressId,
           address: addressId

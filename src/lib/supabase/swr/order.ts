@@ -53,6 +53,7 @@ type CreateOrderPayload = {
     address: ShippingAddressType;
   };
   payment_method: string;
+  reserve_order_id?: string;
 };
 
 const createOrder = async (payload: CreateOrderPayload) => {
@@ -167,7 +168,26 @@ const fetchMyOrders = async (params: MyOrdersPayloadType) => {
   return data as MyOrdersGroupedByDayResponseType[];
 };
 
-export { createOrder, fetchOrderById, fetchMyOrders };
+// Reserve Order
+type ReserveOrderPayloadType = {
+  items: CartItemType[];
+  expirationMs?: number;
+};
+
+const reserveOrder = async (payload: ReserveOrderPayloadType) => {
+  const supabase = createBrowserSupabase('user');
+  const expirationMs = payload.expirationMs || 10 * 60 * 1000; // 10 minutes
+
+  const { data: reservationResult, error: reservationError } =
+    await supabase.rpc('reserve_order', {
+      p_expire_at: new Date(Date.now() + expirationMs).toISOString(),
+      p_items: payload.items, // see item schema below
+    });
+  if (reservationError) throw reservationError;
+  return reservationResult;
+};
+
+export { createOrder, fetchOrderById, fetchMyOrders, reserveOrder };
 export type {
   CreateOrderPayload,
   OrderResponseType,

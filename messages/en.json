@@ -472,7 +472,8 @@
     "refund_request_btn": "Refund request",
     "exchange_request_btn": "Exchange request",
     "delivery_tracking_btn": "Delivery tracking",
-    "delivery_request_placeholder": "Please enter the delivery request"
+    "delivery_request_placeholder": "Please enter the delivery request",
+    "order_expired": "Order expired"
   },
   "my-cash": {
     "cash_amount": "{value} cash",

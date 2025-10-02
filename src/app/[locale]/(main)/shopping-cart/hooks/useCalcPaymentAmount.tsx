@@ -14,6 +14,7 @@ export const useCalcPaymentAmount = (items: CartItemType[]) => {
     items
       ?.filter(item => item?.good?.shipping_provider === 'modive')
       ?.map(item =>
+        item?.good?.free_shipping_threshold &&
         item?.good?.price * item.quantity > item?.good?.free_shipping_threshold
           ? 0
           : item?.good?.delivery_fee

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { notification } from 'antd';
 import { useAtomValue } from 'jotai';
 import { useTranslations } from 'next-intl';
+import { useSWRConfig } from 'swr';
 
 import { ArrowRight, Cart } from '@/assets/icons';
 import {
@@ -16,6 +17,7 @@ import {
 } from '@/atoms/goodsAtom';
 import Button from '@/components/Button';
 import { useRouter } from '@/lib/navigation';
+import { CART_KEY } from '@/lib/supabase/swr/cart';
 import { createOrder, reserveOrder } from '@/lib/supabase/swr/order';
 import { ROUTES } from '@/utils/constants';
 
@@ -30,6 +32,7 @@ import Term from './Term.Client';
 export default function Ordering() {
   const router = useRouter();
   const t = useTranslations('ordering');
+  const { mutate } = useSWRConfig();
   const myCartValue = useAtomValue(myCartAtom);
   const paymentMethod = useAtomValue<string | null>(paymentMethodAtom);
   const isAgreement = useAtomValue<boolean>(isAgreementAtom);
@@ -165,6 +168,7 @@ export default function Ordering() {
           className="h-24 w-24"
           onClick={() => {
             router.back();
+            mutate(CART_KEY.all);
           }}
         >
           <ArrowRight className="rotate-180" />

@@ -73,7 +73,7 @@ export default function CartItem({
             )}
           </p>
           <p className="line-clamp-1 text-12 font-normal">
-            {shippingFee && (
+            {!!shippingFee && (
               <>
                 {t('shipping_fee')} {shippingFee?.toLocaleString()} {t('won')}
               </>

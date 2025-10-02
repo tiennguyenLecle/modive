@@ -145,7 +145,8 @@ const GoodDetail: React.FC = () => {
             ? t('free_shipping')
             : t('shipping_cost', { cost: delivery_fee?.toLocaleString() })}
           <br />
-          {!!free_shipping_threshold &&
+          {delivery_fee !== 0 &&
+            !!free_shipping_threshold &&
             free_shipping_threshold > 0 &&
             t('shipping_fee_description', {
               free_shipping_threshold:

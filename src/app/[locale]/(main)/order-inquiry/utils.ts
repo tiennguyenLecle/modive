@@ -15,6 +15,8 @@ const mapOrderStatus = (status: string, t: any) => {
       return t('cancelled');
     case 'refunded':
       return t('refunded');
+    case 'payment_failed':
+      return t('payment_failed');
     default:
       return status;
   }

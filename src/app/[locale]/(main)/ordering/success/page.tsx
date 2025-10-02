@@ -85,6 +85,10 @@ export const shippingInfoList = (data: ShippingAddressType, t: any) => {
       value: data?.address,
     },
     {
+      label: t('detail_address'),
+      value: data?.detailed_address,
+    },
+    {
       label: t('delivery_request'),
       value: mappedNoteInfo(data?.note || '', t),
     },

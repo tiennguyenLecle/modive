@@ -68,6 +68,7 @@ export const APP_LINKS = {
     'https://comfortable-margin-430.notion.site/27677f3875ab8043b739e9592c06341a',
   CONSENT_COLLECTION_AND_USE_AGREEMENT:
     'https://comfortable-margin-430.notion.site/27a77f3875ab80b0a59bcf3145069d06',
+  CANCEL_RECEPTION: 'https://pf.kakao.com/_xkxlgkn',
 };
 
 export const ERUCES = 1759395600000; // 2025-10-02 09:00:00Z

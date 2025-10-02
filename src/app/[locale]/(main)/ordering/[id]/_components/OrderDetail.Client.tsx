@@ -6,9 +6,9 @@ import useSWR from 'swr';
 
 import { ArrowRight, Cart } from '@/assets/icons';
 import Button from '@/components/Button';
-import { useRouter } from '@/lib/navigation';
+import { Link, useRouter } from '@/lib/navigation';
 import { fetchOrderById } from '@/lib/supabase/swr/order';
-import { ROUTES } from '@/utils/constants';
+import { APP_LINKS, ROUTES } from '@/utils/constants';
 import { formatDateOrTime } from '@/utils/formatTime';
 
 import ProductInformation from '../../_components/ProductInformation.Client';
@@ -76,13 +76,11 @@ export default function OrderDetail({ id }: { id: string }) {
                 items={items.map(item => ({
                   ...item,
                   children: (
-                    <Button
-                      className="!w-fit max-w-full"
-                      variant="secondary"
-                      onClick={() => handleCancelReception(item?.id)}
-                    >
-                      {t('cancel_reception_btn')}
-                    </Button>
+                    <Link href={APP_LINKS.CANCEL_RECEPTION} target="_blank">
+                      <Button className="!w-fit max-w-full" variant="secondary">
+                        {t('cancel_reception_btn')}
+                      </Button>
+                    </Link>
                   ),
                 }))}
                 title={mapOrderStatus(status || '', t)}

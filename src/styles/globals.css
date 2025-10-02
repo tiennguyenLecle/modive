@@ -85,23 +85,8 @@
 .main-layout {
   @apply flex flex-col bg-background;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   position: relative;
-}
-
-/* Mobile devices: handle address bar */
-@media (max-width: 767px) {
-  .main-layout {
-    height: 100vh;
-    height: -webkit-fill-available;
-  }
-}
-
-/* Desktop devices: standard viewport */
-@media (min-width: 768px) {
-  .main-layout {
-    min-height: 100vh;
-  }
 }
 
 .main-layout.device-desktop {
@@ -169,7 +154,8 @@
 /* --- End: Image preview --- Ant design image preview --- */
 
 #nprogress .bar {
-  background: #ff627b; /* progress bar color */
+  background: #ff627b;
+  /* progress bar color */
   height: 2px;
   z-index: 9999;
   position: fixed;

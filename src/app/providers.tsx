@@ -7,6 +7,10 @@ import { usePathname } from 'next/navigation';
 import NProgress from 'nprogress';
 
 import { ThemeRegistry } from '@/lib/theme-registry';
+import {
+  isInKakaoInAppBrowser,
+  openExternalBrowser,
+} from '@/utils/kakao-browser';
 
 type Props = {
   children: React.ReactNode;
@@ -34,6 +38,13 @@ export const Providers = ({ children, messages, locale }: Props) => {
       NProgress.done();
     }
   }, [pathname]);
+
+  // Redirect to external browser if in KakaoTalk in-app browser
+  useEffect(() => {
+    if (isInKakaoInAppBrowser()) {
+      openExternalBrowser();
+    }
+  }, []);
 
   return (
     <ThemeRegistry>

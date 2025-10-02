@@ -5,16 +5,23 @@
 @import 'nprogress/nprogress.css';
 
 @layer base {
+  * {
+    /* Safari fix: prevent minimum font size enforcement */
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+
   html {
     /* In this project, use 1 rem as default spacing unit (1rem = 1px) */
-    font-size: 6.25%;
+    font-size: 1px;
     @apply overflow-x-hidden;
     accent-color: var(--primary);
   }
 
   body {
-    @apply font-pretendard text-16 text-foreground;
+    @apply font-pretendard text-foreground;
     margin: 0 auto;
+    font-size: 16px;
   }
 
   body:has(.main-layout) {
@@ -76,7 +83,25 @@
 }
 
 .main-layout {
-  @apply flex h-full flex-col bg-background;
+  @apply flex flex-col bg-background;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Mobile devices: handle address bar */
+@media (max-width: 767px) {
+  .main-layout {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+}
+
+/* Desktop devices: standard viewport */
+@media (min-width: 768px) {
+  .main-layout {
+    min-height: 100vh;
+  }
 }
 
 .main-layout.device-desktop {

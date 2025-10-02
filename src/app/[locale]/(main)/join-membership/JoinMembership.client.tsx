@@ -387,15 +387,11 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
           >
             <Checkbox>
               <span className="mr-4 text-gray-40">[{t('optional')}]</span>
-              <Link
-                href={APP_LINKS.CONSENT_COLLECTION_AND_USE_AGREEMENT}
-                target="_blank"
-                className="text-gray-40 underline hover:!text-primary"
-              >
+              <span className="text-gray-40">
                 {t(
                   'third_party_personal_information_collection_and_use_agreement'
                 )}
-              </Link>
+              </span>
             </Checkbox>
           </Form.Item>
         </div>
@@ -404,7 +400,7 @@ const JoinMembershipClient: React.FC<JoinMembershipClientProps> = ({
         variant="primary"
         type="submit"
         className={cx(
-          'sticky bottom-0 mt-auto h-56 !rounded-0 text-16 font-semibold !opacity-100',
+          'sticky bottom-0 mt-auto !rounded-0 !p-16 text-16 font-semibold !opacity-100',
           !submitable && '!bg-gray-02 !text-gray-50'
         )}
         disabled={!submitable}

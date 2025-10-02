@@ -17,6 +17,23 @@ import {
 
 import styles from './ShippingForm.module.scss';
 
+export const SHIPPING_OPTIONS = (t: any) => {
+  return [
+    {
+      label: t('please_place_it_in_front_of_the_door_in_case_of_absence'),
+      value: 'Please place it in front of the door in case of absence.',
+    },
+    {
+      label: t('please_place_it_in_the_guard_room_in_the_absence'),
+      value: 'Please place it in the guard room in the absence.',
+    },
+    {
+      label: t('direct_input'),
+      value: 'Direct input',
+    },
+  ];
+};
+
 export default function ShippingForm() {
   const t = useTranslations('ordering');
   const [shippingForm, setShippingForm] = useAtom(shippingFormAtom);
@@ -41,35 +58,27 @@ export default function ShippingForm() {
 
       if (defaultAddress) {
         const isDirectInput =
-          defaultAddress?.note !== SHIPPING_OPTIONS[0].value &&
-          defaultAddress?.note !== SHIPPING_OPTIONS[1].value;
+          defaultAddress?.note !== SHIPPING_OPTIONS(t)[0].value &&
+          defaultAddress?.note !== SHIPPING_OPTIONS(t)[1].value;
         const address = {
           ...defaultAddress,
           note: isDirectInput
-            ? SHIPPING_OPTIONS[2].value
+            ? SHIPPING_OPTIONS(t)[2].value
             : defaultAddress?.note,
           note_custom: isDirectInput ? defaultAddress?.note : '',
         };
         form.setFieldsValue(address);
         setShippingForm(address);
       }
+    } else {
+      form?.setFieldsValue({
+        note: SHIPPING_OPTIONS(t)[0].value,
+      });
+      setShippingForm({
+        note: SHIPPING_OPTIONS(t)[0].value,
+      });
     }
-  }, [addressList]);
-
-  const SHIPPING_OPTIONS = [
-    {
-      label: t('please_place_it_in_front_of_the_door_in_case_of_absence'),
-      value: 'Please place it in front of the door in case of absence.',
-    },
-    {
-      label: t('please_place_it_in_the_guard_room_in_the_absence'),
-      value: 'Please place it in the guard room in the absence.',
-    },
-    {
-      label: t('direct_input'),
-      value: 'Direct input',
-    },
-  ];
+  }, [addressList, form]);
 
   // start of Daum Postcode API
   const openDaumPostcode = (searchTerm: string) => {
@@ -237,20 +246,15 @@ export default function ShippingForm() {
         </div>
         <Form.Item name="note">
           <Select
-            options={SHIPPING_OPTIONS}
+            options={SHIPPING_OPTIONS(t)}
             onChange={value => {
-              setShippingForm({
-                ...shippingForm,
-                note: value,
-                note_custom: '',
-              });
               form.setFieldsValue({ note: value, note_custom: '' });
             }}
           />
         </Form.Item>
         {shippingForm?.note &&
-          shippingForm?.note !== SHIPPING_OPTIONS[0].value &&
-          shippingForm?.note !== SHIPPING_OPTIONS[1].value && (
+          shippingForm?.note !== SHIPPING_OPTIONS(t)[0].value &&
+          shippingForm?.note !== SHIPPING_OPTIONS(t)[1].value && (
             <Form.Item name="note_custom">
               <Input.TextArea
                 maxLength={80}

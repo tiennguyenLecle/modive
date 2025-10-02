@@ -13,7 +13,9 @@ import { Message } from '@/lib/api/types/chat.types';
 export const useAffectionScore = (messages: Message[]): number | null => {
   return useMemo(() => {
     const lastChatbotMessage = messages.findLast(
-      msg => msg.speaker_type === 'chatbot'
+      msg =>
+        msg.speaker_type === 'chatbot' &&
+        !msg.id.startsWith('temparareryChatbotItemId')
     );
 
     if (!lastChatbotMessage) {

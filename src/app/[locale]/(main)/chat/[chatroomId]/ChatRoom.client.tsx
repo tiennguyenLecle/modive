@@ -167,7 +167,7 @@ const ChatRoom = memo(
         <div className="container flex h-[48px] items-center gap-[16px] border-b border-t border-gray-80">
           <ProgressBar
             label={t('room.intimacy')}
-            value={affectionScore && affectionScore > 0 ? affectionScore : 0}
+            value={affectionScore || 0}
             fillColor={{
               from: '#FF627B',
               to: '#FFB559',

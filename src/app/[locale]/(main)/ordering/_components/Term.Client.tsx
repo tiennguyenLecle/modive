@@ -73,7 +73,7 @@ export default function Term({ className = '' }: TermProps) {
             {t('look')}
           </Link>
         </li>
-        <li className="flex flex-row items-center justify-between">
+        {/* <li className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-8">
             <Checkbox
               checked={isCheckedList[2]}
@@ -94,7 +94,7 @@ export default function Term({ className = '' }: TermProps) {
           >
             {t('payment_agency_service_link')}
           </Link>
-        </li>
+        </li> */}
       </ul>
     </div>
   );

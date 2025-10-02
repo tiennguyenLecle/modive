@@ -17,7 +17,8 @@ export default function ProgressBar({
   valueColorInside,
   valueColorOutside,
 }: ProgressBarProps) {
-  const percentage = ((value ?? 0) / max) * 100;
+  const valueValue = value >= 0 ? value : 0;
+  const percentage = ((valueValue ?? 0) / max) * 100;
   const clampedPercentage = Math.min(percentage, 90);
 
   return (
@@ -74,7 +75,7 @@ export default function ProgressBar({
               left: `calc(${clampedPercentage}% + 4.7px)`,
             }}
           >
-            {percentage ?? 0}%
+            {value && value > 0 ? percentage : Math.round(Number(value) ?? 0)}%
           </span>
         )}
       </div>

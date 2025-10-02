@@ -2,10 +2,10 @@
 
 import { useTranslations } from 'next-intl';
 
-import { formatDateOrTime } from '@/utils/formatTime';
-
+// import { formatDateOrTime } from '@/utils/formatTime';
 import { mapOrderStatus } from '../../../order-inquiry/utils';
-import InfoBlock from '../../../shopping-cart/_components/InfoBlock.Client';
+
+// import InfoBlock from '../../../shopping-cart/_components/InfoBlock.Client';
 
 type InfoProps = {
   orderNumber: string;
@@ -16,7 +16,7 @@ type InfoProps = {
 export default function Info({
   orderNumber,
   status,
-  scheduledDateInfo,
+  // scheduledDateInfo,
 }: InfoProps) {
   const t = useTranslations('ordering');
 
@@ -30,13 +30,13 @@ export default function Info({
       <h4 className="text-center text-14 font-normal text-gray-30">
         {t('order_number')} {orderNumber}
       </h4>
-      {scheduledDateInfo.map((date, index) => (
+      {/* {scheduledDateInfo.map((date, index) => (
         <InfoBlock
           key={index}
           scheduledDate={formatDateOrTime(date, 'date')}
           title={t('pre_sale_product')}
         />
-      ))}
+      ))} */}
     </div>
   );
 }

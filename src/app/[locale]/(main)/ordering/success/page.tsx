@@ -22,12 +22,19 @@ import { confirmPayment } from '@/lib/supabase/swr/payment';
 import { getAmplitudeLocationProperties } from '@/utils/amplitude';
 import { ROUTES } from '@/utils/constants';
 
+import { SHIPPING_OPTIONS } from '../_components/ShippingForm.Client';
 import { mapOrderStatus } from '../../order-inquiry/utils';
 import { mappedCartItems } from '../../shopping-cart/_components/utils';
 import Success from './_components/Success.Client';
 
 const ORDER_KEY = {
   detail: (orderId: string) => ['order', orderId],
+};
+
+const mappedNoteInfo = (note: string, t: any) => {
+  if (!SHIPPING_OPTIONS(t)?.length) return note;
+  const option = SHIPPING_OPTIONS(t).find(option => option.value === note);
+  return option ? option.label : note;
 };
 
 export const paymentInfoList = (data: OrderResponseType, t: any) => {
@@ -79,7 +86,7 @@ export const shippingInfoList = (data: ShippingAddressType, t: any) => {
     },
     {
       label: t('delivery_request'),
-      value: data?.note,
+      value: mappedNoteInfo(data?.note || '', t),
     },
   ];
 };

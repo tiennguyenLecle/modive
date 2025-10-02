@@ -9,14 +9,32 @@ export const useCalcPaymentAmount = (items: CartItemType[]) => {
     0
   );
 
-  const deliveryFee = items?.reduce(
-    (acc: number, item: CartItemType) =>
-      acc +
-      (item?.good?.price * item.quantity > item?.good?.free_shipping_threshold
-        ? 0
-        : item?.good?.delivery_fee),
-    0
-  );
+  // Tính phí vận chuyển cho từng provider
+  const modiveDeliveryFees =
+    items
+      ?.filter(item => item?.good?.shipping_provider === 'modive')
+      ?.map(item =>
+        item?.good?.price * item.quantity > item?.good?.free_shipping_threshold
+          ? 0
+          : item?.good?.delivery_fee
+      ) || [];
+
+  const externalDeliveryFees =
+    items
+      ?.filter(item => item?.good?.shipping_provider === 'external')
+      ?.map(item =>
+        item?.good?.price * item.quantity > item?.good?.free_shipping_threshold
+          ? 0
+          : item?.good?.delivery_fee
+      ) || [];
+
+  // Lấy phí vận chuyển lớn nhất của mỗi provider
+  const maxModiveFee =
+    modiveDeliveryFees?.length > 0 ? Math.max(...modiveDeliveryFees) : 0;
+  const maxExternalFee =
+    externalDeliveryFees?.length > 0 ? Math.max(...externalDeliveryFees) : 0;
+
+  const deliveryFee = maxModiveFee + maxExternalFee;
 
   const paymentAmount = productAmount + deliveryFee || 0;
 

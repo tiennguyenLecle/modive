@@ -72,3 +72,5 @@ export const APP_LINKS = {
 };
 
 export const ERUCES = 1759395600000; // 2025-10-02 09:00:00Z
+
+export const QUANTITY_THRESHOLD = 20;

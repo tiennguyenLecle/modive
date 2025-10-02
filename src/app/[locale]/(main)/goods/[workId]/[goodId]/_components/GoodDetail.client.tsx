@@ -15,7 +15,7 @@ import { useAuth } from '@/lib/authentication/auth-context';
 import { createBrowserSupabase } from '@/lib/supabase/factory';
 import { fetchWorkDetail } from '@/lib/supabase/swr/work';
 import { getAmplitudeLocationProperties } from '@/utils/amplitude';
-import { ERUCES } from '@/utils/constants';
+import { ERUCES, QUANTITY_THRESHOLD } from '@/utils/constants';
 import { cx, getPublicUrl } from '@/utils/method';
 
 import { useGoodDetailProvider } from '../_provider/GoodDetailProvider';
@@ -126,7 +126,9 @@ const GoodDetail: React.FC = () => {
             <ChangeQuantity
               defaultValue={quantity}
               onChange={val => setQuantity(val)}
-              max={goodQuantity ? Math.min(goodQuantity, 3) : 0}
+              max={
+                goodQuantity ? Math.min(goodQuantity, QUANTITY_THRESHOLD) : 0
+              }
             />
             {/* <span className="text-12 font-normal text-primary">
               {t('remaining_quantity', {

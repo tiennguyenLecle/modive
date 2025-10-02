@@ -7,6 +7,7 @@ import { CartItemProps } from '@/atoms/goodsAtom';
 import ChangeQuantity from '@/components/ChangeQuantity';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import DefaultImageComponent from '@/components/DefaultImage';
+import { QUANTITY_THRESHOLD } from '@/utils/constants';
 import { formatDateOrTime } from '@/utils/formatTime';
 
 import InfoBlock from './InfoBlock.Client';
@@ -100,7 +101,9 @@ export default function CartItem({
                 onCountChange && onCountChange(value - 1, id);
               }
             }}
-            max={remainingCount ? Math.min(remainingCount, 3) : 0}
+            max={
+              remainingCount ? Math.min(remainingCount, QUANTITY_THRESHOLD) : 0
+            }
           />
         </div>
       )}
